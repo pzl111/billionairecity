@@ -1,0 +1,7 @@
+Adding a property:
+
+1. Move cards image into source folders
+2. Add the property ( new property() ) in respective property type in level order
+3. Import the image file (source url)
+4. Push the property into the name array (by level too)
+5. Define the property's level

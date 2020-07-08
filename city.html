@@ -1,0 +1,3799 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Billionaire City</title>
+<style>
+
+body {
+	margin: 0px;
+	background-color: #FFFFFF;
+}
+
+#canvas {
+	display: block;
+	background-color: #000000;
+	margin: 0px;
+}
+
+#loadbox {
+	background-color:#15191f;
+	height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    position: fixed;
+}
+
+#pic {
+	height:30%;
+	position: absolute;
+    left: 50%;
+    top: 60%; 
+    margin-left: -135px;
+    margin-top: -150px;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div id="loadbox">
+	<img id="pic" src="assets/images/loading.gif" />
+</div>
+<canvas id="canvas"></canvas>
+<audio autoplay loop  id="myAudio">
+      <source src="assets/audio/pc_bgmusic.mp3">
+</audio>
+
+<script>
+	
+	
+	// Game Variables
+	var canvas, ctx;
+	var looping;
+	var grid;
+	var drag;
+	var draghouse;
+	var tiles;
+	var cards;
+	var state;
+	var propertyImg;
+	var propertyNames;
+	var houseno;
+	var poor;
+	var contractstate;
+	var contracttime;
+	var prevtime;
+	var currenttime;
+	var contractloop;
+	var contractminus = false;
+	var timediff;
+	var revenue = 9999999;
+	var tempHouse;
+	var company;
+	var companyvalue;
+	
+	// Images
+	var money, gold, level;
+	var money_tab, gold_tab, level_tab;
+	var houseicon, roadicon, deleteicon;
+	var zoominicon, zoomouticon;
+	var housebg;
+	var housesbtn, commercesbtn, decorationsbtn, wondersbtn;
+	var crossbtn;
+	var leftbtn, rightbtn;
+	var crossicon, tickicon;
+	var gridbg;
+	var nomoneypic, nogoldpic;
+	var contractbg, contractcross;
+	var familycontract, studentscontract, touristscontract, rockstarcontract, pensionerscontract, athletescontract;
+	var moneyicon, contracticon;
+	var statbg;
+	
+	// Audio
+	var bgmusic;
+	var clicksound;
+	var buildsound;
+	var moneysound;
+	var deletesound;
+	var contractsound;
+	
+
+	function object(){
+			this.x = 0;
+			this.y = 0;
+			this.width = 0;
+			this.height = 0;
+			this.active = false;
+			this.image = new Image();
+			this.aspectRatio = function(){
+				var ratio;
+				ratio = (this.image.width/this.image.height);
+				return ratio;
+			};
+			this.render = function(){
+				ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+			};
+			this.collide = function(x, y){
+				if (x > this.x && x < this.x + this.width && y > this.y && y < this.y + this.height){
+					return true;
+				} else {
+					return false;	
+				};
+			};
+		};
+		
+	function property(){
+			this.x = 0;
+			this.y = 0;
+			this.width = 0;
+			this.height = 0;
+			this.active = false;
+			this.rendering = false;
+			this.level = 0;
+			this.cost = 0;
+			this.gold = false;
+			this.unlock = false;
+			this.image = new Image();
+			this.aspectRatio = function(){
+				var ratio;
+				ratio = (this.image.width/this.image.height);
+				return ratio;
+			};
+			this.render = function(){
+				ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+			};
+			this.collide = function(x, y){
+				if (x > this.x && x < this.x + this.width && y > this.y && y < this.y + this.height){
+					return true;
+				} else {
+					return false;	
+				};
+			};
+		};
+		
+	function Tiles(){
+			// Empty = 0;
+			this.grass = new Image(); // 1
+			this.roadEmpty = new Image(); // 2
+			this.roadFull = new Image(); // 3
+			this.roadHori = new Image(); // 4
+			this.roadHoriLeft = new Image(); // 5
+			this.roadHoriRight = new Image(); // 6
+			this.roadVert = new Image(); // 7
+			this.roadVertTop = new Image(); // 8
+			this.roadVertBottom = new Image(); // 9
+			this.roadConRightBottom = new Image(); // 10
+			this.roadConLeftBottom = new Image(); // 11
+			this.roadConTopLeft = new Image(); // 12
+			this.roadConTopRight = new Image(); // 13
+			this.roadOnLeftRightBottom = new Image(); // 14
+			this.roadOnTopBottomLeft = new Image(); // 15
+			this.roadOnTopLeftRight = new Image(); // 16
+			this.roadOnTopRightBottom = new Image(); // 17
+			this.roadOnAll = new Image(); // 18
+		};
+		
+	function Grid(){
+			this.tileWidth = 40;
+			this.tileHeight = 40;
+			this.gridNo = 50;
+			this.deletenumbers = [];
+			this.x = ( window.innerWidth - (this.tileWidth * this.gridNo))/2;
+			this.y = ( window.innerHeight - (this.tileHeight * this.gridNo))/2;
+			this.data = [
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,0,0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0],
+			[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+		];
+			this.render = function(){
+				ctx.drawImage(gridbg.image, this.x + this.tileWidth, this.y + this.tileHeight, (this.gridNo-2)*this.tileWidth, (this.gridNo-2)*this.tileHeight);
+				for (var y=0; y<this.gridNo; y++){
+					for (var x=0; x<this.gridNo; x++){
+						
+						if (this.data[y][x] == 0){
+							//ctx.fillStyle = "#000000";
+							//ctx.fillRect(x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+						};
+						if (this.data[y][x] == 1){ //draw grass
+							ctx.drawImage(tiles.grass, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+						};
+						if (this.data[y][x] == 2){ //draw different roads
+							if (this.data[y-1][x] != 2 && this.data[y+1][x] != 2 && this.data[y][x-1] != 2 && this.data[y][x+1] != 2){
+								ctx.drawImage(tiles.roadEmpty, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] != 2 && this.data[y+1][x] != 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadHoriLeft, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x+1] == 2 && this.data[y][x-1] != 2 && this.data[y+1][x] != 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadHoriRight, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] == 2 && this.data[y+1][x] != 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadHori, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] != 2 && this.data[y][x+1] != 2 && this.data[y+1][x] != 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadVertBottom, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] != 2 && this.data[y][x+1] != 2 && this.data[y+1][x] == 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadVertTop, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] != 2 && this.data[y][x+1] != 2 && this.data[y+1][x] == 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadVert, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] != 2 && this.data[y][x+1] == 2 && this.data[y+1][x] == 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadConRightBottom, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] != 2 && this.data[y+1][x] == 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadConLeftBottom, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] != 2 && this.data[y+1][x] != 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadConTopLeft, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] != 2 && this.data[y][x+1] == 2 && this.data[y+1][x] != 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadConTopRight, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] == 2 && this.data[y+1][x] == 2 && this.data[y-1][x] != 2){
+								ctx.drawImage(tiles.roadOnLeftRightBottom, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] != 2 && this.data[y+1][x] == 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadOnTopBottomLeft, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] == 2 && this.data[y+1][x] != 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadOnTopLeftRight, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] != 2 && this.data[y][x+1] == 2 && this.data[y+1][x] == 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadOnTopRightBottom, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+							if (this.data[y][x-1] == 2 && this.data[y][x+1] == 2 && this.data[y+1][x] == 2 && this.data[y-1][x] == 2){
+								ctx.drawImage(tiles.roadOnAll, x*this.tileWidth + this.x, y*this.tileHeight + this.y, this.tileWidth, this.tileHeight);
+							};
+						};
+						
+						if (this.deletenumbers.indexOf(this.data[y][x]) != -1){
+							this.data[y][x] = 1;
+							localStore("data",grid.data);
+						};
+						
+						if (this.data[y][x] >2 ){
+							var num, name;
+							num = this.data[y][x];
+							originalnum = this.data[y][x];
+							if (this.data[y][x] !=3){
+								num = Math.ceil(num)-1;
+							};
+							num -= 3;
+							name = propertyNames[num];
+							name += "Img";
+							if (num == 0){
+								ctx.drawImage(propertyImg[name], x*this.tileWidth + this.x, y*this.tileHeight + this.y - propertyImg[name].height + this.tileHeight, propertyImg[name].width, propertyImg[name].height );
+							};
+							if (num != 0){
+								if (this.data[y+1][x] != originalnum && this.data[y][x-1] != originalnum){
+									ctx.drawImage(propertyImg[name], x*this.tileWidth + this.x, y*this.tileHeight + this.y - propertyImg[name].height + this.tileHeight, propertyImg[name].width, propertyImg[name].height );
+								};
+							};
+						};
+						
+					};
+				};
+			};
+			this.getTileLocationX = function(mousex){
+				var xlocation;
+				mousex -= this.x;
+				xlocation = Math.floor(mousex/this.tileWidth);
+				return xlocation;			
+			};
+			this.getTileLocationY = function(mousey){
+				var ylocation;
+				mousey -= this.y;
+				ylocation = Math.floor(mousey/this.tileHeight);
+				return ylocation;
+			};
+			this.getTile = function(mousex, mousey){
+				return this.data[mousey][mousex];
+			};
+			this.setTile = function(mousex, mousey, data){
+				if (state == "road" && data == 2 && this.data[mousey][mousex] == 1){
+					this.data[mousey][mousex] = 2;
+				};
+				if (state == "delete" && data == 1 && this.data[mousey][mousex] == 2){
+					this.data[mousey][mousex] = 1;
+				};
+			};
+			this.willCollide = function (x, y){
+				if (houseicon.collide(x, y) == false && roadicon.collide(x, y) == false && deleteicon.collide(x, y) == false &&
+					zoominicon.collide(x, y) == false && zoomouticon.collide(x, y) == false){
+					
+					return false;	
+				} else {
+					return true;	
+				};
+			};
+		};
+
+	function Drag(){
+			this.x1;
+			this.y1;
+			this.x2;
+			this.y2;
+			this.dragging = false;
+			this.diffx = 0;
+			this.diffy = 0;
+			this.totalDrag = 0;
+			this.willCollide = function(x, y){
+				if (houseicon.collide(x, y) == false && roadicon.collide(x, y) == false && deleteicon.collide(x, y) == false &&
+					zoominicon.collide(x, y) == false && zoomouticon.collide(x, y) == false){
+					
+					return false;	
+				} else {
+					return true;	
+				};
+			};
+		};
+		
+	function Cards(){
+			this.tab = "houses";
+			this.page = 0;
+			this.housesNames = [];
+			this.commercesNames = [];
+			this.decorationsNames = [];
+			this.wondersNames = [];
+			this.lockedCard = new property();
+			this.houses = {	
+				bungalow: new property(),
+				bungalowluxury: new property(),
+				townhouse: new property(),
+				townhouseluxury: new property(),
+				duplex: new property(),
+				duplexluxury: new property(),
+				threestory: new property(),
+				tudorstylehouse: new property(),
+				threestoryluxury: new property(),	
+				apartmentblock: new property(),
+				futuristiccityblock: new property(),
+				colonialhouse: new property(),
+				apartmentblockluxury: new property(),
+				ecohome: new property(),
+				houseofharmony: new property(),
+				chryslerbuilding: new property(),
+				designerhouse: new property(),	
+				villa: new property(),
+				loftblock: new property(),
+				villaluxury: new property(),
+				parisiantownhouse: new property(),
+				luxurymansion: new property(),
+				skyscraper: new property(),
+				loftblockluxury: new property(),
+				chateau: new property(),
+				skyscraperluxury: new property(),
+				minimalisticdeluxe: new property(),
+				ecohouseluxury: new property(),
+				luxurymansion2: new property(),
+				tennisstarshome: new property(),
+				brickmansion: new property(),
+				poolmanor: new property(),
+				futuristic: new property(),
+				cityblock: new property(),
+				megapoliscondo: new property(),
+				superskyscraper: new property(),	
+				skyscraperultimate: new property(),	
+				glasscontemporary: new property(),
+				fututower: new property(),	
+				highlandcastle: new property(),
+				brazilianskyscraper: new property(),
+				affluencetower: new property(),
+				millionairepalace: new property(),
+				dragonskyscraper: new property(),
+				twirltower: new property(),
+				residentiallux: new property(),
+				spiraltower: new property(),
+				jewelstower: new property(),
+				sterlingtower: new property(),
+				platinummansion: new property(),
+				billionairestower: new property()
+			};
+			this.commerces = {
+				pizzeria: new property(),
+				coffeeshop: new property(),
+				hollywoodtheatre: new property(),
+				gym: new property(),
+				flowershop: new property(),
+				mcdollars: new property(),
+				petshop: new property(),
+				toyshop: new property(),
+				bowling: new property(),
+				jewelleryshop: new property(),
+				nightclub: new property(),
+				operahouse: new property(),
+				mall: new property(),
+				bank: new property(),
+				hospital: new property(),
+				hotelmidas: new property(),
+				casino: new property(),	
+				stadium: new property(),
+				midasmall: new property(),	
+				luxboutique: new property(),
+				modernartmuseum: new property,
+				baseballstadium: new property(),
+				cntower: new property(),
+				mctvstation: new property(),
+				zoo: new property(),
+				waterpark: new property()
+			};
+			this.decorations = {
+				cypresstree: new property(),
+				cactus: new property(),
+				oaktree: new property(),
+				babypalm: new property(),
+				agaveplant: new property(),
+				windmill: new property(),
+				balloonboy: new property(),
+				palmtree: new property(),
+				silvermaple: new property(),
+				appletree: new property(),
+				fountain: new property(),
+				sugarmaple: new property(),
+				artnoveaulamp: new property(),	
+				orangetree: new property(),
+				goldmaple: new property(),
+				japanesetree: new property(),	
+				spruce: new property(),	
+				goldtree: new property(),
+				birchtree: new property(),
+				bamboo: new property(),
+				cloudtree: new property(),
+				archofsuccess: new property(),	
+				flowerytree: new property(),	
+				chafa: new property(),	
+				biggarden: new property(),
+				schoollimousine: new property(),
+				privatechopper: new property(),
+				triumpharch: new property(),
+				fountain2: new property(),	
+				pondofwealth: new property(),		
+				statueofdavid: new property(),
+				cerebrum: new property(),
+				whitetigerpets: new property(),
+				artsysculpture: new property(),
+				crystalsculpture: new property(),
+				pooldeluxe: new property(),
+				diamondcolumn: new property()
+			};
+			this.wonders = {
+				goldenstatue: new property(),
+				discovery: new property(),
+				pyramid: new property(),
+				lasagradafamilia: new property(),
+				yellowsubmarine: new property(),
+				atomium: new property(),
+				eiffeltower: new property(),
+				chichenitza: new property(),
+				ronaldstatue: new property(),
+				colesseo: new property(),
+				statueofliberty: new property(),
+				stonehenge: new property(),
+				tajmahal: new property(),
+				corcovado: new property(),
+				chronostower: new property(),
+				stbasilscathedral: new property(),		
+				dollarsbin: new property(),
+				angelfalls: new property()
+			};
+		};
+		
+	function localStore(key, obj) {
+			return window.localStorage.setItem(key, JSON.stringify(obj));
+	};
+		
+	function localGet(key) {
+			return JSON.parse(window.localStorage.getItem(key));
+	};
+
+	function main(){
+		canvas = document.getElementById("canvas");
+		canvas.height = window.innerHeight;
+		canvas.width = window.innerWidth;
+		ctx = canvas.getContext("2d");
+		init();
+		window.onload = function(){
+			var child = document.getElementById("loadbox");
+			child.parentNode.removeChild(child);
+		};
+	};
+	
+	function init(){
+		
+		propertyImg = {
+			tempHouse: new Image(),
+			hqImg: new Image(), // 3
+			bungalowImg: new Image(), // 4
+			bungalowluxuryImg: new Image(), // 5
+			townhouseImg: new Image(), // 6
+			townhouseluxuryImg: new Image(),  // 7
+			duplexImg: new Image(),  // 8
+			duplexluxuryImg: new Image(),  // 9
+			threestoryImg: new Image(), // 10
+			tudorstylehouseImg: new Image(), // 11
+			threestoryluxuryImg: new Image(), // 12
+			apartmentblockImg: new Image(), // 13
+			futuristiccityblockImg: new Image(), // 14
+			colonialhouseImg: new Image(), // 15
+			apartmentblockluxuryImg: new Image(), // 16
+			ecohomeImg: new Image(), // 17
+			houseofharmonyImg: new Image(), // 18
+			chryslerbuildingImg: new Image(), // 19
+			designerhouseImg: new Image(), // 20
+			villaImg: new Image(), // 21
+			loftblockImg: new Image(), // 22
+			villaluxuryImg: new Image(), // 23
+			parisiantownhouseImg: new Image(), // 24
+			luxurymansionImg: new Image(), // 25
+			skyscraperImg: new Image(), // 26
+			loftblockluxuryImg: new Image(), // 27
+			chateauImg: new Image(), // 28
+			skyscraperluxuryImg: new Image(), // 29
+			minimalisticdeluxeImg: new Image(), // 30
+			ecohouseluxuryImg: new Image(), // 31
+			luxurymansion2Img: new Image(), // 32
+			tennisstarshomeImg: new Image(), // 33
+			brickmansionImg: new Image(), // 34
+			poolmanorImg: new Image(), // 35
+			futuristicImg: new Image(), // 36
+			cityblockImg: new Image(), // 37
+			megapoliscondoImg: new Image(), // 38
+			superskyscraperImg: new Image(), // 39	
+			skyscraperultimateImg: new Image(),	// 40
+			glasscontemporaryImg: new Image(), // 41
+			fututowerImg: new Image(), // 42
+			highlandcastleImg: new Image(), // 43
+			brazilianskyscraperImg: new Image(), // 44
+			affluencetowerImg: new Image(), // 45
+			millionairepalaceImg: new Image(), // 46
+			dragonskyscraperImg: new Image(), // 47
+			twirltowerImg: new Image(), // 48
+			residentialluxImg: new Image(), // 49
+			spiraltowerImg: new Image(), // 50
+			jewelstowerImg: new Image(), // 51
+			sterlingtowerImg: new Image(), // 52
+			platinummansionImg: new Image(), // 53
+			billionairestowerImg: new Image(), // 54
+			pizzeriaImg: new Image(), // 55
+			coffeeshopImg: new Image(), // 56
+			hollywoodtheatreImg: new Image(), // 57
+			gymImg: new Image(), // 58
+			flowershopImg: new Image(), // 59
+			mcdollarsImg: new Image(), // 60
+			petshopImg: new Image(), // 61
+			toyshopImg: new Image(), // 62
+			bowlingImg: new Image(), // 63
+			jewelleryshopImg: new Image(), // 64
+			nightclubImg: new Image(), // 65
+			operahouseImg: new Image(), // 66
+			mallImg: new Image(), // 67
+			bankImg: new Image(), // 68
+			hospitalImg: new Image(), // 69
+			hotelmidasImg: new Image(), // 70
+			casinoImg: new Image(),	 // 71
+			stadiumImg: new Image(), // 72
+			midasmallImg: new Image(),	 // 73
+			luxboutiqueImg: new Image(), // 74
+			modernartmuseumImg: new Image, // 75
+			baseballstadiumImg: new Image(), // 76
+			cntowerImg: new Image(), // 77
+			mctvstationImg: new Image(), // 78
+			zooImg: new Image(), // 79
+			waterparkImg: new Image(), // 80
+			cypresstreeImg: new Image(), // 81
+			cactusImg: new Image(), // 82
+			oaktreeImg: new Image(), // 83
+			babypalmImg: new Image(), // 84
+			agaveplantImg: new Image(), // 85
+			windmillImg: new Image(), // 86
+			balloonboyImg: new Image(), // 87
+			palmtreeImg: new Image(), // 88
+			silvermapleImg: new Image(), // 89
+			appletreeImg: new Image(), // 90
+			fountainImg: new Image(), // 91
+			sugarmapleImg: new Image(), // 92
+			artnoveaulampImg: new Image(),	 // 93
+			orangetreeImg: new Image(), // 94
+			goldmapleImg: new Image(), // 95
+			japanesetreeImg: new Image(), // 96
+			spruceImg: new Image(),	 // 97
+			goldtreeImg: new Image(), // 98
+			birchtreeImg: new Image(), // 99
+			bambooImg: new Image(), // 100
+			cloudtreeImg: new Image(), // 101
+			archofsuccessImg: new Image(), // 102
+			flowerytreeImg: new Image(), // 103
+			chafaImg: new Image(),	 // 104
+			biggardenImg: new Image(), // 105
+			schoollimousineImg: new Image(), // 106
+			privatechopperImg: new Image(), // 107
+			triumpharchImg: new Image(), // 108
+			fountain2Img: new Image(),	 // 109
+			pondofwealthImg: new Image(), // 110
+			statueofdavidImg: new Image(), // 111
+			cerebrumImg: new Image(), // 112
+			whitetigerpetsImg: new Image(), // 113
+			artsysculptureImg: new Image(), // 114
+			crystalsculptureImg: new Image(), // 115
+			pooldeluxeImg: new Image(), // 116
+			diamondcolumnImg: new Image(), // 117
+			goldenstatueImg: new Image(), // 118
+			discoveryImg: new Image(), // 119
+			pyramidImg: new Image(), // 120
+			lasagradafamiliaImg: new Image(), // 121
+			yellowsubmarineImg: new Image(), // 122
+			atomiumImg: new Image(), // 123
+			eiffeltowerImg: new Image(), // 124
+			chichenitzaImg: new Image(), // 125
+			ronaldstatueImg: new Image(), // 126
+			colesseoImg: new Image(), // 127
+			statueoflibertyImg: new Image(), // 128
+			stonehengeImg: new Image(), // 129
+			tajmahalImg: new Image(), // 130
+			corcovadoImg: new Image(), // 131
+			chronostowerImg: new Image(), // 132
+			stbasilscathedralImg: new Image(),	 // 133
+			dollarsbinImg: new Image(), // 134
+			angelfallsImg: new Image() // 135
+		};
+		contracttime = localGet("contracttime");
+		looping = setInterval(function(){ loop(); }, 1000/160);
+		contractloop = setInterval(function(){ 
+			if (localGet("contracttime") != 0){
+				currenttime = new Date();
+				currenttime = currenttime.getTime();
+				if (contractminus == false){
+					if (prevtime){
+						var timediff = Math.floor((currenttime-prevtime)/1000);
+						contractstate = "wait";
+						if (contracttime != 0){
+							if (contracttime-timediff < 0 ){
+								contracttime = 1;
+								contractstate = "collect";
+							} else {
+								contracttime -= timediff;
+							};
+						};
+						contractminus = true;
+					};
+				};
+			};
+			if (contracttime != null && contracttime > 0){
+				contracttime--;
+				prevtime = new Date();
+				prevtime = prevtime.getTime();
+				localStore("prevtime", prevtime);
+				localStore("contracttime", contracttime);
+			};
+		}, 1000);
+		
+		money = 2500000;
+		gold = 999;
+		level = 999;
+		
+		state = "game";
+		
+		money_tab = new object();
+		gold_tab = new object();
+		level_tab = new object();
+		houseicon = new object();
+		roadicon = new object();
+		deleteicon = new object();
+		zoominicon = new object();
+		zoomouticon = new object();
+		housebg = new object();
+		housebgframe = new object();
+		housesbtn = new object();
+		commercesbtn = new object();
+		decorationsbtn = new object();
+		wondersbtn = new object();
+		crossbtn = new object();
+		leftbtn = new object();
+		rightbtn = new object();
+		crossicon = new object();
+		tickicon = new object();
+		nomoneypic = new object();
+		nogoldpic = new object();
+		contractbg = new object();
+		contractcross = new object();
+		familycontract = new object();
+		studentscontract = new object();
+		touristscontract = new object();
+		rockstarcontract = new object();
+		pensionerscontract = new object();
+		athletescontract = new object();
+		moneyicon = new object();
+		contracticon = new object();
+		gridbg = new object();
+		statbg = new object();
+		
+		//bgmusic = new Audio("assets/audio/bgmusic.mp3");
+		clicksound = new Audio("assets/audio/click.wav");
+		buildsound = new Audio("assets/audio/build.wav");
+		moneysound = new Audio("assets/audio/money.wav");
+		deletesound = new Audio("assets/audio/delete.wav");
+		contractsound = new Audio("assets/audio/contract.wav");
+		
+		tiles = new Tiles();
+		grid = new Grid();
+		drag = new Drag();
+		draghouse = new Drag();
+		cards = new Cards();
+		
+		propertyNames = [];
+		
+		tempHouse = {
+			x: 0,
+			y: 0,
+			housename: "",
+			cornerx: 0,
+			cornery: 0
+		};
+		
+		company = {
+			x: 0,
+			y: 0,
+			width: 0,
+			height: 0	
+		};
+		
+		money_tab.image.src = "assets/images/moneytab.png";
+		gold_tab.image.src = "assets/images/goldtab.png";
+		level_tab.image.src = "assets/images/xptab.png";
+		houseicon.image.src = "assets/images/houseicon.png";
+		roadicon.image.src = "assets/images/roadicon.png";
+		deleteicon.image.src = "assets/images/deleteicon.png";
+		zoominicon.image.src = "assets/images/zoominicon.png";
+		zoomouticon.image.src = "assets/images/zoomouticon.png";
+		housebg.image.src = "assets/images/housebg.png";
+		housebgframe.image.src = "assets/images/housebgframe.png";
+		housesbtn.image.src = "assets/images/housesbtn.png";
+		commercesbtn.image.src = "assets/images/commercesbtn.png";
+		decorationsbtn.image.src = "assets/images/decorationsbtn.png";
+		wondersbtn.image.src = "assets/images/wondersbtn.png";
+		crossbtn.image.src = "assets/images/crossbtn.png";
+		leftbtn.image.src = "assets/images/leftarrow.png";
+		rightbtn.image.src = "assets/images/rightarrow.png";
+		tickicon.image.src = "assets/images/tickicon.png";
+		crossicon.image.src = "assets/images/crossicon.png";
+		gridbg.image.src = "assets/images/gridbg.png";
+		nomoneypic.image.src = "assets/images/nomoney.png";
+		nogoldpic.image.src = "assets/images/nogold.png";
+		contractbg.image.src = "assets/images/contractbg.png";
+		contractcross.image.src = "assets/images/crossbtn.png";
+		familycontract.image.src = "assets/images/familycontract.png";
+		studentscontract.image.src = "assets/images/studentscontract.png";
+		touristscontract.image.src = "assets/images/touristscontract.png";
+		rockstarcontract.image.src = "assets/images/rockstarcontract.png";
+		pensionerscontract.image.src = "assets/images/pensionerscontract.png";
+		athletescontract.image.src = "assets/images/athletescontract.png";
+		moneyicon.image.src = "assets/images/money.png";
+		contracticon.image.src = "assets/images/contract.png";
+		statbg.image.src = "assets/images/statbg.png";
+		
+		tiles.grass.src = "assets/images/grassTile.png";
+		tiles.roadEmpty.src = "assets/images/roadempty.png";
+		tiles.roadFull.src = "assets/images/roadfull.png";
+		tiles.roadHori.src = "assets/images/roadHori.png";
+		tiles.roadHoriLeft.src = "assets/images/roadHoriLeft.png";
+		tiles.roadHoriRight.src = "assets/images/roadHoriRight.png";
+		tiles.roadVert.src = "assets/images/roadVert.png";
+		tiles.roadVertTop.src = "assets/images/roadVertTop.png";
+		tiles.roadVertBottom.src = "assets/images/roadVertBottom.png";
+		tiles.roadConRightBottom.src = "assets/images/roadConRightBottom.png";
+		tiles.roadConLeftBottom.src = "assets/images/roadConLeftBottom.png";
+		tiles.roadConTopLeft.src = "assets/images/roadConTopLeft.png";
+		tiles.roadConTopRight.src = "assets/images/roadConTopRight.png";
+		tiles.roadOnLeftRightBottom.src = "assets/images/roadOnLeftRightBottom.png";
+		tiles.roadOnTopBottomLeft.src = "assets/images/roadOnTopBottomLeft.png";
+		tiles.roadOnTopLeftRight.src = "assets/images/roadOnTopLeftRight.png";
+		tiles.roadOnTopRightBottom.src = "assets/images/roadOnTopRightBottom.png";
+		tiles.roadOnAll.src = "assets/images/roadOnAll.png";
+		
+		cards.lockedCard.image.src = "assets/images/cards/lockcard.png";
+		
+		cards.houses.affluencetower.image.src = "assets/images/cards/Houses/affluencetower.png";
+		cards.houses.apartmentblock.image.src = "assets/images/cards/Houses/apartmentblock.png";
+		cards.houses.apartmentblockluxury.image.src = "assets/images/cards/Houses/apartmentblockluxury.png";
+		cards.houses.billionairestower.image.src = "assets/images/cards/Houses/billionairestower.png";
+		cards.houses.brazilianskyscraper.image.src = "assets/images/cards/Houses/brazilianskyscraper.png";
+		cards.houses.brickmansion.image.src = "assets/images/cards/Houses/brickmansion.png";
+		cards.houses.bungalow.image.src = "assets/images/cards/Houses/bungalow.png";
+		cards.houses.bungalowluxury.image.src = "assets/images/cards/Houses/bungalowluxury.png";
+		cards.houses.chateau.image.src = "assets/images/cards/Houses/chateau.png";
+		cards.houses.chryslerbuilding.image.src = "assets/images/cards/Houses/chryslerbuilding.png";
+		cards.houses.cityblock.image.src = "assets/images/cards/Houses/cityblock.png";
+		cards.houses.colonialhouse.image.src = "assets/images/cards/Houses/colonialhouse.png";
+		cards.houses.designerhouse.image.src = "assets/images/cards/Houses/designerhouse.png";
+		cards.houses.dragonskyscraper.image.src = "assets/images/cards/Houses/dragonskyscraper.png";
+		cards.houses.duplex.image.src = "assets/images/cards/Houses/duplex.png";
+		cards.houses.duplexluxury.image.src = "assets/images/cards/Houses/duplexluxury.png";
+		cards.houses.ecohome.image.src = "assets/images/cards/Houses/ecohome.png";
+		cards.houses.ecohouseluxury.image.src = "assets/images/cards/Houses/ecohouseluxury.png";
+		cards.houses.futuristic.image.src = "assets/images/cards/Houses/futuristic.png";
+		cards.houses.futuristiccityblock.image.src = "assets/images/cards/Houses/futuristiccityblock.png";
+		cards.houses.fututower.image.src = "assets/images/cards/Houses/fututower.png";
+		cards.houses.glasscontemporary.image.src = "assets/images/cards/Houses/glasscontemporary.png";
+		cards.houses.highlandcastle.image.src = "assets/images/cards/Houses/highlandcastle.png";
+		cards.houses.houseofharmony.image.src = "assets/images/cards/Houses/houseofharmony.png";
+		cards.houses.jewelstower.image.src = "assets/images/cards/Houses/jewelstower.png";
+		cards.houses.loftblock.image.src = "assets/images/cards/Houses/loftblock.png";
+		cards.houses.loftblockluxury.image.src = "assets/images/cards/Houses/loftblockluxury.png";
+		cards.houses.luxurymansion.image.src = "assets/images/cards/Houses/luxurymansion.png";
+		cards.houses.luxurymansion2.image.src = "assets/images/cards/Houses/luxurymansion2.png";
+		cards.houses.megapoliscondo.image.src = "assets/images/cards/Houses/megapoliscondo.png";
+		cards.houses.millionairepalace.image.src = "assets/images/cards/Houses/millionairepalace.png";
+		cards.houses.minimalisticdeluxe.image.src = "assets/images/cards/Houses/minimalisticdeluxe.png";
+		cards.houses.parisiantownhouse.image.src = "assets/images/cards/Houses/parisiantownhouse.png";
+		cards.houses.platinummansion.image.src = "assets/images/cards/Houses/platinummansion.png";
+		cards.houses.poolmanor.image.src = "assets/images/cards/Houses/poolmanor.png";
+		cards.houses.residentiallux.image.src = "assets/images/cards/Houses/residentiallux.png";
+		cards.houses.skyscraper.image.src = "assets/images/cards/Houses/skyscraper.png";
+		cards.houses.skyscraperluxury.image.src = "assets/images/cards/Houses/skyscraperluxury.png";
+		cards.houses.skyscraperultimate.image.src = "assets/images/cards/Houses/skyscraperultimate.png";
+		cards.houses.spiraltower.image.src = "assets/images/cards/Houses/spiraltower.png";
+		cards.houses.sterlingtower.image.src = "assets/images/cards/Houses/sterlingtower.png";
+		cards.houses.superskyscraper.image.src = "assets/images/cards/Houses/superskyscraper.png";
+		cards.houses.tennisstarshome.image.src = "assets/images/cards/Houses/tennisstarshome.png";
+		cards.houses.threestory.image.src = "assets/images/cards/Houses/threestory.png";
+		cards.houses.threestoryluxury.image.src = "assets/images/cards/Houses/threestoryluxury.png";
+		cards.houses.townhouse.image.src = "assets/images/cards/Houses/townhouse.png";
+		cards.houses.townhouseluxury.image.src = "assets/images/cards/Houses/townhouseluxury.png";
+		cards.houses.tudorstylehouse.image.src = "assets/images/cards/Houses/tudorstylehouse.png";
+		cards.houses.twirltower.image.src = "assets/images/cards/Houses/twirltower.png";
+		cards.houses.villa.image.src = "assets/images/cards/Houses/villa.png";
+		cards.houses.villaluxury.image.src = "assets/images/cards/Houses/villaluxury.png";
+		
+		cards.housesNames.push("hq");
+		cards.housesNames.push("bungalow");
+		cards.housesNames.push("bungalowluxury");
+		cards.housesNames.push("townhouse");
+		cards.housesNames.push("townhouseluxury");
+		cards.housesNames.push("duplex");
+		cards.housesNames.push("duplexluxury");
+		cards.housesNames.push("threestory");
+		cards.housesNames.push("tudorstylehouse");
+		cards.housesNames.push("threestoryluxury");
+		cards.housesNames.push("apartmentblock");
+		cards.housesNames.push("futuristiccityblock");
+		cards.housesNames.push("colonialhouse");
+		cards.housesNames.push("apartmentblockluxury");
+		cards.housesNames.push("ecohome");
+		cards.housesNames.push("houseofharmony");
+		cards.housesNames.push("chryslerbuilding");
+		cards.housesNames.push("designerhouse");
+		cards.housesNames.push("villa");
+		cards.housesNames.push("loftblock");
+		cards.housesNames.push("villaluxury");
+		cards.housesNames.push("parisiantownhouse");
+		cards.housesNames.push("luxurymansion");
+		cards.housesNames.push("skyscraper");
+		cards.housesNames.push("loftblockluxury");
+		cards.housesNames.push("chateau");
+		cards.housesNames.push("skyscraperluxury");
+		cards.housesNames.push("minimalisticdeluxe");
+		cards.housesNames.push("ecohouseluxury");
+		cards.housesNames.push("luxurymansion2");
+		cards.housesNames.push("tennisstarshome");
+		cards.housesNames.push("brickmansion");
+		cards.housesNames.push("poolmanor");
+		cards.housesNames.push("futuristic");
+		cards.housesNames.push("cityblock");
+		cards.housesNames.push("megapoliscondo");
+		cards.housesNames.push("superskyscraper");
+		cards.housesNames.push("skyscraperultimate");
+		cards.housesNames.push("glasscontemporary");
+		cards.housesNames.push("fututower");
+		cards.housesNames.push("highlandcastle");
+		cards.housesNames.push("brazilianskyscraper");
+		cards.housesNames.push("affluencetower");
+		cards.housesNames.push("millionairepalace");
+		cards.housesNames.push("dragonskyscraper");
+		cards.housesNames.push("twirltower");
+		cards.housesNames.push("residentiallux");
+		cards.housesNames.push("spiraltower");
+		cards.housesNames.push("jewelstower");
+		cards.housesNames.push("sterlingtower");
+		cards.housesNames.push("platinummansion");
+		cards.housesNames.push("billionairestower");
+		
+		cards.houses.bungalow.level = 1;
+		cards.houses.bungalowluxury.level = 1;
+		cards.houses.townhouse.level = 1;
+		cards.houses.townhouseluxury.level = 3;
+		cards.houses.duplex.level = 6;
+		cards.houses.duplexluxury.level = 7;
+		cards.houses.threestory.level = 8;
+		cards.houses.tudorstylehouse.level = 10;
+		cards.houses.threestoryluxury.level = 11;
+		cards.houses.apartmentblock.level = 13;
+		cards.houses.futuristiccityblock.level = 14;
+		cards.houses.colonialhouse.level = 14;
+		cards.houses.apartmentblockluxury.level = 15;
+		cards.houses.ecohome.level = 15;
+		cards.houses.houseofharmony.level = 16;
+		cards.houses.chryslerbuilding.level = 16;
+		cards.houses.designerhouse.level = 16;
+		cards.houses.villa.level = 17;
+		cards.houses.loftblock.level = 19;
+		cards.houses.villaluxury.level = 21;
+		cards.houses.parisiantownhouse.level = 21;
+		cards.houses.luxurymansion.level = 22;
+		cards.houses.skyscraper.level = 23;
+		cards.houses.loftblockluxury.level = 25;
+		cards.houses.chateau.level = 27;
+		cards.houses.skyscraperluxury.level = 29;
+		cards.houses.minimalisticdeluxe.level = 29;
+		cards.houses.ecohouseluxury.level = 31;
+		cards.houses.luxurymansion2.level = 34;
+		cards.houses.tennisstarshome.level = 36;
+		cards.houses.brickmansion.level = 38;
+		cards.houses.poolmanor.level = 39;
+		cards.houses.futuristic.level = 40;
+		cards.houses.cityblock.level = 49;
+		cards.houses.megapoliscondo.level = 52;
+		cards.houses.superskyscraper.level = 55;
+		cards.houses.skyscraperultimate.level = 60;
+		cards.houses.glasscontemporary.level = 63;
+		cards.houses.fututower.level = 64;
+		cards.houses.highlandcastle.level = 65;
+		cards.houses.brazilianskyscraper.level = 70;
+		cards.houses.affluencetower.level = 75;
+		cards.houses.millionairepalace.level = 76;
+		cards.houses.dragonskyscraper.level = 80;
+		cards.houses.twirltower.level = 85;
+		cards.houses.residentiallux.level = 100;
+		cards.houses.spiraltower.level = 115;
+		cards.houses.jewelstower.level = 120;
+		cards.houses.sterlingtower.level = 120;
+		cards.houses.platinummansion.level = 130;
+		cards.houses.billionairestower.level = 145;
+		
+		cards.houses.bungalow.cost = 30000;
+		cards.houses.bungalowluxury.cost = 60000;
+		cards.houses.townhouse.cost = 100000;
+		cards.houses.townhouseluxury.cost = 160000;
+		cards.houses.duplex.cost = 200000;
+		cards.houses.duplexluxury.cost = 225000;
+		cards.houses.threestory.cost = 250000;
+		cards.houses.tudorstylehouse.cost = 450000;
+		cards.houses.threestoryluxury.cost = 300000;
+		cards.houses.apartmentblock.cost = 600000;
+		cards.houses.futuristiccityblock.cost = 750000;
+		cards.houses.colonialhouse.cost = 900000;
+		cards.houses.apartmentblockluxury.cost = 1000000;
+		cards.houses.ecohome.cost = 1200000;
+		cards.houses.houseofharmony.cost = 300000;
+		cards.houses.chryslerbuilding.cost = 100; cards.houses.chryslerbuilding.gold = true;
+		cards.houses.designerhouse.cost = 10000000;
+		cards.houses.villa.cost = 2000000;
+		cards.houses.loftblock.cost = 3000000;
+		cards.houses.villaluxury.cost = 4000000;
+		cards.houses.parisiantownhouse.cost = 9000000;
+		cards.houses.luxurymansion.cost = 50000000;
+		cards.houses.skyscraper.cost = 5000000;
+		cards.houses.loftblockluxury.cost = 7000000;
+		cards.houses.chateau.cost = 12000000;
+		cards.houses.skyscraperluxury.cost = 15000000;
+		cards.houses.minimalisticdeluxe.cost = 30000000;
+		cards.houses.ecohouseluxury.cost = 35000000;
+		cards.houses.luxurymansion2.cost = 100000000;
+		cards.houses.tennisstarshome.cost = 110000000;
+		cards.houses.brickmansion.cost = 35000000;
+		cards.houses.poolmanor.cost = 32000000;
+		cards.houses.futuristic.cost = 25000000;
+		cards.houses.cityblock.cost = 50000000;
+		cards.houses.megapoliscondo.cost = 30000000;
+		cards.houses.superskyscraper.cost = 55000000;
+		cards.houses.skyscraperultimate.cost = 110000000;
+		cards.houses.glasscontemporary.cost = 200000000;
+		cards.houses.fututower.cost = 28; cards.houses.fututower.gold = true;
+		cards.houses.highlandcastle.cost = 100000000;
+		cards.houses.brazilianskyscraper.cost = 250000000;
+		cards.houses.affluencetower.cost = 340000000;
+		cards.houses.millionairepalace.cost = 150000000;
+		cards.houses.dragonskyscraper.cost = 380000000;
+		cards.houses.twirltower.cost = 650000000;
+		cards.houses.residentiallux.cost = 650000000;
+		cards.houses.spiraltower.cost = 800000000;
+		cards.houses.jewelstower.cost = 70; cards.houses.jewelstower.gold = true;
+		cards.houses.sterlingtower.cost = 990000000;
+		cards.houses.platinummansion.cost = 1000000000;
+		cards.houses.billionairestower.cost = 2000000000;
+		
+		cards.commerces.bank.image.src = "assets/images/cards/Commerces/bank.png";
+		cards.commerces.baseballstadium.image.src = "assets/images/cards/Commerces/baseballstadium.png";
+		cards.commerces.bowling.image.src = "assets/images/cards/Commerces/bowling.png";
+		cards.commerces.casino.image.src = "assets/images/cards/Commerces/casino.png";
+		cards.commerces.cntower.image.src = "assets/images/cards/Commerces/cntower.png";
+		cards.commerces.coffeeshop.image.src = "assets/images/cards/Commerces/coffeeshop.png";
+		cards.commerces.flowershop.image.src = "assets/images/cards/Commerces/flowershop.png";
+		cards.commerces.gym.image.src = "assets/images/cards/Commerces/gym.png";
+		cards.commerces.hollywoodtheatre.image.src = "assets/images/cards/Commerces/hollywoodtheatre.png";
+		cards.commerces.hospital.image.src = "assets/images/cards/Commerces/hospital.png";
+		cards.commerces.hotelmidas.image.src = "assets/images/cards/Commerces/hotelmidas.png";
+		cards.commerces.jewelleryshop.image.src = "assets/images/cards/Commerces/jewelleryshop.png";
+		cards.commerces.luxboutique.image.src = "assets/images/cards/Commerces/luxboutique.png";
+		cards.commerces.mall.image.src = "assets/images/cards/Commerces/mall.png";
+		cards.commerces.mcdollars.image.src = "assets/images/cards/Commerces/mcdollars.png";
+		cards.commerces.mctvstation.image.src = "assets/images/cards/Commerces/mctvstation.png";
+		cards.commerces.midasmall.image.src = "assets/images/cards/Commerces/midasmall.png";
+		cards.commerces.modernartmuseum.image.src = "assets/images/cards/Commerces/modernartmuseum.png";
+		cards.commerces.nightclub.image.src = "assets/images/cards/Commerces/nightclub.png";
+		cards.commerces.operahouse.image.src = "assets/images/cards/Commerces/operahouse.png";
+		cards.commerces.petshop.image.src = "assets/images/cards/Commerces/petshop.png";
+		cards.commerces.pizzeria.image.src = "assets/images/cards/Commerces/pizzeria.png";
+		cards.commerces.stadium.image.src = "assets/images/cards/Commerces/stadium.png";
+		cards.commerces.toyshop.image.src = "assets/images/cards/Commerces/toyshop.png";
+		cards.commerces.waterpark.image.src = "assets/images/cards/Commerces/waterpark.png";
+		cards.commerces.zoo.image.src = "assets/images/cards/Commerces/zoo.png";
+		
+		cards.commercesNames.push("pizzeria");
+		cards.commercesNames.push("coffeeshop");
+		cards.commercesNames.push("hollywoodtheatre");
+		cards.commercesNames.push("gym");
+		cards.commercesNames.push("flowershop");
+		cards.commercesNames.push("mcdollars");
+		cards.commercesNames.push("petshop");
+		cards.commercesNames.push("toyshop");
+		cards.commercesNames.push("bowling");
+		cards.commercesNames.push("jewelleryshop");
+		cards.commercesNames.push("nightclub");
+		cards.commercesNames.push("operahouse");
+		cards.commercesNames.push("mall");
+		cards.commercesNames.push("bank");
+		cards.commercesNames.push("hospital");
+		cards.commercesNames.push("hotelmidas");
+		cards.commercesNames.push("casino");
+		cards.commercesNames.push("stadium");
+		cards.commercesNames.push("midasmall");
+		cards.commercesNames.push("luxboutique");
+		cards.commercesNames.push("modernartmuseum");
+		cards.commercesNames.push("baseballstadium");
+		cards.commercesNames.push("cntower");
+		cards.commercesNames.push("mctvstation");
+		cards.commercesNames.push("zoo");
+		cards.commercesNames.push("waterpark");
+		
+		cards.commerces.pizzeria.level = 1;
+		cards.commerces.coffeeshop.level = 1;
+		cards.commerces.hollywoodtheatre.level = 1;
+		cards.commerces.gym.level = 3;
+		cards.commerces.flowershop.level = 7;
+		cards.commerces.mcdollars.level = 9;
+		cards.commerces.petshop.level = 10;
+		cards.commerces.toyshop.level = 10;
+		cards.commerces.bowling.level = 16;
+		cards.commerces.jewelleryshop.level = 18;
+		cards.commerces.nightclub.level = 20;
+		cards.commerces.operahouse.level = 22;
+		cards.commerces.mall.level = 24;
+		cards.commerces.bank.level = 26;
+		cards.commerces.hospital.level = 28;
+		cards.commerces.hotelmidas.level = 29;
+		cards.commerces.casino.level = 32;
+		cards.commerces.stadium.level = 35;
+		cards.commerces.midasmall.level = 38;
+		cards.commerces.luxboutique.level = 41;
+		cards.commerces.modernartmuseum.level = 45;
+		cards.commerces.baseballstadium.level = 50;
+		cards.commerces.cntower.level = 55;
+		cards.commerces.mctvstation.level = 57;
+		cards.commerces.zoo.level = 66;
+		cards.commerces.waterpark.level = 73;
+		
+		cards.commerces.pizzeria.cost = 60000;
+		cards.commerces.coffeeshop.cost = 100000;
+		cards.commerces.hollywoodtheatre.cost = 200000;
+		cards.commerces.gym.cost = 150000;
+		cards.commerces.flowershop.cost = 250000;
+		cards.commerces.mcdollars.cost = 1000000;
+		cards.commerces.petshop.cost = 500000;
+		cards.commerces.toyshop.cost = 1000000;
+		cards.commerces.bowling.cost = 2000000;
+		cards.commerces.jewelleryshop.cost = 3000000;
+		cards.commerces.nightclub.cost = 4000000;
+		cards.commerces.operahouse.cost = 30000000;
+		cards.commerces.mall.cost = 5000000;
+		cards.commerces.bank.cost = 6000000;
+		cards.commerces.hospital.cost = 10000000;
+		cards.commerces.hotelmidas.cost = 50000000;
+		cards.commerces.casino.cost = 15000000;
+		cards.commerces.stadium.cost = 20000000;
+		cards.commerces.midasmall.cost = 150000000;
+		cards.commerces.luxboutique.cost = 90000000;
+		cards.commerces.modernartmuseum.cost = 150000000;
+		cards.commerces.baseballstadium.cost = 120000000;
+		cards.commerces.cntower.cost = 125000000;
+		cards.commerces.mctvstation.cost = 125000000;
+		cards.commerces.zoo.cost = 140000000;
+		cards.commerces.waterpark.cost = 180000000;
+		
+		cards.decorations.agaveplant.image.src = "assets/images/cards/Decorations/agaveplant.png";
+		cards.decorations.appletree.image.src = "assets/images/cards/Decorations/appletree.png";
+		cards.decorations.archofsuccess.image.src = "assets/images/cards/Decorations/archofsuccess.png";
+		cards.decorations.artnoveaulamp.image.src = "assets/images/cards/Decorations/artnoveaulamp.png";
+		cards.decorations.artsysculpture.image.src = "assets/images/cards/Decorations/artsysculpture.png";
+		cards.decorations.babypalm.image.src = "assets/images/cards/Decorations/babypalm.png";
+		cards.decorations.balloonboy.image.src = "assets/images/cards/Decorations/balloonboy.png";
+		cards.decorations.bamboo.image.src = "assets/images/cards/Decorations/bamboo.png";
+		cards.decorations.biggarden.image.src = "assets/images/cards/Decorations/biggarden.png";
+		cards.decorations.birchtree.image.src = "assets/images/cards/Decorations/birchtree.png";
+		cards.decorations.cactus.image.src = "assets/images/cards/Decorations/cactus.png";
+		cards.decorations.cerebrum.image.src = "assets/images/cards/Decorations/cerebrum.png";
+		cards.decorations.chafa.image.src = "assets/images/cards/Decorations/chafa.png";
+		cards.decorations.cloudtree.image.src = "assets/images/cards/Decorations/cloudtree.png";
+		cards.decorations.crystalsculpture.image.src = "assets/images/cards/Decorations/crystalsculpture.png";
+		cards.decorations.cypresstree.image.src = "assets/images/cards/Decorations/cypresstree.png";
+		cards.decorations.flowerytree.image.src = "assets/images/cards/Decorations/flowerytree.png";
+		cards.decorations.fountain.image.src = "assets/images/cards/Decorations/fountain.png";
+		cards.decorations.fountain2.image.src = "assets/images/cards/Decorations/fountain2.png";
+		cards.decorations.goldmaple.image.src = "assets/images/cards/Decorations/goldmaple.png";
+		cards.decorations.goldtree.image.src = "assets/images/cards/Decorations/goldtree.png";
+		cards.decorations.japanesetree.image.src = "assets/images/cards/Decorations/japanesetree.png";
+		cards.decorations.oaktree.image.src = "assets/images/cards/Decorations/oaktree.png";
+		cards.decorations.orangetree.image.src = "assets/images/cards/Decorations/orangetree.png";
+		cards.decorations.palmtree.image.src = "assets/images/cards/Decorations/palmtree.png";
+		cards.decorations.pondofwealth.image.src = "assets/images/cards/Decorations/pondofwealth.png";
+		cards.decorations.pooldeluxe.image.src = "assets/images/cards/Decorations/pooldeluxe.png";
+		cards.decorations.privatechopper.image.src = "assets/images/cards/Decorations/privatechopper.png";
+		cards.decorations.schoollimousine.image.src = "assets/images/cards/Decorations/schoollimousine.png";
+		cards.decorations.silvermaple.image.src = "assets/images/cards/Decorations/silvermaple.png";
+		cards.decorations.spruce.image.src = "assets/images/cards/Decorations/sprucetree.png";
+		cards.decorations.statueofdavid.image.src = "assets/images/cards/Decorations/statueofdavid.png";
+		cards.decorations.sugarmaple.image.src = "assets/images/cards/Decorations/sugarmaple.png";
+		cards.decorations.triumpharch.image.src = "assets/images/cards/Decorations/triumpharch.png";
+		cards.decorations.whitetigerpets.image.src = "assets/images/cards/Decorations/whitetigerpets.png";
+		cards.decorations.windmill.image.src = "assets/images/cards/Decorations/windmill.png";
+		cards.decorations.diamondcolumn.image.src = "assets/images/cards/Decorations/diamondcolumn.png";
+		
+		cards.decorationsNames.push("cypresstree");
+		cards.decorationsNames.push("cactus");
+		cards.decorationsNames.push("oaktree");
+		cards.decorationsNames.push("babypalm");
+		cards.decorationsNames.push("agaveplant");
+		cards.decorationsNames.push("windmill");
+		cards.decorationsNames.push("balloonboy");
+		cards.decorationsNames.push("palmtree");
+		cards.decorationsNames.push("silvermaple");
+		cards.decorationsNames.push("appletree");
+		cards.decorationsNames.push("fountain");
+		cards.decorationsNames.push("sugarmaple");
+		cards.decorationsNames.push("artnoveaulamp");
+		cards.decorationsNames.push("orangetree");
+		cards.decorationsNames.push("goldmaple");
+		cards.decorationsNames.push("japanesetree");
+		cards.decorationsNames.push("spruce");
+		cards.decorationsNames.push("goldtree");
+		cards.decorationsNames.push("birchtree");
+		cards.decorationsNames.push("bamboo");
+		cards.decorationsNames.push("cloudtree");
+		cards.decorationsNames.push("archofsuccess");
+		cards.decorationsNames.push("flowerytree");
+		cards.decorationsNames.push("chafa");
+		cards.decorationsNames.push("biggarden");
+		cards.decorationsNames.push("schoollimousine");
+		cards.decorationsNames.push("privatechopper");
+		cards.decorationsNames.push("triumpharch");
+		cards.decorationsNames.push("fountain2");
+		cards.decorationsNames.push("pondofwealth");
+		cards.decorationsNames.push("statueofdavid");
+		cards.decorationsNames.push("cerebrum");
+		cards.decorationsNames.push("whitetigerpets");
+		cards.decorationsNames.push("artsysculpture");
+		cards.decorationsNames.push("crystalsculpture");
+		cards.decorationsNames.push("pooldeluxe");
+		cards.decorationsNames.push("diamondcolumn");
+		
+		cards.decorations.cypresstree.level = 1;
+		cards.decorations.cactus.level = 3;
+		cards.decorations.oaktree.level = 3;
+		cards.decorations.babypalm.level = 6;
+		cards.decorations.agaveplant.level = 6;
+		cards.decorations.windmill.level = 6;
+		cards.decorations.balloonboy.level = 7;
+		cards.decorations.palmtree.level = 9;
+		cards.decorations.silvermaple.level = 10;
+		cards.decorations.appletree.level = 11;
+		cards.decorations.fountain.level = 12;
+		cards.decorations.sugarmaple.level = 13;
+		cards.decorations.artnoveaulamp.level = 14;
+		cards.decorations.orangetree.level = 15;
+		cards.decorations.goldmaple.level = 17;
+		cards.decorations.japanesetree.level = 18;
+		cards.decorations.spruce.level = 19;
+		cards.decorations.goldtree.level = 19;
+		cards.decorations.birchtree.level = 20;
+		cards.decorations.bamboo.level = 21;
+		cards.decorations.cloudtree.level = 22;
+		cards.decorations.archofsuccess.level = 23; 
+		cards.decorations.flowerytree.level = 23;
+		cards.decorations.chafa.level = 24;
+		cards.decorations.biggarden.level = 24;
+		cards.decorations.schoollimousine.level = 25;
+		cards.decorations.privatechopper.level = 25;
+		cards.decorations.triumpharch.level = 26;
+		cards.decorations.fountain2.level = 28;
+		cards.decorations.pondofwealth.level = 31;
+		cards.decorations.statueofdavid.level = 32;
+		cards.decorations.cerebrum.level = 38;
+		cards.decorations.whitetigerpets.level = 40;
+		cards.decorations.artsysculpture.level = 43;
+		cards.decorations.crystalsculpture.level = 45;
+		cards.decorations.pooldeluxe.level = 105;
+		cards.decorations.diamondcolumn.level = 122;
+		
+		cards.decorations.cypresstree.cost = 2000;
+		cards.decorations.cactus.cost = 2000;
+		cards.decorations.oaktree.cost = 3000;
+		cards.decorations.babypalm.cost = 3000;
+		cards.decorations.agaveplant.cost = 10000;
+		cards.decorations.windmill.cost = 150000;
+		cards.decorations.balloonboy.cost = 5000;
+		cards.decorations.palmtree.cost = 5000;
+		cards.decorations.silvermaple.cost = 24000;
+		cards.decorations.appletree.cost = 1500;
+		cards.decorations.fountain.cost = 80000;
+		cards.decorations.sugarmaple.cost = 2500;
+		cards.decorations.artnoveaulamp.cost = 10000;
+		cards.decorations.orangetree.cost = 2500;
+		cards.decorations.goldmaple.cost = 5000;
+		cards.decorations.japanesetree.cost = 8000;
+		cards.decorations.spruce.cost = 8500;
+		cards.decorations.goldtree.cost = 10000000;
+		cards.decorations.birchtree.cost = 3000;
+		cards.decorations.bamboo.cost = 2500;
+		cards.decorations.cloudtree.cost = 3500;
+		cards.decorations.archofsuccess.cost = 100000; 
+		cards.decorations.flowerytree.cost = 130000;
+		cards.decorations.chafa.cost = 35000;
+		cards.decorations.biggarden.cost = 2000000;
+		cards.decorations.schoollimousine.cost = 8; cards.decorations.schoollimousine.gold = true;
+		cards.decorations.privatechopper.cost = 80; cards.decorations.privatechopper.gold = true;
+		cards.decorations.triumpharch.cost = 3500000;
+		cards.decorations.fountain2.cost = 120000;
+		cards.decorations.pondofwealth.cost = 2000000;
+		cards.decorations.statueofdavid.cost = 540000;
+		cards.decorations.cerebrum.cost = 22; cards.decorations.cerebrum.gold = true;
+		cards.decorations.whitetigerpets.cost = 40000000;
+		cards.decorations.artsysculpture.cost = 20000000;
+		cards.decorations.crystalsculpture.cost = 60000000;
+		cards.decorations.pooldeluxe.cost = 65000000;
+		cards.decorations.diamondcolumn.cost = 100000000;
+		
+		cards.wonders.atomium.image.src = "assets/images/cards/Wonders/atomium.png";
+		cards.wonders.chichenitza.image.src = "assets/images/cards/Wonders/chichenitza.png";
+		cards.wonders.chronostower.image.src = "assets/images/cards/Wonders/chronostower.png";
+		cards.wonders.colesseo.image.src = "assets/images/cards/Wonders/colesseo.png";
+		cards.wonders.corcovado.image.src = "assets/images/cards/Wonders/corcovado.png";
+		cards.wonders.discovery.image.src = "assets/images/cards/Wonders/discovery.png";
+		cards.wonders.dollarsbin.image.src = "assets/images/cards/Wonders/dollarsbin.png";
+		cards.wonders.eiffeltower.image.src = "assets/images/cards/Wonders/eiffeltower.png";
+		cards.wonders.goldenstatue.image.src = "assets/images/cards/Wonders/goldenstatue.png";
+		cards.wonders.lasagradafamilia.image.src = "assets/images/cards/Wonders/lasagradafamilia.png";
+		cards.wonders.pyramid.image.src = "assets/images/cards/Wonders/pyramid.png";
+		cards.wonders.ronaldstatue.image.src = "assets/images/cards/Wonders/ronaldstatue.png";
+		cards.wonders.statueofliberty.image.src = "assets/images/cards/Wonders/statueofliberty.png";
+		cards.wonders.stbasilscathedral.image.src = "assets/images/cards/Wonders/stbasilscathedral.png";
+		cards.wonders.stonehenge.image.src = "assets/images/cards/Wonders/stonehenge.png";
+		cards.wonders.tajmahal.image.src = "assets/images/cards/Wonders/tajmahal.png";
+		cards.wonders.yellowsubmarine.image.src = "assets/images/cards/Wonders/yellowsubmarine.png";
+		cards.wonders.angelfalls.image.src = "assets/images/cards/Wonders/angelfalls.png";
+		
+		cards.wondersNames.push("goldenstatue");
+		cards.wondersNames.push("discovery");
+		cards.wondersNames.push("pyramid");
+		cards.wondersNames.push("lasagradafamilia");
+		cards.wondersNames.push("yellowsubmarine");
+		cards.wondersNames.push("atomium");
+		cards.wondersNames.push("eiffeltower");
+		cards.wondersNames.push("chichenitza");
+		cards.wondersNames.push("ronaldstatue");
+		cards.wondersNames.push("colesseo");
+		cards.wondersNames.push("statueofliberty");
+		cards.wondersNames.push("stonehenge");
+		cards.wondersNames.push("tajmahal");
+		cards.wondersNames.push("corcovado");
+		cards.wondersNames.push("chronostower");
+		cards.wondersNames.push("stbasilscathedral");
+		cards.wondersNames.push("dollarsbin");
+		cards.wondersNames.push("angelfalls");
+		
+		cards.wonders.goldenstatue.level = 1;
+		cards.wonders.discovery.level = 7;
+		cards.wonders.pyramid.level = 12;
+		cards.wonders.lasagradafamilia.level = 15;
+		cards.wonders.yellowsubmarine.level = 16;
+		cards.wonders.atomium.level = 17;
+		cards.wonders.eiffeltower.level = 20;
+		cards.wonders.chichenitza.level = 22;
+		cards.wonders.ronaldstatue.level = 25;
+		cards.wonders.colesseo.level = 26;
+		cards.wonders.statueofliberty.level = 30;
+		cards.wonders.stonehenge.level = 30;
+		cards.wonders.tajmahal.level = 36;
+		cards.wonders.corcovado.level = 39;
+		cards.wonders.chronostower.level = 40;
+		cards.wonders.stbasilscathedral.level = 45;
+		cards.wonders.dollarsbin.level = 48;
+		cards.wonders.angelfalls.level = 75;
+		
+		cards.wonders.goldenstatue.cost = 10000;
+		cards.wonders.discovery.cost = 12500;
+		cards.wonders.pyramid.cost = 15000;
+		cards.wonders.lasagradafamilia.cost = 5500000;
+		cards.wonders.yellowsubmarine.cost = 5000000;
+		cards.wonders.atomium.cost = 5000000;
+		cards.wonders.eiffeltower.cost = 150000;
+		cards.wonders.chichenitza.cost = 9000000;
+		cards.wonders.ronaldstatue.cost = 175000;
+		cards.wonders.colesseo.cost = 900000;
+		cards.wonders.statueofliberty.cost = 175000;
+		cards.wonders.stonehenge.cost = 7000000;
+		cards.wonders.tajmahal.cost = 12000000;
+		cards.wonders.corcovado.cost = 8000000;
+		cards.wonders.chronostower.cost = 300000;
+		cards.wonders.stbasilscathedral.cost = 12000000;
+		cards.wonders.dollarsbin.cost = 10000000;
+		cards.wonders.angelfalls.cost = 50; cards.wonders.angelfalls.gold = true;
+		
+		propertyImg.affluencetowerImg.src = "assets/images/properties/affluencetower.png";
+		propertyImg.apartmentblockImg.src = "assets/images/properties/apartmentblock.png";
+		propertyImg.apartmentblockluxuryImg.src = "assets/images/properties/apartmentblockluxury.png";
+		propertyImg.billionairestowerImg.src = "assets/images/properties/billionairestower.png";
+		propertyImg.brazilianskyscraperImg.src = "assets/images/properties/brazilianskyscraper.png";
+		propertyImg.brickmansionImg.src = "assets/images/properties/brickmansion.png";
+		propertyImg.bungalowImg.src = "assets/images/properties/bungalow.png";
+		propertyImg.bungalowluxuryImg.src = "assets/images/properties/bungalowluxury.png";
+		propertyImg.chateauImg.src = "assets/images/properties/chateau.png";
+		propertyImg.chryslerbuildingImg.src = "assets/images/properties/chryslerbuilding.png";
+		propertyImg.cityblockImg.src = "assets/images/properties/cityblock.png";
+		propertyImg.colonialhouseImg.src = "assets/images/properties/colonialhouse.png";
+		propertyImg.designerhouseImg.src = "assets/images/properties/designerhouse.png";
+		propertyImg.dragonskyscraperImg.src = "assets/images/properties/dragonskyscraper.png";
+		propertyImg.duplexImg.src = "assets/images/properties/duplex.png";
+		propertyImg.duplexluxuryImg.src = "assets/images/properties/duplexluxury.png";
+		propertyImg.ecohomeImg.src = "assets/images/properties/ecohome.png";
+		propertyImg.ecohouseluxuryImg.src = "assets/images/properties/ecohouseluxury.png";
+		propertyImg.futuristicImg.src = "assets/images/properties/futuristic.png";
+		propertyImg.futuristiccityblockImg.src = "assets/images/properties/futuristiccityblock.png";
+		propertyImg.fututowerImg.src = "assets/images/properties/fututower.png";
+		propertyImg.glasscontemporaryImg.src = "assets/images/properties/glasscontemporary.png";
+		propertyImg.highlandcastleImg.src = "assets/images/properties/highlandcastle.png";
+		propertyImg.houseofharmonyImg.src = "assets/images/properties/houseofharmony.png";
+		propertyImg.jewelstowerImg.src = "assets/images/properties/jewelstower.png";
+		propertyImg.loftblockImg.src = "assets/images/properties/loftblock.png";
+		propertyImg.loftblockluxuryImg.src = "assets/images/properties/loftblockluxury.png";
+		propertyImg.luxurymansionImg.src = "assets/images/properties/luxurymansion.png";
+		propertyImg.luxurymansion2Img.src = "assets/images/properties/luxurymansion2.png";
+		propertyImg.megapoliscondoImg.src = "assets/images/properties/megapoliscondo.png";
+		propertyImg.millionairepalaceImg.src = "assets/images/properties/millionairepalace.png";
+		propertyImg.minimalisticdeluxeImg.src = "assets/images/properties/minimalisticdeluxe.png";
+		propertyImg.parisiantownhouseImg.src = "assets/images/properties/parisiantownhouse.png";
+		propertyImg.platinummansionImg.src = "assets/images/properties/platinummansion.png";
+		propertyImg.poolmanorImg.src = "assets/images/properties/poolmanor.png";
+		propertyImg.residentialluxImg.src = "assets/images/properties/residentiallux.png";
+		propertyImg.skyscraperImg.src = "assets/images/properties/skyscraper.png";
+		propertyImg.skyscraperluxuryImg.src = "assets/images/properties/skyscraperluxury.png";
+		propertyImg.skyscraperultimateImg.src = "assets/images/properties/skyscraperultimate.png";
+		propertyImg.spiraltowerImg.src = "assets/images/properties/spiraltower.png";
+		propertyImg.sterlingtowerImg.src = "assets/images/properties/sterlingtower.png";
+		propertyImg.superskyscraperImg.src = "assets/images/properties/superskyscraper.png";
+		propertyImg.tennisstarshomeImg.src = "assets/images/properties/tennisstarshome.png";
+		propertyImg.threestoryImg.src = "assets/images/properties/threestory.png";
+		propertyImg.threestoryluxuryImg.src = "assets/images/properties/threestoryluxury.png";
+		propertyImg.townhouseImg.src = "assets/images/properties/townhouse.png";
+		propertyImg.townhouseluxuryImg.src = "assets/images/properties/townhouseluxury.png";
+		propertyImg.tudorstylehouseImg.src = "assets/images/properties/tudorstylehouse.png";
+		propertyImg.twirltowerImg.src = "assets/images/properties/twirltower.png";
+		propertyImg.villaImg.src = "assets/images/properties/villa.png";
+		propertyImg.villaluxuryImg.src = "assets/images/properties/villaluxury.png";
+		propertyImg.hqImg.src = "assets/images/properties/hq.png";
+		
+		propertyImg.bankImg.src = "assets/images/properties/bank.png";
+		propertyImg.baseballstadiumImg.src = "assets/images/properties/baseballstadium.png";
+		propertyImg.bowlingImg.src = "assets/images/properties/bowling.png";
+		propertyImg.casinoImg.src = "assets/images/properties/casino.png";
+		propertyImg.cntowerImg.src = "assets/images/properties/cntower.png";
+		propertyImg.coffeeshopImg.src = "assets/images/properties/coffeeshop.png";
+		propertyImg.flowershopImg.src = "assets/images/properties/flowershop.png";
+		propertyImg.gymImg.src = "assets/images/properties/gym.png";
+		propertyImg.hollywoodtheatreImg.src = "assets/images/properties/hollywoodtheatre.png";
+		propertyImg.hospitalImg.src = "assets/images/properties/hospital.png";
+		propertyImg.hotelmidasImg.src = "assets/images/properties/hotelmidas.png";
+		propertyImg.jewelleryshopImg.src = "assets/images/properties/jewelleryshop.png";
+		propertyImg.luxboutiqueImg.src = "assets/images/properties/luxboutique.png";
+		propertyImg.mallImg.src = "assets/images/properties/mall.png";
+		propertyImg.mcdollarsImg.src = "assets/images/properties/mcdollars.png";
+		propertyImg.mctvstationImg.src = "assets/images/properties/mctvstation.png";
+		propertyImg.midasmallImg.src = "assets/images/properties/midasmall.png";
+		propertyImg.modernartmuseumImg.src = "assets/images/properties/modernartmuseum.png";
+		propertyImg.nightclubImg.src = "assets/images/properties/nightclub.png";
+		propertyImg.operahouseImg.src = "assets/images/properties/operahouse.png";
+		propertyImg.petshopImg.src = "assets/images/properties/petshop.png";
+		propertyImg.pizzeriaImg.src = "assets/images/properties/pizzeria.png";
+		propertyImg.stadiumImg.src = "assets/images/properties/stadium.png";
+		propertyImg.toyshopImg.src = "assets/images/properties/toyshop.png";
+		propertyImg.waterparkImg.src = "assets/images/properties/waterpark.png";
+		propertyImg.zooImg.src = "assets/images/properties/zoo.png";
+		
+		propertyImg.agaveplantImg.src = "assets/images/properties/agaveplant.png";
+		propertyImg.appletreeImg.src = "assets/images/properties/appletree.png";
+		propertyImg.archofsuccessImg.src = "assets/images/properties/archofsuccess.png";
+		propertyImg.artnoveaulampImg.src = "assets/images/properties/artnoveaulamp.png";
+		propertyImg.artsysculptureImg.src = "assets/images/properties/artsysculpture.png";
+		propertyImg.babypalmImg.src = "assets/images/properties/babypalm.png";
+		propertyImg.balloonboyImg.src = "assets/images/properties/balloonboy.png";
+		propertyImg.bambooImg.src = "assets/images/properties/bamboo.png";
+		propertyImg.biggardenImg.src = "assets/images/properties/biggarden.png";
+		propertyImg.birchtreeImg.src = "assets/images/properties/birchtree.png";
+		propertyImg.cactusImg.src = "assets/images/properties/cactus.png";
+		propertyImg.cerebrumImg.src = "assets/images/properties/cerebrum.png";
+		propertyImg.chafaImg.src = "assets/images/properties/chafa.png";
+		propertyImg.cloudtreeImg.src = "assets/images/properties/cloudtree.png";
+		propertyImg.crystalsculptureImg.src = "assets/images/properties/crystalsculpture.png";
+		propertyImg.cypresstreeImg.src = "assets/images/properties/cypresstree.png";
+		propertyImg.flowerytreeImg.src = "assets/images/properties/flowerytree.png";
+		propertyImg.fountainImg.src = "assets/images/properties/fountain.png";
+		propertyImg.fountain2Img.src = "assets/images/properties/fountain2.png";
+		propertyImg.goldmapleImg.src = "assets/images/properties/goldmaple.png";
+		propertyImg.goldtreeImg.src = "assets/images/properties/goldtree.png";
+		propertyImg.japanesetreeImg.src = "assets/images/properties/japanesetree.png";
+		propertyImg.oaktreeImg.src = "assets/images/properties/oaktree.png";
+		propertyImg.orangetreeImg.src = "assets/images/properties/orangetree.png";
+		propertyImg.palmtreeImg.src = "assets/images/properties/palmtree.png";
+		propertyImg.pondofwealthImg.src = "assets/images/properties/pondofwealth.png";
+		propertyImg.pooldeluxeImg.src = "assets/images/properties/pooldeluxe.png";
+		propertyImg.privatechopperImg.src = "assets/images/properties/privatechopper.png";
+		propertyImg.schoollimousineImg.src = "assets/images/properties/schoollimousine.png";
+		propertyImg.silvermapleImg.src = "assets/images/properties/silvermaple.png";
+		propertyImg.spruceImg.src = "assets/images/properties/sprucetree.png";
+		propertyImg.statueofdavidImg.src = "assets/images/properties/statueofdavid.png";
+		propertyImg.sugarmapleImg.src = "assets/images/properties/sugarmaple.png";
+		propertyImg.triumpharchImg.src = "assets/images/properties/triumpharch.png";
+		propertyImg.whitetigerpetsImg.src = "assets/images/properties/whitetigerpets.png";
+		propertyImg.windmillImg.src = "assets/images/properties/windmill.png";
+		propertyImg.diamondcolumnImg.src = "assets/images/properties/diamondcolumn.png";
+		
+		propertyImg.atomiumImg.src = "assets/images/properties/atomium.png";
+		propertyImg.chichenitzaImg.src = "assets/images/properties/chichenitza.png";
+		propertyImg.chronostowerImg.src = "assets/images/properties/chronostower.png";
+		propertyImg.colesseoImg.src = "assets/images/properties/colesseo.png";
+		propertyImg.corcovadoImg.src = "assets/images/properties/corcovado.png";
+		propertyImg.discoveryImg.src = "assets/images/properties/discovery.png";
+		propertyImg.dollarsbinImg.src = "assets/images/properties/dollarsbin.png";
+		propertyImg.eiffeltowerImg.src = "assets/images/properties/eiffeltower.png";
+		propertyImg.goldenstatueImg.src = "assets/images/properties/goldenstatue.png";
+		propertyImg.lasagradafamiliaImg.src = "assets/images/properties/lasagradafamilia.png";
+		propertyImg.pyramidImg.src = "assets/images/properties/pyramid.png";
+		propertyImg.ronaldstatueImg.src = "assets/images/properties/ronaldstatue.png";
+		propertyImg.statueoflibertyImg.src = "assets/images/properties/statueofliberty.png";
+		propertyImg.stbasilscathedralImg.src = "assets/images/properties/stbasilscathedral.png";
+		propertyImg.stonehengeImg.src = "assets/images/properties/stonehenge.png";
+		propertyImg.tajmahalImg.src = "assets/images/properties/tajmahal.png";
+		propertyImg.yellowsubmarineImg.src = "assets/images/properties/yellowsubmarine.png";
+		propertyImg.angelfallsImg.src = "assets/images/properties/angelfalls.png";
+		
+		propertyNames.push("hq");
+		propertyNames.push("bungalow");
+		propertyNames.push("bungalowluxury");
+		propertyNames.push("townhouse");
+		propertyNames.push("townhouseluxury");
+		propertyNames.push("duplex");
+		propertyNames.push("duplexluxury");
+		propertyNames.push("threestory");
+		propertyNames.push("tudorstylehouse");
+		propertyNames.push("threestoryluxury");
+		propertyNames.push("apartmentblock");
+		propertyNames.push("futuristiccityblock");
+		propertyNames.push("colonialhouse");
+		propertyNames.push("apartmentblockluxury");
+		propertyNames.push("ecohome");
+		propertyNames.push("houseofharmony");
+		propertyNames.push("chryslerbuilding");
+		propertyNames.push("designerhouse");
+		propertyNames.push("villa");
+		propertyNames.push("loftblock");
+		propertyNames.push("villaluxury");
+		propertyNames.push("parisiantownhouse");
+		propertyNames.push("luxurymansion");
+		propertyNames.push("skyscraper");
+		propertyNames.push("loftblockluxury");
+		propertyNames.push("chateau");
+		propertyNames.push("skyscraperluxury");
+		propertyNames.push("minimalisticdeluxe");
+		propertyNames.push("ecohouseluxury");
+		propertyNames.push("luxurymansion2");
+		propertyNames.push("tennisstarshome");
+		propertyNames.push("brickmansion");
+		propertyNames.push("poolmanor");
+		propertyNames.push("futuristic");
+		propertyNames.push("cityblock");
+		propertyNames.push("megapoliscondo");
+		propertyNames.push("superskyscraper");
+		propertyNames.push("skyscraperultimate");
+		propertyNames.push("glasscontemporary");
+		propertyNames.push("fututower");
+		propertyNames.push("highlandcastle");
+		propertyNames.push("brazilianskyscraper");
+		propertyNames.push("affluencetower");
+		propertyNames.push("millionairepalace");
+		propertyNames.push("dragonskyscraper");
+		propertyNames.push("twirltower");
+		propertyNames.push("residentiallux");
+		propertyNames.push("spiraltower");
+		propertyNames.push("jewelstower");
+		propertyNames.push("sterlingtower");
+		propertyNames.push("platinummansion");
+		propertyNames.push("billionairestower");
+		propertyNames.push("pizzeria");
+		propertyNames.push("coffeeshop");
+		propertyNames.push("hollywoodtheatre");
+		propertyNames.push("gym");
+		propertyNames.push("flowershop");
+		propertyNames.push("mcdollars");
+		propertyNames.push("petshop");
+		propertyNames.push("toyshop");
+		propertyNames.push("bowling");
+		propertyNames.push("jewelleryshop");
+		propertyNames.push("nightclub");
+		propertyNames.push("operahouse");
+		propertyNames.push("mall");
+		propertyNames.push("bank");
+		propertyNames.push("hospital");
+		propertyNames.push("hotelmidas");
+		propertyNames.push("casino");
+		propertyNames.push("stadium");
+		propertyNames.push("midasmall");
+		propertyNames.push("luxboutique");
+		propertyNames.push("modernartmuseum");
+		propertyNames.push("baseballstadium");
+		propertyNames.push("cntower");
+		propertyNames.push("mctvstation");
+		propertyNames.push("zoo");
+		propertyNames.push("waterpark");
+		propertyNames.push("cypresstree");
+		propertyNames.push("cactus");
+		propertyNames.push("oaktree");
+		propertyNames.push("babypalm");
+		propertyNames.push("agaveplant");
+		propertyNames.push("windmill");
+		propertyNames.push("balloonboy");
+		propertyNames.push("palmtree");
+		propertyNames.push("silvermaple");
+		propertyNames.push("appletree");
+		propertyNames.push("fountain");
+		propertyNames.push("sugarmaple");
+		propertyNames.push("artnoveaulamp");
+		propertyNames.push("orangetree");
+		propertyNames.push("goldmaple");
+		propertyNames.push("japanesetree");
+		propertyNames.push("spruce");
+		propertyNames.push("goldtree");
+		propertyNames.push("birchtree");
+		propertyNames.push("bamboo");
+		propertyNames.push("cloudtree");
+		propertyNames.push("archofsuccess");
+		propertyNames.push("flowerytree");
+		propertyNames.push("chafa");
+		propertyNames.push("biggarden");
+		propertyNames.push("schoollimousine");
+		propertyNames.push("privatechopper");
+		propertyNames.push("triumpharch");
+		propertyNames.push("fountain2");
+		propertyNames.push("pondofwealth");
+		propertyNames.push("statueofdavid");
+		propertyNames.push("cerebrum");
+		propertyNames.push("whitetigerpets");
+		propertyNames.push("artsysculpture");
+		propertyNames.push("crystalsculpture");
+		propertyNames.push("pooldeluxe");
+		propertyNames.push("diamondcolumn");
+		propertyNames.push("goldenstatue");
+		propertyNames.push("discovery");
+		propertyNames.push("pyramid");
+		propertyNames.push("lasagradafamilia");
+		propertyNames.push("yellowsubmarine");
+		propertyNames.push("atomium");
+		propertyNames.push("eiffeltower");
+		propertyNames.push("chichenitza");
+		propertyNames.push("ronaldstatue");
+		propertyNames.push("colesseo");
+		propertyNames.push("statueofliberty");
+		propertyNames.push("stonehenge");
+		propertyNames.push("tajmahal");
+		propertyNames.push("corcovado");
+		propertyNames.push("chronostower");
+		propertyNames.push("stbasilscathedral");
+		propertyNames.push("dollarsbin");
+		propertyNames.push("angelfalls");
+		
+		canvas.addEventListener("click", function(e){
+			onClick(e.x, e.y);
+		});
+		
+		canvas.addEventListener("mousemove", function(e){
+			onMove(e.x, e.y);
+		});
+		
+		canvas.addEventListener("mousedown", function(e){
+			onMousedown(e.x, e.y);
+		});
+		
+		canvas.addEventListener("mouseup", function(e){
+			onMouseup(e.x, e.y);
+		});
+		
+		housesbtn.active = true;
+		//bgmusic.addEventListener('ended', function() {
+		//    this.currentTime = 0;
+		//    this.play();
+		//}, false);
+		//bgmusic.play();
+		houseno = 1;
+		companyvalue = money + (gold*60000);
+		
+		if(typeof(Storage) !== "undefined") {
+			if (localGet("data") === null) {
+			} else {
+				grid.data = localGet("data");
+			};
+
+				if (localGet("money") === null){
+				} else {
+					money = localGet("money");
+				};
+
+				if (localGet("companyvalue") === null){
+				} else {
+					companyvalue = localGet("companyvalue");
+				};
+
+				if (localGet("gold") === null){
+				} else {
+					gold = localGet("gold");
+				};
+
+				if (localGet("houseno") === null){
+				} else {
+					houseno = localGet("houseno");
+				};
+
+				contracttime = localGet("contracttime");
+	
+		} else {
+			alert("Your browser does not support web storage, your data will not be saved");
+		}
+		
+	};
+	
+	function render(){
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		if (state == "game" || state == "road" || state == "delete"){
+			grid.render();
+			money_tab.render();
+			gold_tab.render();
+			level_tab.render();
+			houseicon.render();
+			roadicon.render();
+			deleteicon.render();
+			zoominicon.render();
+			zoomouticon.render();
+			ctx.fillStyle = "white";
+			ctx.font = "32px sans-serif";
+			if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+			ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+			ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+			if (contractstate == "contract" && contracttime == null){
+				contracticon.render();
+			};
+			if (contractstate == "collect" && contracttime != null && contracttime == 0){
+				moneyicon.render();
+			};
+			if (statbg.active == true){
+				statbg.render();
+				ctx.font = "bold 20px sans-serif";
+				ctx.fillStyle = "black";
+				ctx.fillText("Company value:", statbg.x + statbg.width*0.1, statbg.y + statbg.height*0.27);
+				ctx.font = "18px sans-serif";
+				var val = companyvalue.toLocaleString();
+				ctx.fillText("$" + val, statbg.x + statbg.width*0.1, statbg.y + statbg.height*0.45);
+
+				ctx.font = "bold 20px sans-serif";
+				ctx.fillText("Contract Time:", statbg.x + statbg.width*0.1, statbg.y + statbg.height*0.64);
+				ctx.font = "18px sans-serif";
+				if (contracttime == null){
+					ctx.fillText("No contract set", statbg.x + statbg.width*0.1, statbg.y + statbg.height*0.79);
+				} else {
+					var totalSeconds = contracttime;
+					hours = Math.floor(totalSeconds / 3600);
+					totalSeconds %= 3600;
+					minutes = Math.floor(totalSeconds / 60);
+					seconds = totalSeconds % 60;
+					if (hours < 1){
+						if (minutes < 1){
+							if (seconds < 1){
+								time = "Collect";
+							} else {
+							var time = seconds+"s";
+							};
+						} else {
+							var time = minutes+" min "+seconds+"s";
+						}
+					} else {
+						var time = hours+"h "+minutes+" min "+seconds+"s";
+					}
+					ctx.fillText(time, statbg.x + statbg.width*0.1, statbg.y + statbg.height*0.79);
+				};
+				
+			};
+		};
+		if (state == "poor"){
+			grid.render();
+			money_tab.render();
+			gold_tab.render();
+			level_tab.render();
+			houseicon.render();
+			roadicon.render();
+			deleteicon.render();
+			zoominicon.render();
+			zoomouticon.render();
+			ctx.fillStyle = "white";
+			ctx.font = "32px sans-serif";
+			if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+			ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+			ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+			ctx.fillStyle = "black";
+			ctx.globalAlpha = 0.5;
+			ctx.fillRect(0,0,canvas.width, canvas.height);
+			ctx.globalAlpha = 1;
+			if (poor == "money"){
+				nomoneypic.render();
+			};
+			if (poor == "gold"){
+				nogoldpic.render();
+			};
+		};
+		if (state == "contract"){
+			grid.render();
+			money_tab.render();
+			gold_tab.render();
+			level_tab.render();
+			houseicon.render();
+			roadicon.render();
+			deleteicon.render();
+			zoominicon.render();
+			zoomouticon.render();
+			ctx.fillStyle = "white";
+			ctx.font = "32px sans-serif";
+			if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+			ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+			ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+			ctx.fillStyle = "black";
+			ctx.globalAlpha = 0.5;
+			ctx.fillRect(0,0,canvas.width, canvas.height);
+			ctx.globalAlpha = 1;
+			contractbg.render();
+			contractcross.render();
+			familycontract.render();
+			studentscontract.render();
+			touristscontract.render();
+			rockstarcontract.render();
+			pensionerscontract.render();
+			athletescontract.render();
+		};
+		if (state == "place"){
+			grid.render();
+			ctx.globalAlpha = 0.7;
+			ctx.drawImage(propertyImg.tempHouse, tempHouse.x, tempHouse.y, propertyImg.tempHouse.width, propertyImg.tempHouse.height);
+			ctx.globalAlpha = 1;
+			crossicon.render();
+			tickicon.render();
+		};
+		if (state == "house"){
+			
+			var f = 0;
+			for(f in cards.houses){
+				cards.houses[f].rendering = false;
+			};
+			
+			var l = 0;
+			for(l in cards.commerces){
+				cards.commerces[l].rendering = false;
+			};
+			
+			var m = 0;
+			for(m in cards.decorations){
+				cards.decorations[m].rendering = false;
+			};
+			
+			var n = 0;
+			for(n in cards.wonders){
+				cards.wonders[n].rendering = false;
+			};
+			
+			if (housesbtn.active == true){
+				ctx.fillStyle = "#1C6A9F";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				money_tab.render();
+				gold_tab.render();
+				level_tab.render();		
+				housesbtn.render();
+				commercesbtn.render();
+				decorationsbtn.render();
+				wondersbtn.render();
+				ctx.fillStyle = "white";
+				ctx.font = "32px sans-serif";
+				if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+				ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+				ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+				crossbtn.render();
+				housebg.render();
+				housebgframe.render();
+				if (cards.page > 0){
+					leftbtn.render();
+				};
+				if (cards.page < Math.ceil(cards.housesNames.length/3)-2){
+					rightbtn.render();
+				};
+				
+				for (n = 0; n < 3; n++){
+					if ((n + 3*(cards.page)) < cards.housesNames.length-1){
+						cards.houses[cards.housesNames[n + 3*cards.page+1]].x = (housebg.x + (housebg.width - (cards.houses.apartmentblock.width*3 + 2*(housebg.width/100)))/2) + n*(cards.houses.apartmentblock.width + housebg.width/100);
+						cards.houses[cards.housesNames[n + 3*cards.page+1]].render();
+						cards.houses[cards.housesNames[n + 3*cards.page+1]].rendering = true;
+						if ( level < cards.houses[cards.housesNames[n + 3*cards.page+1]].level ){
+							cards.lockedCard.x = cards.houses[cards.housesNames[n + 3*cards.page+1]].x;
+							cards.lockedCard.render();
+						};
+					};
+				};
+			};
+			if (commercesbtn.active == true){
+				ctx.fillStyle = "#1C6A9F";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				money_tab.render();
+				gold_tab.render();
+				level_tab.render();		
+				housesbtn.render();
+				commercesbtn.render();
+				decorationsbtn.render();
+				wondersbtn.render();
+				ctx.fillStyle = "white";
+				ctx.font = "32px sans-serif";
+				if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+				ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+				ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+				crossbtn.render();
+				housebg.render();
+				housebgframe.render();
+				if (cards.page > 0){
+					leftbtn.render();
+				};
+				if (cards.page < Math.ceil(cards.commercesNames.length/3)-1){
+					rightbtn.render();
+				};
+				for (n = 0; n < 3; n++){
+					if ((n + 3*(cards.page)) < cards.commercesNames.length){
+						cards.commerces[cards.commercesNames[n + 3*cards.page]].x = (housebg.x + (housebg.width - (cards.houses.apartmentblock.width*3 + 2*(housebg.width/100)))/2) + n*(cards.houses.apartmentblock.width + housebg.width/100);
+						cards.commerces[cards.commercesNames[n + 3*cards.page]].render();
+						cards.commerces[cards.commercesNames[n + 3*cards.page]].rendering = true;
+						if ( level < cards.commerces[cards.commercesNames[n + 3*cards.page]].level ){
+							cards.lockedCard.x = cards.commerces[cards.commercesNames[n + 3*cards.page]].x;
+							cards.lockedCard.render();
+						};
+					};
+				};
+			};	
+			if (decorationsbtn.active == true){
+				ctx.fillStyle = "#1C6A9F";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				money_tab.render();
+				gold_tab.render();
+				level_tab.render();		
+				housesbtn.render();
+				commercesbtn.render();
+				decorationsbtn.render();
+				wondersbtn.render();
+				ctx.fillStyle = "white";
+				ctx.font = "32px sans-serif";
+				if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+				ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+				ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+				crossbtn.render();
+				housebg.render();
+				housebgframe.render();
+				if (cards.page > 0){
+					leftbtn.render();
+				};
+				if (cards.page < Math.ceil(cards.decorationsNames.length/3)-1){
+					rightbtn.render();
+				};
+				for (n = 0; n < 3; n++){
+					if ((n + 3*(cards.page)) < cards.decorationsNames.length){
+						cards.decorations[cards.decorationsNames[n + 3*cards.page]].x = (housebg.x + (housebg.width - (cards.houses.apartmentblock.width*3 + 2*(housebg.width/100)))/2) + n*(cards.houses.apartmentblock.width + housebg.width/100);
+						cards.decorations[cards.decorationsNames[n + 3*cards.page]].render();
+						cards.decorations[cards.decorationsNames[n + 3*cards.page]].rendering = true;
+						if ( level < cards.decorations[cards.decorationsNames[n + 3*cards.page]].level ){
+							cards.lockedCard.x = cards.decorations[cards.decorationsNames[n + 3*cards.page]].x;
+							cards.lockedCard.render();
+						};
+					};
+				};
+			};	
+			if (wondersbtn.active == true){
+				ctx.fillStyle = "#1C6A9F";
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				money_tab.render();
+				gold_tab.render();
+				level_tab.render();		
+				housesbtn.render();
+				commercesbtn.render();
+				decorationsbtn.render();
+				wondersbtn.render();
+				ctx.fillStyle = "white";
+				ctx.font = "32px sans-serif";
+				if (money >= 10000000 && money < 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000);
+					bigmoney += "M";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000 && money < 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000);
+					bigmoney += "B";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else if (money >= 10000000000000){
+					var bigmoney;
+					bigmoney = Math.floor(money/1000000000000);
+					bigmoney += "T";
+					bigmoney = "$" + bigmoney;
+					ctx.fillText(bigmoney,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				} else {
+					var val = money.toLocaleString();
+					ctx.fillText(val,money_tab.x + money_tab.width/3,money_tab.y + 31 + ((money_tab.height-36)/2));
+				};
+				ctx.fillText(gold,gold_tab.x + gold_tab.width/3,gold_tab.y + 31 + ((gold_tab.height-36)/2));
+				ctx.fillText(level,level_tab.x + level_tab.width/3,level_tab.y + 31 + ((level_tab.height-36)/2));
+				crossbtn.render();
+				housebg.render();
+				housebgframe.render();
+				if (cards.page > 0){
+					leftbtn.render();
+				};
+				if (cards.page < Math.ceil(cards.wondersNames.length/3)-1){
+					rightbtn.render();
+				};
+				for (n = 0; n < 3; n++){
+					if ((n + 3*(cards.page)) < cards.wondersNames.length){
+						cards.wonders[cards.wondersNames[n + 3*cards.page]].x = (housebg.x + (housebg.width - (cards.houses.apartmentblock.width*3 + 2*(housebg.width/100)))/2) + n*(cards.houses.apartmentblock.width + housebg.width/100);
+						cards.wonders[cards.wondersNames[n + 3*cards.page]].render();
+						cards.wonders[cards.wondersNames[n + 3*cards.page]].rendering = true;
+						if ( level < cards.wonders[cards.wondersNames[n + 3*cards.page]].level ){
+							cards.lockedCard.x = cards.wonders[cards.wondersNames[n + 3*cards.page]].x;
+							cards.lockedCard.render();
+						};
+					};
+				};
+			};		
+		};
+		ctx.font = "14px sans-serif";
+		ctx.fillStyle = "white";
+		ctx.fillText("Billionaire City Alpha 0.9.1", 15, window.innerHeight*0.98);
+	};
+	
+	function update(){
+		money_tab.x = (canvas.width - (money_tab.width + gold_tab.width + level_tab.width + 2*(canvas.height/26)))*0.5;
+		money_tab.height = canvas.height/10;
+		money_tab.width = money_tab.height * money_tab.aspectRatio();
+		money_tab.y = canvas.height/26;
+		
+		gold_tab.x = money_tab.x + money_tab.width + canvas.height/26;
+		gold_tab.height = canvas.height/10;
+		gold_tab.width = gold_tab.height * gold_tab.aspectRatio();
+		gold_tab.y = canvas.height/26;
+		
+		level_tab.x = gold_tab.x + gold_tab.width + canvas.height/26;	
+		level_tab.height = canvas.height/10;
+		level_tab.width = level_tab.height * level_tab.aspectRatio();
+		level_tab.y = canvas.height/26;
+		
+		houseicon.x = canvas.width/35;
+		houseicon.y = (canvas.height - (houseicon.height + roadicon.height + deleteicon.height + 2*(houseicon.height/5)))*0.5;
+		houseicon.height = houseicon.width = canvas.height/7.5;
+		
+		roadicon.x = canvas.width/35;
+		roadicon.y = houseicon.y + houseicon.height + houseicon.height/5;
+		roadicon.height = roadicon.width = canvas.height/7.5;
+		
+		deleteicon.x = canvas.width/35;
+		deleteicon.y = roadicon.y + roadicon.height + roadicon.height/5;
+		deleteicon.height = deleteicon.width = canvas.height/7.5;
+		
+		zoominicon.x = canvas.width - zoominicon.height - canvas.width/35;
+		zoominicon.y = (canvas.height - (zoominicon.height + zoomouticon.height + zoominicon.height/5))*0.5
+		zoominicon.height = zoominicon.width = canvas.height/12;
+		
+		zoomouticon.x = canvas.width - zoominicon.height - canvas.width/35;
+		zoomouticon.y = zoominicon.y + zoominicon.height + zoominicon.height/5;
+		zoomouticon.height = zoomouticon.width = canvas.height/12;
+		
+		housebg.x = (canvas.width - housebg.width + (housesbtn.width))/2;
+		housebg.y = (canvas.height - housebg.height)/2 + canvas.height/12;
+		housebg.height = 2*(canvas.height/3);
+		housebg.width = housebg.height * housebg.aspectRatio() *1.6;
+		
+		housesbtn.x = housebg.x - housesbtn.width + 1;
+		if (housesbtn.active == true){
+			housesbtn.x = housebg.x - housesbtn.width + 5;
+		};
+		housesbtn.y = housebg.y;
+		housesbtn.height = housebg.height/7;
+		housesbtn.width = housesbtn.height * housesbtn.aspectRatio();
+		
+		commercesbtn.x = housebg.x - commercesbtn.width + 1;
+		if (commercesbtn.active == true){
+			commercesbtn.x = housebg.x - commercesbtn.width + 5;
+		};
+		commercesbtn.y = housesbtn.y + 1.5*(housesbtn.height);
+		commercesbtn.height = housebg.height/7;
+		commercesbtn.width = commercesbtn.height * commercesbtn.aspectRatio();
+		
+		decorationsbtn.x = housebg.x - decorationsbtn.width + 1;
+		if (decorationsbtn.active == true){
+			decorationsbtn.x = housebg.x - decorationsbtn.width + 5;
+		};
+		decorationsbtn.y = commercesbtn.y + 1.5*(housesbtn.height);
+		decorationsbtn.height = housebg.height/7;
+		decorationsbtn.width = decorationsbtn.height * decorationsbtn.aspectRatio();
+		
+		wondersbtn.x = housebg.x - wondersbtn.width + 1;
+		if (wondersbtn.active == true){
+			wondersbtn.x = housebg.x - wondersbtn.width + 5;
+		};
+		wondersbtn.y = decorationsbtn.y + 1.5*(housesbtn.height);
+		wondersbtn.height = housebg.height/7;
+		wondersbtn.width = wondersbtn.height * wondersbtn.aspectRatio();
+		
+		crossbtn.x = canvas.height/25;
+		crossbtn.y = canvas.height/25;
+		crossbtn.height = canvas.height/12;
+		crossbtn.width = crossbtn.height * crossbtn.aspectRatio();
+		
+		crossicon.x = tempHouse.x - (crossicon.width + crossicon.width/10 + tickicon.width - propertyImg.tempHouse.width)/2;
+		crossicon.y = tempHouse.y + propertyImg.tempHouse.height + crossicon.height/3;
+		crossicon.height = canvas.height/20;
+		crossicon.width = crossicon.height * crossicon.aspectRatio();
+		
+		tickicon.x = crossicon.x +  crossicon.width + crossicon.width/10;
+		tickicon.y = tempHouse.y + propertyImg.tempHouse.height + tickicon.height/3;
+		tickicon.height = canvas.height/20;
+		tickicon.width = tickicon.height * tickicon.aspectRatio();
+		
+		nomoneypic.x = (canvas.width - nomoneypic.width)/2;
+		nomoneypic.y = (canvas.height - nomoneypic.height)/2;
+		nomoneypic.height = canvas.height/4;
+		nomoneypic.width = nomoneypic.height * nomoneypic.aspectRatio();
+		
+		nogoldpic.x = (canvas.width - nogoldpic.width)/2;
+		nogoldpic.y = (canvas.height - nogoldpic.height)/2;
+		nogoldpic.height = canvas.height/4;
+		nogoldpic.width = nogoldpic.height * nogoldpic.aspectRatio();
+		
+		contractbg.x = (canvas.width-contractbg.width)/2;
+		contractbg.y = (canvas.height-contractbg.height)/2;
+		contractbg.height = canvas.height / 1.5;
+		contractbg.width = contractbg.height * contractbg.aspectRatio();
+		
+		contractcross.x = contractbg.x + contractbg.width - (contractcross.height/2);
+		contractcross.y = contractbg.y - (contractcross.height/3);
+		contractcross.height = canvas.height/16;
+		contractcross.width = contractcross.height * contractcross.aspectRatio();
+		
+		familycontract.x = contractbg.x + (contractbg.width - ((familycontract.width*3) + ((familycontract.width/12)*2)))/2 ;
+		familycontract.y = contractbg.y + contractbg.height/6;
+		familycontract.height = contractbg.height/2.6;
+		familycontract.width = familycontract.height * familycontract.aspectRatio();
+		
+		studentscontract.x = familycontract.x + familycontract.width + familycontract.width/12;
+		studentscontract.y = familycontract.y;
+		studentscontract.height = contractbg.height/2.6;
+		studentscontract.width = studentscontract.height * studentscontract.aspectRatio();
+		
+		touristscontract.x = studentscontract.x + familycontract.width + familycontract.width/12;
+		touristscontract.y = familycontract.y;
+		touristscontract.height = contractbg.height/2.6;
+		touristscontract.width = touristscontract.height * touristscontract.aspectRatio();
+		
+		rockstarcontract.x = contractbg.x + (contractbg.width - ((familycontract.width*3) + ((familycontract.width/12)*2)))/2 ;
+		rockstarcontract.y = familycontract.y + familycontract.height + (familycontract.width/12);
+		rockstarcontract.height = contractbg.height/2.6;
+		rockstarcontract.width = rockstarcontract.height * rockstarcontract.aspectRatio();
+		
+		pensionerscontract.x = familycontract.x + familycontract.width + familycontract.width/12;
+		pensionerscontract.y = familycontract.y + familycontract.height + (familycontract.width/12);
+		pensionerscontract.height = contractbg.height/2.6;
+		pensionerscontract.width = pensionerscontract.height * pensionerscontract.aspectRatio();
+		
+		athletescontract.x = studentscontract.x + familycontract.width + familycontract.width/12;
+		athletescontract.y = familycontract.y + familycontract.height + (familycontract.width/12);
+		athletescontract.height = contractbg.height/2.6;
+		athletescontract.width = athletescontract.height * athletescontract.aspectRatio();
+		
+		contracticon.x = grid.x + (grid.tileWidth*23);
+		contracticon.y = grid.y + (grid.tileWidth*23.9);
+		contracticon.height = propertyImg.hqImg.height/1.5;
+		contracticon.width = contracticon.height * contracticon.aspectRatio();
+		
+		moneyicon.x = grid.x + (grid.tileWidth*22.6);
+		moneyicon.y = grid.y + (grid.tileWidth*23.9);
+		moneyicon.height = propertyImg.hqImg.height/1.5;
+		moneyicon.width = moneyicon.height * moneyicon.aspectRatio();
+		
+		company.x = grid.x + 22*grid.tileWidth;
+		company.y = grid.y + 23*grid.tileHeight;
+		company.width = propertyImg.hqImg.width;
+		company.height = propertyImg.hqImg.height;
+
+		
+		if (statbg.width == 0 || statbg.height == 0){
+			statbg.height = company.height*1.3;
+			statbg.width = statbg.height * statbg.aspectRatio();
+		};
+
+		statbg.x = company.x - ((statbg.width - company.width)/2);
+		statbg.y = company.y - company.height*0.1 - propertyImg.hqImg.height;
+			
+		var a = 0;
+		for(a in cards.houses){
+			cards.houses[a].y = housebg.y + ((housebg.height - cards.houses.villaluxury.height)/2);
+			cards.houses[a].height = housebg.height * 0.8;
+			cards.houses[a].width = cards.houses.villaluxury.height * cards.houses.villaluxury.aspectRatio();
+			cards.lockedCard.y = housebg.y + ((housebg.height - cards.houses.villaluxury.height)/2);
+			cards.lockedCard.height = housebg.height * 0.8;
+			cards.lockedCard.width = cards.houses.villaluxury.height * cards.houses.villaluxury.aspectRatio();
+		};
+		
+		var b = 0;
+		for(b in cards.commerces){
+			cards.commerces[b].y = housebg.y + ((housebg.height - cards.houses.villaluxury.height)/2);
+			cards.commerces[b].height = housebg.height * 0.8;
+			cards.commerces[b].width = cards.houses.villaluxury.height * cards.houses.villaluxury.aspectRatio();
+		};
+		
+		var c = 0;
+		for(c in cards.decorations){
+			cards.decorations[c].y = housebg.y + ((housebg.height - cards.houses.villaluxury.height)/2);
+			cards.decorations[c].height = housebg.height * 0.8;
+			cards.decorations[c].width = cards.houses.villaluxury.height * cards.houses.villaluxury.aspectRatio();
+		};
+		
+		var d = 0;
+		for(d in cards.wonders){
+			cards.wonders[d].y = housebg.y + ((housebg.height - cards.houses.villaluxury.height)/2);
+			cards.wonders[d].height = housebg.height * 0.8;
+			cards.wonders[d].width = cards.houses.villaluxury.height * cards.houses.villaluxury.aspectRatio();
+		};
+		
+		leftbtn.x = housebg.x + housebg.width/25;
+		leftbtn.y = housebg.y + (housebg.height-leftbtn.height)/2;
+		
+		rightbtn.x = housebg.x + housebg.width - housebg.width/25 - rightbtn.width;
+		rightbtn.y = housebg.y + (housebg.height-rightbtn.height)/2;
+		
+		leftbtn.height = rightbtn.height = housesbtn.height*0.7;
+		leftbtn.width = rightbtn.width = leftbtn.height * leftbtn.aspectRatio();
+		
+		if (roadicon.active == true){
+			roadicon.image.src = "assets/images/roadicon_on.png";	
+		};
+		if (roadicon.active == false){
+			roadicon.image.src = "assets/images/roadicon.png";	
+		};
+		
+		if (deleteicon.active == true){
+			deleteicon.image.src = "assets/images/deleteicon_on.png";	
+		};
+		if (deleteicon.active == false){
+			deleteicon.image.src = "assets/images/deleteicon.png";	
+		};
+		
+		if (housesbtn.active == true){
+			housesbtn.image.src = "assets/images/housesbtn_on.png";
+			cards.tab = "houses";
+		};
+		if (housesbtn.active == false){
+			housesbtn.image.src = "assets/images/housesbtn.png";
+		};
+		
+		if (commercesbtn.active == true){
+			commercesbtn.image.src = "assets/images/commercesbtn_on.png";
+			cards.tab = "commerces";
+		};
+		if (commercesbtn.active == false){
+			commercesbtn.image.src = "assets/images/commercesbtn.png";
+		};
+		
+		if (decorationsbtn.active == true){
+			decorationsbtn.image.src = "assets/images/decorationsbtn_on.png";
+			cards.tab = "decorations";
+		};
+		if (decorationsbtn.active == false){
+			decorationsbtn.image.src = "assets/images/decorationsbtn.png";
+		};
+		
+		if (wondersbtn.active == true){
+			wondersbtn.image.src = "assets/images/wondersbtn_on.png";
+			cards.tab = "wonders";
+		};
+		if (wondersbtn.active == false){
+			wondersbtn.image.src = "assets/images/wondersbtn.png";
+		};
+		
+		if (contracttime == null){
+			contractstate = "contract";
+		};
+		
+		if (contracttime != null && contracttime <= 0){
+			contractstate = "collect";
+		};
+		
+		propertyImg.hqImg.width = grid.tileWidth*4;
+		propertyImg.hqImg.widthNo = 4;
+		propertyImg.hqImg.heightNo = 2;
+		propertyImg.hqImg.height = 96/128 * propertyImg.hqImg.width;
+		
+		propertyImg.bungalowImg.width = grid.tileWidth*2;
+		propertyImg.bungalowImg.widthNo = 2;
+		propertyImg.bungalowImg.heightNo = 2;
+		propertyImg.bungalowImg.height = 143/133 * propertyImg.bungalowImg.width;
+		
+		propertyImg.bungalowluxuryImg.width = grid.tileWidth*2; 
+		propertyImg.bungalowluxuryImg.widthNo = 2;
+		propertyImg.bungalowluxuryImg.heightNo = 2;
+		propertyImg.bungalowluxuryImg.height = 167/137 * propertyImg.bungalowluxuryImg.width;
+		
+		propertyImg.townhouseImg.width = grid.tileWidth*3; 
+		propertyImg.townhouseImg.widthNo = 3;
+		propertyImg.townhouseImg.heightNo = 3;
+		propertyImg.townhouseImg.height = 161/148 * propertyImg.townhouseImg.width;
+		
+		propertyImg.townhouseluxuryImg.width = grid.tileWidth*3; 
+		propertyImg.townhouseluxuryImg.widthNo = 3;
+		propertyImg.townhouseluxuryImg.heightNo = 3;
+		propertyImg.townhouseluxuryImg.height = 166/143 * propertyImg.townhouseluxuryImg.width;
+		
+		propertyImg.duplexImg.width = grid.tileWidth*3;
+		propertyImg.duplexImg.widthNo = 3;
+		propertyImg.duplexImg.heightNo = 2;
+		propertyImg.duplexImg.height = 125/153 * propertyImg.duplexImg.width;
+		
+		propertyImg.duplexluxuryImg.width = grid.tileWidth*3;  
+		propertyImg.duplexluxuryImg.widthNo = 3;
+		propertyImg.duplexluxuryImg.heightNo = 2;
+		propertyImg.duplexluxuryImg.height = 126/154 * propertyImg.duplexluxuryImg.width;
+		
+		propertyImg.threestoryImg.width = grid.tileWidth*3;  
+		propertyImg.threestoryImg.widthNo = 3;
+		propertyImg.threestoryImg.heightNo = 3;
+		propertyImg.threestoryImg.height = 164/148 * propertyImg.threestoryImg.width;
+		
+		propertyImg.tudorstylehouseImg.width = grid.tileWidth*2;  
+		propertyImg.tudorstylehouseImg.widthNo = 2;
+		propertyImg.tudorstylehouseImg.heightNo = 2;
+		propertyImg.tudorstylehouseImg.height = 237/162 * propertyImg.tudorstylehouseImg.width;
+		
+		propertyImg.threestoryluxuryImg.width = grid.tileWidth*3;  
+		propertyImg.threestoryluxuryImg.widthNo = 3;
+		propertyImg.threestoryluxuryImg.heightNo = 3;
+		propertyImg.threestoryluxuryImg.height = 166/140 * propertyImg.threestoryluxuryImg.width;
+		
+		propertyImg.apartmentblockImg.width = grid.tileWidth*3; 
+		propertyImg.apartmentblockImg.widthNo = 3;
+		propertyImg.apartmentblockImg.heightNo = 3;
+		propertyImg.apartmentblockImg.height = 182/146 * propertyImg.apartmentblockImg.width;
+		
+		propertyImg.futuristiccityblockImg.width = grid.tileWidth*3; 
+		propertyImg.futuristiccityblockImg.widthNo = 3;
+		propertyImg.futuristiccityblockImg.heightNo = 3;
+		propertyImg.futuristiccityblockImg.height = 243/135 * propertyImg.futuristiccityblockImg.width; 
+		 
+		propertyImg.colonialhouseImg.width = grid.tileWidth*3;  
+		propertyImg.colonialhouseImg.widthNo = 3;
+		propertyImg.colonialhouseImg.heightNo = 3;
+		propertyImg.colonialhouseImg.height = 102/99 * propertyImg.colonialhouseImg.width;
+		
+		propertyImg.apartmentblockluxuryImg.width = grid.tileWidth*3;
+		propertyImg.apartmentblockluxuryImg.widthNo = 3;
+		propertyImg.apartmentblockluxuryImg.heightNo = 3;
+		propertyImg.apartmentblockluxuryImg.height = 119/96 * propertyImg.apartmentblockluxuryImg.width;
+		
+		propertyImg.ecohomeImg.width = grid.tileWidth*4; 
+		propertyImg.ecohomeImg.widthNo = 4;
+		propertyImg.ecohomeImg.heightNo = 3;
+		propertyImg.ecohomeImg.height = 144/132 * propertyImg.ecohomeImg.width;
+		
+		propertyImg.houseofharmonyImg.width = grid.tileWidth*3;  
+		propertyImg.houseofharmonyImg.widthNo = 3;
+		propertyImg.houseofharmonyImg.heightNo = 4;
+		propertyImg.houseofharmonyImg.height = 149/98 * propertyImg.houseofharmonyImg.width;
+		
+		propertyImg.chryslerbuildingImg.width = grid.tileWidth*4; 
+		propertyImg.chryslerbuildingImg.widthNo = 4;
+		propertyImg.chryslerbuildingImg.heightNo = 4;
+		propertyImg.chryslerbuildingImg.height = 381/129 * propertyImg.chryslerbuildingImg.width; 
+		
+		propertyImg.designerhouseImg.width = grid.tileWidth*4; 
+		propertyImg.designerhouseImg.widthNo = 4;
+		propertyImg.designerhouseImg.heightNo = 2;
+		propertyImg.designerhouseImg.height = 88/121 * propertyImg.designerhouseImg.width;
+		
+		propertyImg.villaImg.width = grid.tileWidth*4;  
+		propertyImg.villaImg.widthNo = 4;
+		propertyImg.villaImg.heightNo = 3;
+		propertyImg.villaImg.height = 120/128 * propertyImg.villaImg.width;
+		
+		propertyImg.loftblockImg.width = grid.tileWidth*3;  
+		propertyImg.loftblockImg.widthNo = 3;
+		propertyImg.loftblockImg.heightNo = 3;
+		propertyImg.loftblockImg.height = 142/96 * propertyImg.loftblockImg.width;
+		
+		propertyImg.villaluxuryImg.width = grid.tileWidth*4;  
+		propertyImg.villaluxuryImg.widthNo = 4;
+		propertyImg.villaluxuryImg.heightNo = 3;
+		propertyImg.villaluxuryImg.height = 123/128 * propertyImg.villaluxuryImg.width;
+		
+		propertyImg.parisiantownhouseImg.width = grid.tileWidth*3;  
+		propertyImg.parisiantownhouseImg.widthNo = 3;
+		propertyImg.parisiantownhouseImg.heightNo = 3;
+		propertyImg.parisiantownhouseImg.height = 150/97 * propertyImg.parisiantownhouseImg.width;
+		
+		propertyImg.luxurymansionImg.width = grid.tileWidth*5;  
+		propertyImg.luxurymansionImg.widthNo = 5;
+		propertyImg.luxurymansionImg.heightNo = 3;
+		propertyImg.luxurymansionImg.height = 129/155 * propertyImg.luxurymansionImg.width;
+		
+		propertyImg.skyscraperImg.width = grid.tileWidth*3;  
+		propertyImg.skyscraperImg.widthNo = 3;
+		propertyImg.skyscraperImg.heightNo = 3;
+		propertyImg.skyscraperImg.height = 144/96 * propertyImg.skyscraperImg.width;
+		
+		propertyImg.loftblockluxuryImg.width = grid.tileWidth*4;  
+		propertyImg.loftblockluxuryImg.widthNo = 4;
+		propertyImg.loftblockluxuryImg.heightNo = 3;
+		propertyImg.loftblockluxuryImg.height = 142/128 * propertyImg.loftblockluxuryImg.width;
+		
+		propertyImg.chateauImg.width = grid.tileWidth*6;  
+		propertyImg.chateauImg.widthNo = 6;
+		propertyImg.chateauImg.heightNo = 4;
+		propertyImg.chateauImg.height = 161/192 * propertyImg.chateauImg.width;
+		
+		propertyImg.skyscraperluxuryImg.width = grid.tileWidth*4;  
+		propertyImg.skyscraperluxuryImg.widthNo = 4;
+		propertyImg.skyscraperluxuryImg.heightNo = 4;
+		propertyImg.skyscraperluxuryImg.height = 229/128 * propertyImg.skyscraperluxuryImg.width;
+		
+		propertyImg.minimalisticdeluxeImg.width = grid.tileWidth*5;  
+		propertyImg.minimalisticdeluxeImg.widthNo = 5;
+		propertyImg.minimalisticdeluxeImg.heightNo = 2;
+		propertyImg.minimalisticdeluxeImg.height = 105/177 * propertyImg.minimalisticdeluxeImg.width;
+		
+		propertyImg.ecohouseluxuryImg.width = grid.tileWidth*4;  
+		propertyImg.ecohouseluxuryImg.widthNo = 4;
+		propertyImg.ecohouseluxuryImg.heightNo = 4;
+		propertyImg.ecohouseluxuryImg.height = 164/125 * propertyImg.ecohouseluxuryImg.width;
+		
+		propertyImg.luxurymansion2Img.width = grid.tileWidth*4; 
+		propertyImg.luxurymansion2Img.widthNo = 4;
+		propertyImg.luxurymansion2Img.heightNo = 3;
+		propertyImg.luxurymansion2Img.height = 134/135 * propertyImg.luxurymansion2Img.width;
+		
+		propertyImg.tennisstarshomeImg.width = grid.tileWidth*5;  
+		propertyImg.tennisstarshomeImg.widthNo = 5;
+		propertyImg.tennisstarshomeImg.heightNo = 3;
+		propertyImg.tennisstarshomeImg.height = 142/190 * propertyImg.tennisstarshomeImg.width;
+		
+		propertyImg.brickmansionImg.width = grid.tileWidth*4;  
+		propertyImg.brickmansionImg.widthNo = 4;
+		propertyImg.brickmansionImg.heightNo = 3;
+		propertyImg.brickmansionImg.height = 150/170 * propertyImg.brickmansionImg.width;
+		
+		propertyImg.poolmanorImg.width = grid.tileWidth*5; 
+		propertyImg.poolmanorImg.widthNo = 5;
+		propertyImg.poolmanorImg.heightNo = 3;
+		propertyImg.poolmanorImg.height = 120/180 * propertyImg.poolmanorImg.width;
+		
+		propertyImg.futuristicImg.width = grid.tileWidth*3; 
+		propertyImg.futuristicImg.widthNo = 3;
+		propertyImg.futuristicImg.heightNo = 3;
+		propertyImg.futuristicImg.height = 131/102 * propertyImg.futuristicImg.width;
+		
+		propertyImg.cityblockImg.width = grid.tileWidth*5;  
+		propertyImg.cityblockImg.widthNo = 5;
+		propertyImg.cityblockImg.heightNo = 3;
+		propertyImg.cityblockImg.height = 120/172 * propertyImg.cityblockImg.width;
+		
+		propertyImg.megapoliscondoImg.width = grid.tileWidth*6;  
+		propertyImg.megapoliscondoImg.widthNo = 6;
+		propertyImg.megapoliscondoImg.heightNo = 3;
+		propertyImg.megapoliscondoImg.height = 135/168 * propertyImg.megapoliscondoImg.width;
+		
+		propertyImg.superskyscraperImg.width = grid.tileWidth*4;  
+		propertyImg.superskyscraperImg.widthNo = 4;
+		propertyImg.superskyscraperImg.heightNo = 5;
+		propertyImg.superskyscraperImg.height = 302/128 * propertyImg.superskyscraperImg.width;
+		
+		propertyImg.skyscraperultimateImg.width = grid.tileWidth*4;	 
+		propertyImg.skyscraperultimateImg.widthNo = 4;
+		propertyImg.skyscraperultimateImg.heightNo = 4;
+		propertyImg.skyscraperultimateImg.height = 220/144 * propertyImg.skyscraperultimateImg.width;
+		
+		propertyImg.glasscontemporaryImg.width = grid.tileWidth*5;  
+		propertyImg.glasscontemporaryImg.widthNo = 5;
+		propertyImg.glasscontemporaryImg.heightNo = 3;
+		propertyImg.glasscontemporaryImg.height = 221/285 * propertyImg.glasscontemporaryImg.width;
+		
+		propertyImg.fututowerImg.width = grid.tileWidth*3;  
+		propertyImg.fututowerImg.widthNo = 3;
+		propertyImg.fututowerImg.heightNo = 2;
+		propertyImg.fututowerImg.height = 340/133 * propertyImg.fututowerImg.width;
+		
+		propertyImg.highlandcastleImg.width = grid.tileWidth*6;  
+		propertyImg.highlandcastleImg.widthNo = 6;
+		propertyImg.highlandcastleImg.heightNo = 5;
+		propertyImg.highlandcastleImg.height = 222/194 * propertyImg.highlandcastleImg.width;
+		
+		propertyImg.brazilianskyscraperImg.width = grid.tileWidth*5;  
+		propertyImg.brazilianskyscraperImg.widthNo = 5;
+		propertyImg.brazilianskyscraperImg.heightNo = 5;
+		propertyImg.brazilianskyscraperImg.height = 268/175 * propertyImg.brazilianskyscraperImg.width;
+		
+		propertyImg.affluencetowerImg.width = grid.tileWidth*4;  
+		propertyImg.affluencetowerImg.widthNo = 4;
+		propertyImg.affluencetowerImg.heightNo = 2;
+		propertyImg.affluencetowerImg.height = 389/92 * propertyImg.affluencetowerImg.width;
+		
+		propertyImg.millionairepalaceImg.width = grid.tileWidth*4;  
+		propertyImg.millionairepalaceImg.widthNo = 4;
+		propertyImg.millionairepalaceImg.heightNo = 5;
+		propertyImg.millionairepalaceImg.height = 337/233 * propertyImg.millionairepalaceImg.width;
+		
+		propertyImg.dragonskyscraperImg.width = grid.tileWidth*3; 
+		propertyImg.dragonskyscraperImg.widthNo = 3;
+		propertyImg.dragonskyscraperImg.heightNo = 3;
+		propertyImg.dragonskyscraperImg.height = 421/107 * propertyImg.dragonskyscraperImg.width;
+		
+		propertyImg.twirltowerImg.width = grid.tileWidth*3; 
+		propertyImg.twirltowerImg.widthNo = 3;
+		propertyImg.twirltowerImg.heightNo = 3;
+		propertyImg.twirltowerImg.height = 416/128 * propertyImg.twirltowerImg.width;
+		
+		propertyImg.residentialluxImg.width = grid.tileWidth*4;  
+		propertyImg.residentialluxImg.widthNo = 4;
+		propertyImg.residentialluxImg.heightNo = 5;
+		propertyImg.residentialluxImg.height = 464/230 * propertyImg.residentialluxImg.width;
+		
+		propertyImg.spiraltowerImg.width = grid.tileWidth*5;  
+		propertyImg.spiraltowerImg.widthNo = 5;
+		propertyImg.spiraltowerImg.heightNo = 4;
+		propertyImg.spiraltowerImg.height = 472/281 * propertyImg.spiraltowerImg.width;
+		
+		propertyImg.jewelstowerImg.width = grid.tileWidth*3; 
+		propertyImg.jewelstowerImg.widthNo = 3;
+		propertyImg.jewelstowerImg.heightNo = 3;
+		propertyImg.jewelstowerImg.height = 624/167 * propertyImg.jewelstowerImg.width;
+		
+		propertyImg.sterlingtowerImg.width = grid.tileWidth*3;  
+		propertyImg.sterlingtowerImg.widthNo = 3;
+		propertyImg.sterlingtowerImg.heightNo = 3;
+		propertyImg.sterlingtowerImg.height = 423/67 * propertyImg.sterlingtowerImg.width;
+		
+		propertyImg.platinummansionImg.width = grid.tileWidth*5;  
+		propertyImg.platinummansionImg.widthNo = 5;
+		propertyImg.platinummansionImg.heightNo = 3;
+		propertyImg.platinummansionImg.height = 213/278 * propertyImg.platinummansionImg.width;
+		
+		propertyImg.billionairestowerImg.width = grid.tileWidth*3; 
+		propertyImg.billionairestowerImg.widthNo = 3;
+		propertyImg.billionairestowerImg.heightNo = 3;
+		propertyImg.billionairestowerImg.height = 434/143 * propertyImg.billionairestowerImg.width;
+		
+		propertyImg.pizzeriaImg.width = grid.tileWidth*3;  
+		propertyImg.pizzeriaImg.widthNo = 3;
+		propertyImg.pizzeriaImg.heightNo = 3;
+		propertyImg.pizzeriaImg.height = 178/145 * propertyImg.pizzeriaImg.width;
+		
+		propertyImg.coffeeshopImg.width = grid.tileWidth*3;  
+		propertyImg.coffeeshopImg.widthNo = 3;
+		propertyImg.coffeeshopImg.heightNo = 3;
+		propertyImg.coffeeshopImg.height = 177/148 * propertyImg.coffeeshopImg.width;
+		
+		propertyImg.hollywoodtheatreImg.width = grid.tileWidth*4;  
+		propertyImg.hollywoodtheatreImg.widthNo = 4;
+		propertyImg.hollywoodtheatreImg.heightNo = 2;
+		propertyImg.hollywoodtheatreImg.height = 172/197 * propertyImg.hollywoodtheatreImg.width;
+		
+		propertyImg.gymImg.width = grid.tileWidth*3;  
+		propertyImg.gymImg.widthNo = 3;
+		propertyImg.gymImg.heightNo = 3;
+		propertyImg.gymImg.height = 203/165 * propertyImg.gymImg.width;
+		
+		propertyImg.flowershopImg.width = grid.tileWidth*3;  
+		propertyImg.flowershopImg.widthNo = 3;
+		propertyImg.flowershopImg.heightNo = 3;
+		propertyImg.flowershopImg.height = 166/150 * propertyImg.flowershopImg.width;
+		
+		propertyImg.mcdollarsImg.width = grid.tileWidth*4; 
+		propertyImg.mcdollarsImg.widthNo = 4;
+		propertyImg.mcdollarsImg.heightNo = 2;
+		propertyImg.mcdollarsImg.height = 161/214 * propertyImg.mcdollarsImg.width;
+		
+		propertyImg.petshopImg.width = grid.tileWidth*3;  
+		propertyImg.petshopImg.widthNo = 3;
+		propertyImg.petshopImg.heightNo = 3;
+		propertyImg.petshopImg.height = 193/148 * propertyImg.petshopImg.width;
+		
+		propertyImg.toyshopImg.width = grid.tileWidth*5; 
+		propertyImg.toyshopImg.widthNo = 5;
+		propertyImg.toyshopImg.heightNo = 3;
+		propertyImg.toyshopImg.height = 187/226 * propertyImg.toyshopImg.width;
+		
+		propertyImg.bowlingImg.width = grid.tileWidth*4;  
+		propertyImg.bowlingImg.widthNo = 4;
+		propertyImg.bowlingImg.heightNo = 3;
+		propertyImg.bowlingImg.height = 196/208 * propertyImg.bowlingImg.width;
+		
+		propertyImg.jewelleryshopImg.width = grid.tileWidth*4;  
+		propertyImg.jewelleryshopImg.widthNo = 4;
+		propertyImg.jewelleryshopImg.heightNo = 3;
+		propertyImg.jewelleryshopImg.height = 196/208 * propertyImg.jewelleryshopImg.width;
+		
+		propertyImg.nightclubImg.width = grid.tileWidth*4; 
+		propertyImg.nightclubImg.widthNo = 4;
+		propertyImg.nightclubImg.heightNo = 3;
+		propertyImg.nightclubImg.height = 189/219 * propertyImg.nightclubImg.width;
+		
+		propertyImg.operahouseImg.width = grid.tileWidth*5;  
+		propertyImg.operahouseImg.widthNo = 5;
+		propertyImg.operahouseImg.heightNo = 3;
+		propertyImg.operahouseImg.height = 169/199 * propertyImg.operahouseImg.width;
+		
+		propertyImg.mallImg.width = grid.tileWidth*6;  
+		propertyImg.mallImg.widthNo = 6;
+		propertyImg.mallImg.heightNo = 3;
+		propertyImg.mallImg.height = 122/192 * propertyImg.mallImg.width;
+		
+		propertyImg.bankImg.width = grid.tileWidth*3;  
+		propertyImg.bankImg.widthNo = 3;
+		propertyImg.bankImg.heightNo = 3;
+		propertyImg.bankImg.height = 119/96 * propertyImg.bankImg.width;
+		
+		propertyImg.hospitalImg.width = grid.tileWidth*5;  
+		propertyImg.hospitalImg.widthNo = 5;
+		propertyImg.hospitalImg.heightNo = 3;
+		propertyImg.hospitalImg.height = 102/160 * propertyImg.hospitalImg.width;
+		
+		propertyImg.hotelmidasImg.width = grid.tileWidth*5;  
+		propertyImg.hotelmidasImg.widthNo = 5;
+		propertyImg.hotelmidasImg.heightNo = 3;
+		propertyImg.hotelmidasImg.height = 144/164 * propertyImg.hotelmidasImg.width;
+		
+		propertyImg.casinoImg.width = grid.tileWidth*6;	  
+		propertyImg.casinoImg.widthNo = 6;
+		propertyImg.casinoImg.heightNo = 3;
+		propertyImg.casinoImg.height = 115/160 * propertyImg.casinoImg.width;
+		
+		propertyImg.stadiumImg.width = grid.tileWidth*5;  
+		propertyImg.stadiumImg.widthNo = 5;
+		propertyImg.stadiumImg.heightNo = 4;
+		propertyImg.stadiumImg.height = 197/160 * propertyImg.stadiumImg.width;
+		
+		propertyImg.midasmallImg.width = grid.tileWidth*7;	  
+		propertyImg.midasmallImg.widthNo = 7;
+		propertyImg.midasmallImg.heightNo = 4;
+		propertyImg.midasmallImg.height = 157/213 * propertyImg.midasmallImg.width;
+		
+		propertyImg.luxboutiqueImg.width = grid.tileWidth*3;  
+		propertyImg.luxboutiqueImg.widthNo = 3;
+		propertyImg.luxboutiqueImg.heightNo = 2;
+		propertyImg.luxboutiqueImg.height = 179/189 * propertyImg.luxboutiqueImg.width;
+		
+		propertyImg.modernartmuseumImg.width = grid.tileWidth*7;   
+		propertyImg.modernartmuseumImg.widthNo = 7;
+		propertyImg.modernartmuseumImg.heightNo = 5;
+		propertyImg.modernartmuseumImg.height = 229/291 * propertyImg.modernartmuseumImg.width;
+		
+		propertyImg.baseballstadiumImg.width = grid.tileWidth*5;  
+		propertyImg.baseballstadiumImg.widthNo = 5;
+		propertyImg.baseballstadiumImg.heightNo = 4;
+		propertyImg.baseballstadiumImg.height = 162/160 * propertyImg.baseballstadiumImg.width;
+		
+		propertyImg.cntowerImg.width = grid.tileWidth*3;  
+		propertyImg.cntowerImg.widthNo = 3;
+		propertyImg.cntowerImg.heightNo = 2;
+		propertyImg.cntowerImg.height = 348/76 * propertyImg.cntowerImg.width;
+		
+		propertyImg.mctvstationImg.width = grid.tileWidth*5;  
+		propertyImg.mctvstationImg.widthNo = 5;
+		propertyImg.mctvstationImg.heightNo = 3;
+		propertyImg.mctvstationImg.height = 196/212 * propertyImg.mctvstationImg.width;
+		
+		propertyImg.zooImg.width = grid.tileWidth*6;  
+		propertyImg.zooImg.widthNo = 6;
+		propertyImg.zooImg.heightNo = 4;
+		propertyImg.zooImg.height = 177/247 * propertyImg.zooImg.width;
+		
+		propertyImg.waterparkImg.width = grid.tileWidth*5;  
+		propertyImg.waterparkImg.widthNo = 5;
+		propertyImg.waterparkImg.heightNo = 5;
+		propertyImg.waterparkImg.height = 282/195 * propertyImg.waterparkImg.width;
+		
+		propertyImg.cypresstreeImg.width = grid.tileWidth*1; 
+		propertyImg.cypresstreeImg.widthNo = 1;
+		propertyImg.cypresstreeImg.heightNo = 1;
+		propertyImg.cypresstreeImg.height = 148/77 * propertyImg.cypresstreeImg.width;
+		
+		propertyImg.cactusImg.width = grid.tileWidth*1;  
+		propertyImg.cactusImg.widthNo = 1;
+		propertyImg.cactusImg.heightNo = 1;
+		propertyImg.cactusImg.height = 100/67 * propertyImg.cactusImg.width;
+		
+		propertyImg.oaktreeImg.width = grid.tileWidth*1;  
+		propertyImg.oaktreeImg.widthNo = 1;
+		propertyImg.oaktreeImg.heightNo = 1;
+		propertyImg.oaktreeImg.height = 130/84 * propertyImg.oaktreeImg.width;
+		
+		propertyImg.babypalmImg.width = grid.tileWidth*1;  
+		propertyImg.babypalmImg.widthNo = 1;
+		propertyImg.babypalmImg.heightNo = 1;
+		propertyImg.babypalmImg.height = 110/87 * propertyImg.babypalmImg.width;
+		
+		propertyImg.agaveplantImg.width = grid.tileWidth*1;  
+		propertyImg.agaveplantImg.widthNo = 1;
+		propertyImg.agaveplantImg.heightNo = 1;
+		propertyImg.agaveplantImg.height = 100/82 * propertyImg.agaveplantImg.width;
+		
+		propertyImg.windmillImg.width = grid.tileWidth*2;  
+		propertyImg.windmillImg.widthNo = 2;
+		propertyImg.windmillImg.heightNo = 1;
+		propertyImg.windmillImg.height = 118/120 * propertyImg.windmillImg.width;
+		
+		propertyImg.balloonboyImg.width = grid.tileWidth*1;  
+		propertyImg.balloonboyImg.widthNo = 1;
+		propertyImg.balloonboyImg.heightNo = 1;
+		propertyImg.balloonboyImg.height = 62/35 * propertyImg.balloonboyImg.width;
+		
+		propertyImg.palmtreeImg.width = grid.tileWidth*1;  
+		propertyImg.palmtreeImg.widthNo = 1;
+		propertyImg.palmtreeImg.heightNo = 1;
+		propertyImg.palmtreeImg.height = 143/68 * propertyImg.palmtreeImg.width;
+		
+		propertyImg.silvermapleImg.width = grid.tileWidth*1; 
+		propertyImg.silvermapleImg.widthNo = 1;
+		propertyImg.silvermapleImg.heightNo = 1;
+		propertyImg.silvermapleImg.height = 156/101 * propertyImg.silvermapleImg.width;
+		
+		propertyImg.appletreeImg.width = grid.tileWidth*1;  
+		propertyImg.appletreeImg.widthNo = 1;
+		propertyImg.appletreeImg.heightNo = 1;
+		propertyImg.appletreeImg.height = 49/30 * propertyImg.appletreeImg.width;
+		
+		propertyImg.fountainImg.width = grid.tileWidth*2;  
+		propertyImg.fountainImg.widthNo = 2;
+		propertyImg.fountainImg.heightNo = 2;
+		propertyImg.fountainImg.height = 181/181 * propertyImg.fountainImg.width;
+		
+		propertyImg.sugarmapleImg.width = grid.tileWidth*1;  
+		propertyImg.sugarmapleImg.widthNo = 1;
+		propertyImg.sugarmapleImg.heightNo = 1;
+		propertyImg.sugarmapleImg.height = 49/34 * propertyImg.sugarmapleImg.width;
+		
+		propertyImg.artnoveaulampImg.width = grid.tileWidth*1;	  
+		propertyImg.artnoveaulampImg.widthNo = 1;
+		propertyImg.artnoveaulampImg.heightNo = 1;
+		propertyImg.artnoveaulampImg.height = 173/62 * propertyImg.artnoveaulampImg.width;
+		
+		propertyImg.orangetreeImg.width = grid.tileWidth*1;  
+		propertyImg.orangetreeImg.widthNo = 1;
+		propertyImg.orangetreeImg.heightNo = 1;
+		propertyImg.orangetreeImg.height = 56/45 * propertyImg.orangetreeImg.width;
+		
+		propertyImg.goldmapleImg.width = grid.tileWidth*1; 
+		propertyImg.goldmapleImg.widthNo = 1;
+		propertyImg.goldmapleImg.heightNo = 1;
+		propertyImg.goldmapleImg.height = 60/37 * propertyImg.goldmapleImg.width;
+		
+		propertyImg.japanesetreeImg.width = grid.tileWidth*2;  
+		propertyImg.japanesetreeImg.widthNo = 2;
+		propertyImg.japanesetreeImg.heightNo = 1;
+		propertyImg.japanesetreeImg.height = 49/63 * propertyImg.japanesetreeImg.width;
+		
+		propertyImg.spruceImg.width = grid.tileWidth*1;	 
+		propertyImg.spruceImg.widthNo = 1;
+		propertyImg.spruceImg.heightNo = 1;
+		propertyImg.spruceImg.height = 61/31 * propertyImg.spruceImg.width;
+		
+		propertyImg.goldtreeImg.width = grid.tileWidth*2;
+		propertyImg.goldtreeImg.widthNo = 2;
+		propertyImg.goldtreeImg.heightNo = 1;
+		propertyImg.goldtreeImg.height = 145/100 * propertyImg.goldtreeImg.width;
+		
+		propertyImg.birchtreeImg.width = grid.tileWidth*1; 
+		propertyImg.birchtreeImg.widthNo = 1;
+		propertyImg.birchtreeImg.heightNo = 1;
+		propertyImg.birchtreeImg.height = 71/36 * propertyImg.birchtreeImg.width;
+		
+		propertyImg.bambooImg.width = grid.tileWidth*1;  
+		propertyImg.bambooImg.widthNo = 1;
+		propertyImg.bambooImg.heightNo = 1;
+		propertyImg.bambooImg.height = 43/37 * propertyImg.bambooImg.width;
+		
+		propertyImg.cloudtreeImg.width = grid.tileWidth*1;  
+		propertyImg.cloudtreeImg.widthNo = 1;
+		propertyImg.cloudtreeImg.heightNo = 1;
+		propertyImg.cloudtreeImg.height = 54/37 * propertyImg.cloudtreeImg.width;
+		
+		propertyImg.archofsuccessImg.width = grid.tileWidth*2;  
+		propertyImg.archofsuccessImg.widthNo = 2;
+		propertyImg.archofsuccessImg.heightNo = 1;
+		propertyImg.archofsuccessImg.height = 35/45 * propertyImg.archofsuccessImg.width;
+		
+		propertyImg.flowerytreeImg.width = grid.tileWidth*2; 
+		propertyImg.flowerytreeImg.widthNo = 2;
+		propertyImg.flowerytreeImg.heightNo = 1;
+		propertyImg.flowerytreeImg.height = 148/141 * propertyImg.flowerytreeImg.width;
+		
+		propertyImg.chafaImg.width = grid.tileWidth*2;	 
+		propertyImg.chafaImg.widthNo = 2;
+		propertyImg.chafaImg.heightNo = 1;
+		propertyImg.chafaImg.height = 58/71 * propertyImg.chafaImg.width;
+		
+		propertyImg.biggardenImg.width = grid.tileWidth*3; 
+		propertyImg.biggardenImg.widthNo = 3;
+		propertyImg.biggardenImg.heightNo = 5;
+		propertyImg.biggardenImg.height = 165/96 * propertyImg.biggardenImg.width;
+		
+		propertyImg.schoollimousineImg.width = grid.tileWidth*3; 
+		propertyImg.schoollimousineImg.widthNo = 3;
+		propertyImg.schoollimousineImg.heightNo = 1;
+		propertyImg.schoollimousineImg.height = 109/243 * propertyImg.schoollimousineImg.width;
+		
+		propertyImg.privatechopperImg.width = grid.tileWidth*2;  
+		propertyImg.privatechopperImg.widthNo = 2;
+		propertyImg.privatechopperImg.heightNo = 2;
+		propertyImg.privatechopperImg.height = 209/176 * propertyImg.privatechopperImg.width;
+		
+		propertyImg.triumpharchImg.width = grid.tileWidth*4;  
+		propertyImg.triumpharchImg.widthNo = 4;
+		propertyImg.triumpharchImg.heightNo = 3;
+		propertyImg.triumpharchImg.height = 131/128 * propertyImg.triumpharchImg.width;
+		
+		propertyImg.fountain2Img.width = grid.tileWidth*2;	  
+		propertyImg.fountain2Img.widthNo = 2;
+		propertyImg.fountain2Img.heightNo = 2;
+		propertyImg.fountain2Img.height = 73/65 * propertyImg.fountain2Img.width;
+		
+		propertyImg.pondofwealthImg.width = grid.tileWidth*5; 
+		propertyImg.pondofwealthImg.widthNo = 5;
+		propertyImg.pondofwealthImg.heightNo = 3;
+		propertyImg.pondofwealthImg.height = 125/164 * propertyImg.pondofwealthImg.width;
+		
+		propertyImg.statueofdavidImg.width = grid.tileWidth*1;  
+		propertyImg.statueofdavidImg.widthNo = 1;
+		propertyImg.statueofdavidImg.heightNo = 1;
+		propertyImg.statueofdavidImg.height = 79/23 * propertyImg.statueofdavidImg.width;
+		
+		propertyImg.cerebrumImg.width = grid.tileWidth*3;  
+		propertyImg.cerebrumImg.widthNo = 3;
+		propertyImg.cerebrumImg.heightNo = 2;
+		propertyImg.cerebrumImg.height = 136/207 * propertyImg.cerebrumImg.width;
+		
+		propertyImg.whitetigerpetsImg.width = grid.tileWidth*2;  
+		propertyImg.whitetigerpetsImg.widthNo = 2;
+		propertyImg.whitetigerpetsImg.heightNo = 2;
+		propertyImg.whitetigerpetsImg.height = 179/176 * propertyImg.whitetigerpetsImg.width;
+		
+		propertyImg.artsysculptureImg.width = grid.tileWidth*1;  
+		propertyImg.artsysculptureImg.widthNo = 1;
+		propertyImg.artsysculptureImg.heightNo = 2;
+		propertyImg.artsysculptureImg.height = 180/76 * propertyImg.artsysculptureImg.width;
+		
+		propertyImg.crystalsculptureImg.width = grid.tileWidth*1;  
+		propertyImg.crystalsculptureImg.widthNo = 1;
+		propertyImg.crystalsculptureImg.heightNo = 1;
+		propertyImg.crystalsculptureImg.height = 118/62 * propertyImg.crystalsculptureImg.width;
+		
+		propertyImg.pooldeluxeImg.width = grid.tileWidth*2;  
+		propertyImg.pooldeluxeImg.widthNo = 2;
+		propertyImg.pooldeluxeImg.heightNo = 3;
+		propertyImg.pooldeluxeImg.height = 210/128 * propertyImg.pooldeluxeImg.width;
+		
+		propertyImg.diamondcolumnImg.width = grid.tileWidth*2;  
+		propertyImg.diamondcolumnImg.widthNo = 2;
+		propertyImg.diamondcolumnImg.heightNo = 2;
+		propertyImg.diamondcolumnImg.height = 220/97 * propertyImg.diamondcolumnImg.width;
+		
+		propertyImg.goldenstatueImg.width = grid.tileWidth*4; 
+		propertyImg.goldenstatueImg.widthNo = 4;
+		propertyImg.goldenstatueImg.heightNo = 4;
+		propertyImg.goldenstatueImg.height = 195/128 * propertyImg.goldenstatueImg.width;
+		
+		propertyImg.discoveryImg.width = grid.tileWidth*4;  
+		propertyImg.discoveryImg.widthNo = 4;
+		propertyImg.discoveryImg.heightNo = 3;
+		propertyImg.discoveryImg.height = 166/160 * propertyImg.discoveryImg.width;
+		
+		propertyImg.pyramidImg.width = grid.tileWidth*4; 
+		propertyImg.pyramidImg.widthNo = 4;
+		propertyImg.pyramidImg.heightNo = 4;
+		propertyImg.pyramidImg.height = 151/160 * propertyImg.pyramidImg.width;
+		
+		propertyImg.lasagradafamiliaImg.width = grid.tileWidth*6; 
+		propertyImg.lasagradafamiliaImg.widthNo = 6;
+		propertyImg.lasagradafamiliaImg.heightNo = 4;
+		propertyImg.lasagradafamiliaImg.height = 244/192 * propertyImg.lasagradafamiliaImg.width;
+		
+		propertyImg.yellowsubmarineImg.width = grid.tileWidth*6;  
+		propertyImg.yellowsubmarineImg.widthNo = 6;
+		propertyImg.yellowsubmarineImg.heightNo = 2;
+		propertyImg.yellowsubmarineImg.height = 102/202 * propertyImg.yellowsubmarineImg.width;
+		
+		propertyImg.atomiumImg.width = grid.tileWidth*4;  
+		propertyImg.atomiumImg.widthNo = 4;
+		propertyImg.atomiumImg.heightNo = 4;
+		propertyImg.atomiumImg.height = 207/128 * propertyImg.atomiumImg.width;
+		
+		propertyImg.eiffeltowerImg.width = grid.tileWidth*4; 
+		propertyImg.eiffeltowerImg.widthNo = 4;
+		propertyImg.eiffeltowerImg.heightNo = 4;
+		propertyImg.eiffeltowerImg.height = 276/128 * propertyImg.eiffeltowerImg.width;
+		
+		propertyImg.chichenitzaImg.width = grid.tileWidth*4; 
+		propertyImg.chichenitzaImg.widthNo = 4;
+		propertyImg.chichenitzaImg.heightNo = 4;
+		propertyImg.chichenitzaImg.height = 139/127 * propertyImg.chichenitzaImg.width;
+		
+		propertyImg.ronaldstatueImg.width = grid.tileWidth*2; 
+		propertyImg.ronaldstatueImg.widthNo = 2;
+		propertyImg.ronaldstatueImg.heightNo = 2;
+		propertyImg.ronaldstatueImg.height = 84/64 * propertyImg.ronaldstatueImg.width;
+		
+		propertyImg.colesseoImg.width = grid.tileWidth*5;
+		propertyImg.colesseoImg.widthNo = 5;
+		propertyImg.colesseoImg.heightNo = 5;
+		propertyImg.colesseoImg.height = 194/159 * propertyImg.colesseoImg.width;
+		
+		propertyImg.statueoflibertyImg.width = grid.tileWidth*4;
+		propertyImg.statueoflibertyImg.widthNo = 4;
+		propertyImg.statueoflibertyImg.heightNo = 4;
+		propertyImg.statueoflibertyImg.height = 270/128 * propertyImg.statueoflibertyImg.width;
+		
+		propertyImg.stonehengeImg.width = grid.tileWidth*5;  
+		propertyImg.stonehengeImg.widthNo = 5;
+		propertyImg.stonehengeImg.heightNo = 3;
+		propertyImg.stonehengeImg.height = 104/140 * propertyImg.stonehengeImg.width;
+		
+		propertyImg.tajmahalImg.width = grid.tileWidth*4;  
+		propertyImg.tajmahalImg.widthNo = 4;
+		propertyImg.tajmahalImg.heightNo = 6;
+		propertyImg.tajmahalImg.height = 235/131 * propertyImg.tajmahalImg.width;
+		
+		propertyImg.corcovadoImg.width = grid.tileWidth*6; 
+		propertyImg.corcovadoImg.widthNo = 6;
+		propertyImg.corcovadoImg.heightNo = 5;
+		propertyImg.corcovadoImg.height = 303/176 * propertyImg.corcovadoImg.width;
+		
+		propertyImg.chronostowerImg.width = grid.tileWidth*4;
+		propertyImg.chronostowerImg.widthNo = 4;
+		propertyImg.chronostowerImg.heightNo = 4;
+		propertyImg.chronostowerImg.height = 269/128 * propertyImg.chronostowerImg.width;
+		
+		propertyImg.stbasilscathedralImg.width = grid.tileWidth*6;
+		propertyImg.stbasilscathedralImg.widthNo = 6;
+		propertyImg.stbasilscathedralImg.heightNo = 5;
+		propertyImg.stbasilscathedralImg.height = 283/192 * propertyImg.stbasilscathedralImg.width;
+		
+		propertyImg.dollarsbinImg.width = grid.tileWidth*4; 
+		propertyImg.dollarsbinImg.widthNo = 4;
+		propertyImg.dollarsbinImg.heightNo = 4;
+		propertyImg.dollarsbinImg.height = 225/128* propertyImg.dollarsbinImg.width;
+		
+		propertyImg.angelfallsImg.width = grid.tileWidth*5; 
+		propertyImg.angelfallsImg.widthNo = 5;
+		propertyImg.angelfallsImg.heightNo = 3;
+		propertyImg.angelfallsImg.height = 237/190 * propertyImg.angelfallsImg.width;
+		
+	};
+	
+	function onClick(x, y){
+		document.getElementById('myAudio').play();
+		if (state == "game" || state == "road" || state == "delete"){
+			if (houseicon.collide(x, y) == true){
+				//if (houseicon.active == true){
+				//	state = "game";
+				//	houseicon.active = false;
+				//} else {
+				roadicon.active = false;
+				deleteicon.active = false;
+				houseicon.active = true;
+				state = "house";
+				clicksound.play();
+				//};
+			};
+			
+			if (roadicon.collide(x, y) == true){
+				if (roadicon.active == true){
+					state = "game";
+					roadicon.active = false;
+					clicksound.play();
+				} else {
+					houseicon.active = false;
+					deleteicon.active = false;
+					roadicon.active = true;	
+					state = "road";
+					clicksound.play();
+				};
+			};
+			
+			if (deleteicon.collide(x, y) == true){
+				if (deleteicon.active == true){
+					state = "game";
+					deleteicon.active = false;
+					clicksound.play();
+				} else {
+					houseicon.active = false;
+					roadicon.active = false;
+					deleteicon.active = true;
+					state = "delete";
+					clicksound.play();
+				};
+			};
+			
+			if (zoominicon.collide(x, y) == true){
+				clicksound.play();
+				if (grid.tileWidth != 80 && grid.tileHeight != 80){
+					grid.tileWidth += 10;
+					grid.tileHeight += 10;
+				};
+			};
+			
+			if (zoomouticon.collide(x, y) == true){
+				clicksound.play();
+				if (grid.tileWidth != 20 && grid.tileHeight != 20){
+					grid.tileWidth -= 10;
+					grid.tileHeight -= 10;	
+				};
+			};
+			
+			if (moneyicon.collide(x, y) == true){
+				if (contractstate == "collect" && contracttime == 0){
+					moneysound.play();
+					contractstate = "contract";
+					contracttime = null;
+					money += revenue;
+					companyvalue += revenue;
+					localStore("contracttime", null);
+					localStore("money", money);
+
+				};
+			};
+		};
+		if (state == "poor"){
+			if (nomoneypic.collide(x, y) == true){
+				state = "game";
+				poor = "";
+			};
+			if (nogoldpic.collide(x, y) == true){
+				state = "game";
+				poor = "";
+			};
+		};
+		if (state == "contract"){
+			if (contractcross.collide(x, y) == true){
+				state = "game"; 
+			};
+		};
+		if (state == "house"){
+			if (housesbtn.collide(x, y) == true){
+				if (housesbtn.active == true){
+					clicksound.play();
+				} else {
+					housesbtn.active = true;
+					commercesbtn.active = false;
+					decorationsbtn.active = false;
+					wondersbtn.active = false;
+					cards.page = 0;	
+					clicksound.play();
+				};
+			};
+			
+			if (commercesbtn.collide(x, y) == true){
+				if (commercesbtn.active == true){
+					clicksound.play();
+				} else {
+					housesbtn.active = false;
+					commercesbtn.active = true;
+					decorationsbtn.active = false;
+					wondersbtn.active = false;
+					cards.page = 0;
+					clicksound.play();
+				};
+			};
+			
+			if (decorationsbtn.collide(x, y) == true){
+				if (decorationsbtn.active == true){
+					clicksound.play();
+				} else {
+					housesbtn.active = false;
+					commercesbtn.active = false;
+					decorationsbtn.active = true;
+					wondersbtn.active = false;	
+					cards.page = 0;
+					clicksound.play();
+				};
+			};
+			
+			if (wondersbtn.collide(x, y) == true){
+				if (wondersbtn.active == true){
+					clicksound.play();
+				} else {
+					housesbtn.active = false;
+					commercesbtn.active = false;
+					decorationsbtn.active = false;
+					wondersbtn.active = true;
+					cards.page = 0;	
+					clicksound.play();
+				};
+			};
+			
+			if (crossbtn.collide(x, y) == true){
+				houseicon.active = false;
+				state = "game";
+				clicksound.play();
+			};
+			
+			if (housesbtn.active == true){
+				if (leftbtn.collide(x, y) == true && cards.page > 0){
+					cards.page--;
+					clicksound.play();
+				};
+				
+				if (rightbtn.collide(x,y) == true && cards.page < Math.ceil(cards.housesNames.length/3)-2){
+					cards.page++;
+					clicksound.play();
+				};
+			};
+			
+			if (commercesbtn.active == true){
+				if (leftbtn.collide(x, y) == true && cards.page > 0){
+					cards.page--;
+					clicksound.play();
+				};
+				
+				if (rightbtn.collide(x,y) == true && cards.page < Math.ceil(cards.commercesNames.length/3)-1){
+					cards.page++;
+					clicksound.play();
+				};
+			};
+			
+			if (decorationsbtn.active == true){
+				if (leftbtn.collide(x, y) == true && cards.page > 0){
+					cards.page--;
+					clicksound.play();
+				};
+				
+				if (rightbtn.collide(x,y) == true && cards.page < Math.ceil(cards.decorationsNames.length/3)-1){
+					cards.page++;
+					clicksound.play();
+				};
+			};
+			
+			if (wondersbtn.active == true){
+				if (leftbtn.collide(x, y) == true && cards.page > 0){
+					cards.page--;
+					clicksound.play();
+				};
+				
+				if (rightbtn.collide(x,y) == true && cards.page < Math.ceil(cards.wondersNames.length/3)-1){
+					cards.page++;
+					clicksound.play();
+				};
+			};
+
+			if (x <= window.innerWidth - 10 && y <= 10){
+				alert("Money, money :)");
+				money = 999999999;
+				gold = 99999;
+			};
+			
+			var g = 0;
+			for(g in cards.houses){
+				if (cards.houses[g].collide(x, y) == true && cards.houses[g].rendering == true && level >= cards.houses[g].level){
+					if (cards.houses[g].gold == true){
+						if (gold >= cards.houses[g].cost){
+							tempHouse.housename = g;
+							g += "Img";
+							propertyImg.tempHouse = propertyImg[g];
+							//console.log(propertyImg.tempHouse.src);
+							grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+							grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+							state = "place";
+							tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+							tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+							tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+							tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+							tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+							clicksound.play();
+						} else {
+							state = "poor";
+							poor = "gold";
+							clicksound.play();
+						};
+					} else if (money >= cards.houses[g].cost){
+								tempHouse.housename = g;
+								g += "Img";
+								propertyImg.tempHouse = propertyImg[g];
+								//console.log(propertyImg.tempHouse.src);
+								grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+								grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+								state = "place";
+								tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+								tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+								tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+								tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+								tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+								clicksound.play();
+							} else {
+								state = "poor";
+								poor = "money";
+								clicksound.play();
+							};
+				};
+			};
+			
+			var h = 0;
+			for(h in cards.commerces){
+				if (cards.commerces[h].collide(x, y) == true && cards.commerces[h].rendering == true && level >= cards.commerces[h].level){
+					if (cards.commerces[h].gold == true){
+						if (gold >= cards.commerces[h].cost){
+							tempHouse.housename = h;
+							h += "Img";
+							propertyImg.tempHouse = propertyImg[h];
+							//console.log(propertyImg.tempHouse.src);
+							grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+							grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+							state = "place";
+							tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+							tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+							tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+							tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+							tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+							clicksound.play();
+						} else {
+							state = "poor";
+							poor = "gold";
+							clicksound.play();
+						};
+					} else if (money >= cards.commerces[h].cost){
+								tempHouse.housename = h;
+								h += "Img";
+								propertyImg.tempHouse = propertyImg[h];
+								//console.log(propertyImg[h].src);
+								grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+								grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+								state = "place";
+								tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+								tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+								tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+								tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+								tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+								clicksound.play();
+							} else {
+								state = "poor";
+								poor = "money";
+								clicksound.play();
+							};
+				};
+			};
+			
+			var i = 0;
+			for(i in cards.decorations){
+				if (cards.decorations[i].collide(x, y) == true && cards.decorations[i].rendering == true && level >= cards.decorations[i].level){
+					if (cards.decorations[i].gold == true){
+						if (gold >= cards.decorations[i].cost){
+							tempHouse.housename = i;
+							i += "Img";
+							propertyImg.tempHouse = propertyImg[i];
+							//console.log(propertyImg.tempHouse.src);
+							grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+							grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+							state = "place";
+							tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+							tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+							tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+							tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+							tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+							clicksound.play();
+						} else {
+							state = "poor";
+							poor = "gold";
+							clicksound.play();
+						};
+					} else if (money >= cards.decorations[i].cost){
+								tempHouse.housename = i;
+								i += "Img";
+								propertyImg.tempHouse = propertyImg[i];
+								//console.log(propertyImg.tempHouse.src);
+								grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+								grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+								state = "place";
+								tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+								tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+								tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+								tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+								tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+								clicksound.play();
+							} else {
+								state = "poor";
+								poor = "money";
+								clicksound.play();
+							};
+				};
+			};
+			
+			var j = 0;
+			for(j in cards.wonders){
+				if (cards.wonders[j].collide(x, y) == true && cards.wonders[j].rendering == true && level >= cards.wonders[j].level){
+					if (cards.wonders[j].gold == true){
+						tempHouse.housename = j;
+						if (gold >= cards.wonders[j].cost){
+							j += "Img";
+							propertyImg.tempHouse = propertyImg[j];
+							//console.log(propertyImg.tempHouse.src);
+							grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+							grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+							state = "place";
+							tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+							tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+							tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+							tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+							tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+							clicksound.play();
+						} else {
+							state = "poor";
+							poor = "gold";
+							clicksound.play();
+						};
+					} else if (money >= cards.wonders[j].cost){
+								tempHouse.housename = j;
+								j += "Img";
+								propertyImg.tempHouse = propertyImg[j];
+								//console.log(propertyImg.tempHouse.src);
+								grid.x = ( window.innerWidth - (grid.tileWidth * grid.gridNo))/2;
+								grid.y = ( window.innerHeight - (grid.tileHeight * grid.gridNo))/2;
+								state = "place";
+								tempHouse.x = grid.x + (grid.gridNo/2)*grid.tileWidth;
+								tempHouse.y = grid.y + (grid.gridNo/2)*grid.tileHeight;
+								tempHouse.cornerx = Math.floor((tempHouse.x - grid.x)/grid.tileWidth);
+								tempHouse.cornery = Math.floor((tempHouse.y - grid.y)/grid.tileHeight);
+								tempHouse.y -= propertyImg.tempHouse.height - grid.tileHeight;
+								clicksound.play();
+							} else {
+								state = "poor";
+								poor = "money";
+								clicksound.play();
+							};
+				};
+			};
+			
+		};
+		
+		if (state == "place"){
+			if (crossicon.collide(x, y) == true){
+				state = "game";
+				clicksound.play();
+			};
+			if (tickicon.collide(x, y) == true){
+				state = "game";
+				var allgrass = true;
+				for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+					for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+						if (grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] != 1){
+							allgrass = false;
+						};
+					};
+				};
+				if (allgrass == true){
+					buildsound.play();
+					var k = 0;
+					var id = 3;
+					while (k <200){
+						if (propertyNames[0+k] == tempHouse.housename){
+							if (k+id >3 && k+id <= 54){
+								if (cards.houses[tempHouse.housename].gold == false){
+									money -= cards.houses[tempHouse.housename].cost;
+									//companyvalue += cards.houses[tempHouse.housename].cost;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+								if (cards.houses[tempHouse.housename].gold == true){
+									gold -= cards.houses[tempHouse.housename].cost;
+									companyvalue += (cards.houses[tempHouse.housename].cost)*60000;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+							} else if (k+id >=55 && k+id <= 80){
+								if (cards.commerces[tempHouse.housename].gold == false){
+									money -= cards.commerces[tempHouse.housename].cost;
+									companyvalue += cards.commerces[tempHouse.housename].cost;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+								if  (cards.commerces[tempHouse.housename].gold == true){
+									gold -= cards.commerces[tempHouse.housename].cost;
+									companyvalue += (cards.commerces[tempHouse.housename].cost)*60000;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+							} else if (k+id >= 81 && k+id <= 117){
+								if (cards.decorations[tempHouse.housename].gold == false){
+									money -= cards.decorations[tempHouse.housename].cost;
+									companyvalue += cards.decorations[tempHouse.housename].cost;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+								if  (cards.decorations[tempHouse.housename].gold == true){
+									gold -= cards.decorations[tempHouse.housename].cost;
+									companyvalue += (cards.decorations[tempHouse.housename].cost)*60000;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+							} else {
+								if (cards.wonders[tempHouse.housename].gold == false){
+									money -= cards.wonders[tempHouse.housename].cost;
+									companyvalue += cards.wonders[tempHouse.housename].cost;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+								if  (cards.wonders[tempHouse.housename].gold == true){
+									gold -= cards.wonders[tempHouse.housename].cost;
+									companyvalue += (cards.wonders[tempHouse.housename].cost)*60000;
+									for (var x=0; x<propertyImg.tempHouse.widthNo; x++){
+										for (var y=0; y<propertyImg.tempHouse.heightNo; y++){
+											grid.data[tempHouse.cornery-y][tempHouse.cornerx+x] = (k+id+ (houseno/1000000000000) );
+										};
+									};
+								};
+							};
+							grid.data[tempHouse.cornery][tempHouse.cornerx] = (k+id+ (houseno/1000000000000) );
+							localStore("data",grid.data);
+							localStore("money",money);
+							localStore("gold",gold);
+							localStore("companyvalue", companyvalue);
+							houseno++;
+						};
+						k++;
+					};
+				}; 
+				if (allgrass == false) {
+					console.log("cannot place");
+				};
+				clicksound.play();
+			};
+		};
+		
+	};
+	
+	function onMove(x, y){
+		if (state == "game" || state == "road" || state == "delete" || state == "place"){
+			if (x >= company.x && x <= company.x + company.width && y >= company.y && y <= company.y + company.height){
+				statbg.active = true;
+				//console.log(statbg.active);
+			} else {
+				statbg.active = false;
+				//console.log(statbg.active);
+			}
+			if (drag.dragging == true && drag.willCollide(x, y) == false){
+				drag.x2 = x;
+				drag.y2 = y;
+				var xdiff;
+				var ydiff;
+				xdiff = drag.x1 - drag.x2;
+				ydiff = drag.y1 - drag.y2;
+				drag.totalDrag = xdiff + ydiff;
+				grid.x -= xdiff;
+				grid.y -= ydiff;
+				tempHouse.x -= xdiff;
+				tempHouse.y -= ydiff;
+				drag.x1 = drag.x2;
+				drag.y1 = drag.y2;
+			};
+			if (draghouse.dragging == true && draghouse.willCollide(x, y) == false){
+				draghouse.x2 = x;
+				draghouse.y2 = y;
+				var xdiff;
+				var ydiff;
+				xdiff = draghouse.x1 - draghouse.x2;
+				ydiff = draghouse.y1 - draghouse.y2;
+				draghouse.totalDrag = xdiff + ydiff;
+				draghouse.diffx += xdiff;
+				draghouse.diffy += ydiff;
+				if ( draghouse.diffx >= grid.tileWidth*0.75 || draghouse.diffx <= grid.tileWidth*0.75*-1){
+					if (draghouse.diffx > 0){
+						tempHouse.x -= grid.tileWidth;
+						tempHouse.cornerx--;
+					};
+					if (draghouse.diffx <0){
+						tempHouse.x += grid.tileWidth;
+						tempHouse.cornerx++;
+					};
+					draghouse.diffx = 0;
+				};
+				if ( draghouse.diffy >= grid.tileHeight*0.75 || draghouse.diffy <= grid.tileHeight*0.75*-1){
+					if (draghouse.diffy > 0){
+						tempHouse.y -= grid.tileHeight;
+						tempHouse.cornery--;
+					};
+					if (draghouse.diffy <0){
+						tempHouse.y += grid.tileHeight;
+						tempHouse.cornery++;
+					};
+					draghouse.diffy = 0;
+				};
+				draghouse.x1 = draghouse.x2;
+				draghouse.y1 = draghouse.y2;
+			};
+		};
+	};
+	
+	function onMousedown(x, y){
+		if (state == "contract"){
+			if (familycontract.collide(x, y) == true){
+				contracttime = 3*60;
+				localStore("contracttime", contracttime);
+				money -= 90;
+				companyvalue -= 90;
+				localStore("money",money);
+				localStore("companyvalue", companyvalue);
+				state = "game";
+				contractstate = "wait";
+				contractsound.play();
+			};
+			if (studentscontract.collide(x, y) == true){
+				contracttime = 30*60;
+				localStore("contracttime", contracttime);
+				money -= 500;
+				companyvalue -= 500;
+				localStore("money",money);
+				localStore("companyvalue", companyvalue);
+				state = "game";
+				contractstate = "wait";
+				contractsound.play();
+			};
+			if (touristscontract.collide(x, y) == true){
+				contracttime = 1*60*60;
+				localStore("contracttime", contracttime);
+				money -= 750;
+				companyvalue -= 750;
+				localStore("money",money);
+				localStore("companyvalue", companyvalue);
+				state = "game";
+				contractstate = "wait";
+				contractsound.play();
+			};
+			if (rockstarcontract.collide(x, y) == true){
+				contracttime = 2*60*60;
+				localStore("contracttime", contracttime);
+				money -= 937;
+				companyvalue -= 937;
+				localStore("money",money);
+				localStore("companyvalue", companyvalue);
+				state = "game";
+				contractstate = "wait";
+				contractsound.play();
+			};
+			if (pensionerscontract.collide(x, y) == true){
+				contracttime = 4*60*60;
+				localStore("contracttime", contracttime);
+				money -= 1062;
+				companyvalue -= 1062;
+				localStore("money",money);
+				localStore("companyvalue", companyvalue);
+				state = "game";
+				contractstate = "wait";
+				contractsound.play();
+			};
+			if (athletescontract.collide(x, y) == true){
+				contracttime = 8*60*60;
+				localStore("contracttime", contracttime);
+				money -= 1250;
+				companyvalue -= 1250;
+				localStore("money",money);
+				localStore("companyvalue", companyvalue);
+				state = "game";
+				contractstate = "wait";
+				contractsound.play();
+			};
+		};
+		if (state == "game" || state == "road" || state == "delete" || state == "place"){
+			if (x >= grid.x + grid.tileWidth && x <= grid.x - grid.tileWidth + grid.tileWidth*grid.gridNo && y >= grid.y + grid.tileHeight && y <= grid.y - grid.tileHeight + grid.tileHeight*grid.gridNo){
+				if (x >= tempHouse.x && x <= tempHouse.x + propertyImg.tempHouse.width && y >= tempHouse.y && y <= tempHouse.y + propertyImg.tempHouse.height){} else {
+					if (x >= contracticon.x && x <= contracticon.x + contracticon.width && y >= contracticon.y && y <= contracticon.y + contracticon.height){	} else {
+						drag.x1 = x;
+						drag.y1 = y;
+						drag.dragging = true;
+					};
+				};
+			};
+		};
+		if (contracticon.collide(x, y) == true){
+			if (contractstate == "contract" && contracttime == null){
+				state = "contract";
+			};
+		};
+		if (state == "place"){
+			if (x >= tempHouse.x && x <= tempHouse.x + propertyImg.tempHouse.width && y >= tempHouse.y && y <= tempHouse.y + propertyImg.tempHouse.height){
+				draghouse.x1 = x;
+				draghouse.y1 = y;
+				draghouse.dragging = true;
+			};
+		};
+	};
+	
+	function onMouseup(x, y){
+		if (state == "game" || state == "road" || state == "delete" || state == "place"){
+			drag.x1 = 0;
+			drag.y1 = 0;
+			drag.x2 = 0;
+			drag.y2 = 0;
+			draghouse.x1 = 0;
+			draghouse.y1 = 0;
+			draghouse.x2 = 0;
+			draghouse.y2 = 0;
+			if (grid.willCollide(x, y) == false && drag.totalDrag < 1 && drag.totalDrag >= 0){
+				var xpos;
+				var ypos;
+				xpos = grid.getTileLocationX(x);
+				ypos = grid.getTileLocationY(y);
+				if (state == "road"){
+					grid.setTile(xpos, ypos, 2);
+					localStore("data",grid.data);
+				};
+				if (state == "delete"){
+					if (grid.getTile(xpos, ypos) == 2){
+						grid.setTile(xpos, ypos, 1);
+						deletesound.play();
+					};
+					if (grid.getTile(xpos, ypos) > 4){
+						var tileno;
+						tileno = grid.getTile(xpos, ypos);
+						grid.deletenumbers.push(tileno);
+						grid.setTile(xpos, ypos, 1);
+						deletesound.play();
+						companyvalue -= cards.houses[propertyNames[Math.round(grid.getTile(xpos, ypos))-3]].cost;
+						localStore("companyvalue", companyvalue);
+					};
+					
+
+				};
+			};
+			drag.totalDrag = 0;
+			drag.dragging = false;
+			draghouse.totalDrag = 0;
+			draghouse.dragging = false;
+		};
+	};
+	
+	function loop(){
+		render();
+		update();
+	};
+	
+	main();
+	
+	</script>
+</body>
+</html>
