@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Drawing Test</title>
+<style>
+
+body{
+	margin:0px;
+	font-family:Arial, Helvetica, sans-serif;
+	background-color:#9CF;
+}
+
+#leftpanel{
+	position:absolute;
+	margin-left:30px;
+	width:140px;
+	height:600px;
+	border:2px solid #999;
+	border-radius:7px;
+	background-color:#E0E0E0;
+}
+
+#clearbox{
+	margin:0 auto;
+	margin-top:43px;
+	width:100px;
+	height:100px;
+}
+
+#clearbox:hover{
+	cursor:pointer;
+}
+
+#clearpic:hover{
+	height:100px;
+	width:100px;
+	cursor:pointer;
+}
+
+#colorbox{
+	margin:0 auto;
+	margin-top:30px;
+	width:100px;
+	height:100px;
+}
+
+#colorbox:hover{
+	cursor:pointer;
+}
+
+#colorpic:hover{
+	height:100px;
+	width:100px;
+	cursor:pointer;
+}
+
+#fillbox{
+	margin:0 auto;
+	margin-top:35px;
+	width:100px;
+	height:100px;
+}
+
+#fillbox:hover{
+	cursor:pointer;
+}
+
+#fillpic:hover{
+	height:105px;
+	width:105px;
+	cursor:pointer;
+}
+
+#toolpic:hover{
+	height:125px;
+	width:140px;
+	cursor:pointer;
+}
+
+#Board{
+	margin-top:30px;
+	margin-left:205px;
+	border:solid 2px #3F3F3F;
+	border-radius:2px;
+	height:600px;
+	width:1000px;
+	background-color:#FFF;
+}
+
+#Board:hover{
+	cursor:crosshair;
+}
+
+#blackshade{
+	visibility:hidden;
+	background-color: rgba(129, 129, 129, 0.4);
+	position:absolute;
+	width:100%; 
+	height:100%; 
+	z-index:20;
+	left:0px;
+	top:0px;
+}
+
+#ink_color_selection{
+	display:none;
+	border: 1px solid #999;
+	border-radius:2px;
+	background-color:#EBEBEB;
+	position:absolute;
+	width:30%; 
+	height:165px; 
+	z-index:30;
+	left: 470px;
+	top:150px;
+	margin: 0 auto;
+}
+
+#fill_color_selection{
+	display:none;
+	border: 1px solid #999;
+	border-radius:2px;
+	background-color:#EBEBEB;
+	position:absolute;
+	width:30%; 
+	height:165px; 
+	z-index:30;
+	left: 470px;
+	top:150px;
+	margin: 0 auto;
+}
+
+.color_selection{
+	width:25px;	
+	height:25px;
+	border: 1px solid #033;
+	border-radius:2px;
+}
+
+.color_selection:hover{
+	cursor:pointer;	
+}
+
+.fillcolor_selection{
+	width:25px;	
+	height:25px;
+	border: 1px solid #033;
+	border-radius:2px;
+}
+
+.fillcolor_selection:hover{
+	cursor:pointer;	
+}
+
+.closebtns{
+	cursor:pointer;
+}
+
+#tool_selection_box{
+	display:none;
+	border: 1px solid #999;
+	border-radius:2px;
+	background-color:#EBEBEB;
+	position:absolute;
+	width:32%; 
+	height:190px; 
+	z-index:30;
+	left: 470px;
+	top:150px;
+	margin: 0 auto;
+}
+
+</style>
+<script src="jquery.js"></script>
+<script>
+
+	$(document).ready(function(){
+							   
+			var inkNum = 0;
+			var inkName = "ink";
+			var inkId = inkName + inkNum ;
+			var pressed = 0;
+			var clearCount = 0;
+			var inkColor = "Black";
+			var temp_selectedColor = "White";
+			var fillColor = "White";
+			var current_tool = "big";
+			var ink_width = "20px";
+			var halfInk_width = 10;
+			var ink_border_radius = "20px";
+			var board_minus_hor = "990";
+			var board_minus_ver = "590";
+			var eraserInkColor = "White";
+			var notEraser = "true";
+		
+		// Ink Creation ----------------------
+		
+		
+		$( "#Board" ).mousedown(function() {
+										 
+			pressed = 1;
+			
+			if ( current_tool == "big" ){
+				ink_width = "20px";	
+				ink_border_radius = "20px";
+				halfInk_width = 10;
+				board_minus_hor = 1000 - halfInk_width;
+				board_minus_ver = 600 - halfInk_width;
+			} else if ( current_tool == "small" ){
+				ink_width = "10px";
+				ink_border_radius = "10px";
+				halfInk_width = 5;
+				board_minus_hor = 1000 - halfInk_width;
+				board_minus_ver = 600 - halfInk_width;
+			}
+				
+			$( "#Board" ).mousemove(function(e) {							 
+			
+			if(pressed==1 && notEraser == "true"){
+			
+			var offset = $(this).offset();
+ 			var relativeX = (e.pageX - offset.left);
+  			var relativeY = (e.pageY - offset.top);
+
+  			var mouseX = relativeX + 0;
+			var mouseY = relativeY + 0;
+			
+			var inkX = mouseX - halfInk_width;
+			var inkY = mouseY - halfInk_width;
+			
+			inkId = inkName + inkNum ;
+
+			if ( mouseX > halfInk_width && mouseY > halfInk_width){
+				
+				if ( mouseX < board_minus_hor && mouseY < board_minus_ver){
+			
+			$('<div>', { id:inkId } ).appendTo('#Board');
+			
+			
+			$('#'+inkId).css( "position", "absolute" );
+			$('#'+inkId).css( "background-color", inkColor );
+			$('#'+inkId).css( "width", ink_width );
+			$('#'+inkId).css( "height", ink_width );
+			$('#'+inkId).css( "margin-left", inkX );
+			$('#'+inkId).css( "margin-top", inkY );
+			$('#'+inkId).css( "border-radius", ink_border_radius );
+			
+			inkNum++;
+			
+			}     // 1st if statement end!!!!!!
+			
+			}     // 2nd if statement end!
+			
+			}       // Check pressed !
+			
+			});     // Mousemove function end
+			
+		});       // Mousedown function end --------
+		
+		
+		$( "html" ).mouseup(function() {
+			pressed = 0;							   
+		});
+		
+		
+		// Click version ---------------------------------------------------------------------
+		
+		
+		$( "#Board" ).click(function(e) {
+									 
+			if ( current_tool == "big" ){
+				ink_width = "20px";	
+				ink_border_radius = "20px";
+				halfInk_width = 10;
+				board_minus_hor = 1000 - halfInk_width;
+				board_minus_ver = 600 - halfInk_width;
+			} else if ( current_tool == "small" ){
+				ink_width = "10px";
+				ink_border_radius = "10px";
+				halfInk_width = 5;
+				board_minus_hor = 1000 - halfInk_width;
+				board_minus_ver = 600 - halfInk_width;
+			} else if(pressed==1 && notEraser == "true"){					 
+									 
+			var offset = $(this).offset();
+ 			var relativeX = (e.pageX - offset.left);
+  			var relativeY = (e.pageY - offset.top);
+
+  			var mouseX = relativeX + 0;
+			var mouseY = relativeY + 0;
+			
+			var inkX = mouseX - halfInk_width;
+			var inkY = mouseY - halfInk_width;
+			
+			inkId = inkName + inkNum ;
+
+			if ( mouseX > halfInk_width && mouseY > halfInk_width){
+				
+				if ( mouseX < board_minus_hor && mouseY < board_minus_ver){
+			
+			$('<div>', { id:inkId } ).appendTo('#Board');
+			
+			
+			$('#'+inkId).css( "position", "absolute" );
+			$('#'+inkId).css( "background-color", inkColor );
+			$('#'+inkId).css( "width", ink_width );
+			$('#'+inkId).css( "height", ink_width );
+			$('#'+inkId).css( "margin-left", inkX );
+			$('#'+inkId).css( "margin-top", inkY );
+			$('#'+inkId).css( "border-radius", ink_border_radius );
+			
+			inkNum++;
+				}
+			}
+			
+			}
+		});
+		
+		
+		// Ink Creation End ---------------------------------------------------------
+		
+		$("#clearbox").click(function(){
+			location.reload();				
+		});
+		
+		
+		$("#colorbox").click(function(){
+			$("#blackshade").css( "visibility", "visible");	
+			$("#ink_color_selection").show(100);	
+		});
+		
+		$(".color_selection").click(function(){
+			temp_selectedColor = $(this).css("background-color");
+			$("#selected_color").css("background-color" , temp_selectedColor);
+		});
+		
+		$("#selectColorbtn").click(function(){
+			inkColor = temp_selectedColor;
+			$("#blackshade").css( "visibility", "hidden");	
+			$("#ink_color_selection").hide();	
+		});
+		
+		$("#fillbox").click(function(){
+			$("#blackshade").css( "visibility", "visible");	
+			$("#fill_color_selection").show(100);
+		});
+		
+		$(".fillcolor_selection").click(function(){
+			temp_selectedColor = $(this).css("background-color");
+			$("#fillselected_color").css("background-color" , temp_selectedColor);
+		});
+		
+		$("#selectfillColorbtn").click(function(){
+			fillColor = temp_selectedColor;
+			$("#Board").css("background-color",fillColor);
+			$(".eraserInkColor").css("background-color",fillColor);
+			$("#blackshade").css( "visibility", "hidden");	
+			$("#fill_color_selection").hide();
+		});
+		
+		$("#closebtn1").click(function(){
+			$("#blackshade").css( "visibility", "hidden");	
+			$("#ink_color_selection").hide();					  
+		});
+		
+		$("#closebtn2").click(function(){
+			$("#blackshade").css( "visibility", "hidden");	
+			$("#fill_color_selection").hide();					  
+		});
+		
+		$("#closebtn3").click(function(){
+			$("#blackshade").css( "visibility", "hidden");	
+			$("#tool_selection_box").hide();
+			
+			if($('#radio1').is(':checked')) {
+				current_tool = "big";
+				notEraser = "true";
+			} else if($('#radio2').is(':checked')) {
+				current_tool = "small";
+				notEraser = "true";
+			} else if($('#radio3').is(':checked')) {
+				current_tool = "eraser";
+				notEraser = "false";
+			};
+			
+		});
+		
+		$("#toolbox").click(function(){
+			$("#blackshade").css( "visibility", "visible");	
+			$("#tool_selection_box").show(100);
+		});
+		
+		
+		
+		
+		
+		// Eraser Ink Creation *************************************************************************************************************************
+		
+		
+		
+		
+	$( "#Board" ).mousedown(function() {
+										 
+			pressed = 1;
+			
+			if ( current_tool == "eraser" ){
+				ink_width = "40px";
+				ink_border_radius = "40px";
+				halfInk_width = 20;
+				board_minus_hor = 1000 - halfInk_width;
+				board_minus_ver = 600 - halfInk_width;
+				eraserInkColor = $("#Board").css( "background-color" );
+			}
+				
+			$( "#Board" ).mousemove(function(e) {							 
+			
+			if(pressed==1 && notEraser == "false"){
+			
+			var offset = $(this).offset();
+ 			var relativeX = (e.pageX - offset.left);
+  			var relativeY = (e.pageY - offset.top);
+
+  			var mouseX = relativeX + 0;
+			var mouseY = relativeY + 0;
+			
+			var inkX = mouseX - halfInk_width;
+			var inkY = mouseY - halfInk_width;
+			
+			inkId = inkName + inkNum ;
+
+			if ( mouseX > halfInk_width && mouseY > halfInk_width){
+				
+				if ( mouseX < board_minus_hor && mouseY < board_minus_ver){
+			
+			$('<div>', { id:inkId } ).appendTo('#Board');
+			
+			$('#'+inkId).addClass( "eraserInkColor" );
+			$('#'+inkId).css( "position", "absolute" );
+			$('#'+inkId).css( "background-color", eraserInkColor );
+			$('#'+inkId).css( "width", ink_width );
+			$('#'+inkId).css( "height", ink_width );
+			$('#'+inkId).css( "margin-left", inkX );
+			$('#'+inkId).css( "margin-top", inkY );
+			$('#'+inkId).css( "border-radius", ink_border_radius );
+			
+			inkNum++;
+			
+			}     // 1st if statement end!!!!!!
+			
+			}     // 2nd if statement end!
+			
+			}       // Check pressed !
+			
+			});     // Mousemove function end
+			
+		});       // Mousedown function end --------
+		
+		
+		$( "html" ).mouseup(function() {
+			pressed = 0;							   
+		});
+		
+		
+		// Click version ---------------------------------------------------------------------
+		
+		
+		$( "#Board" ).click(function(e) {
+									 
+			if ( current_tool == "eraser" ){
+				ink_width = "40px";
+				ink_border_radius = "40px";
+				halfInk_width = 20;
+				board_minus_hor = 1000 - halfInk_width;
+				board_minus_ver = 600 - halfInk_width;
+				eraserInkColor = $("#Board").css( "background-color" );
+			}				 
+				
+			if( notEraser == "false"){	
+				
+			var offset = $(this).offset();
+ 			var relativeX = (e.pageX - offset.left);
+  			var relativeY = (e.pageY - offset.top);
+
+  			var mouseX = relativeX + 0;
+			var mouseY = relativeY + 0;
+			
+			var inkX = mouseX - halfInk_width;
+			var inkY = mouseY - halfInk_width;
+			
+			inkId = inkName + inkNum ;
+
+			if ( mouseX > halfInk_width && mouseY > halfInk_width){
+				
+				if ( mouseX < board_minus_hor && mouseY < board_minus_ver){
+			
+			$('<div>', { id:inkId } ).appendTo('#Board');
+			
+			$('#'+inkId).addClass( "eraserInkColor" );
+			$('#'+inkId).css( "position", "absolute" );
+			$('#'+inkId).css( "background-color", eraserInkColor );
+			$('#'+inkId).css( "width", ink_width );
+			$('#'+inkId).css( "height", ink_width );
+			$('#'+inkId).css( "margin-left", inkX );
+			$('#'+inkId).css( "margin-top", inkY );
+			$('#'+inkId).css( "border-radius", ink_border_radius );
+			
+			inkNum++;
+				}
+			}
+			
+			}
+		});
+		
+		
+		// End of Eraser Ink Creation *******************************************************************************************************************	
+		
+		
+		
+		
+		
+	});           // Document.ready end ========
+
+</script>
+</head>
+<body>
+	<div id="leftpanel">
+    
+    	<abbr title="Clear"><div id="clearbox"><img src="../images/paper.png" width="90px" height="90px" id="clearpic" onMouseOver="zoom()"/></div></abbr> 
+    
+    	<abbr title="Ink colors..."><div id="colorbox"><img src="../images/palette.png" width="90px" height="90px" id="colorpic"/></div></abbr> 
+        
+        <abbr title="Fill..."><div id="fillbox"><img src="../images/paintbucket.png" width="95px" height="95px" id="fillpic"/></div></abbr> 
+        
+        <abbr title="Tools..."><div id="toolbox" style="margin-top:23px;"><img src="../images/painttools.png" width="130px" height="115px" id="toolpic"/></div></abbr> 
+    
+    </div>
+
+	<div id="Board"></div>
+    
+    <!-- First box----------------------------------->
+    
+    <div id="ink_color_selection">
+    
+    <abbr title="Dark Red"><div id="Dark_red" class="color_selection" style="background-color:DarkRed; margin-left:23px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Red"><div id="Red" class="color_selection" style="background-color:Red; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Orange"><div id="Orange" class="color_selection" style="background-color:Orange; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Dark Orange"><div id="Dark_orange" class="color_selection" style="background-color:DarkOrange; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Yellow"><div id="Yellow" class="color_selection" style="background-color:Yellow; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Light Green"><div id="Light_green" class="color_selection" style="background-color:LightGreen; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Green"><div id="Green" class="color_selection" style="background-color:Green; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Dark Green"><div id="Dark_green" class="color_selection" style="background-color:DarkGreen; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Light Blue"><div id="Light_blue" class="color_selection" style="background-color:LightBlue; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="White"><div id="White "class="color_selection" style="background-color:White; margin-left:23px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Light Grey"><div id="LightGrey" class="color_selection" style="background-color:LightGrey;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr> 
+    <abbr title="Dark Grey"><div id="DarkGrey "class="color_selection" style="background-color:DarkGrey;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Grey"><div id="Grey "class="color_selection" style="background-color:Grey;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Black"><div id="Black" class="color_selection" style="background-color:Black; margin-left:10px;  margin-top:20px; display:inline-block;"></div></abbr>
+    
+    <abbr title="Pink"><div id="Pink" class="color_selection" style="background-color:Pink;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Purple"><div id="Purple" class="color_selection" style="background-color:Purple;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Dark Blue"><div id="DarkBlue" class="color_selection" style="background-color:DarkBlue;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Blue"><div id="Blue" class="color_selection" style="background-color:Blue;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+   
+     <p style="margin-left:20px; margin-top:20px; font-family:Helvetica; display:inline-block;">Selecting:</p><div id="selected_color" class="color_selection" style="background-color:Black; display:inline-block; position:absolute; margin-left:9px; margin-top:14px;"></div>
+     <input type="button" value="Select color" style="margin-left:204px; display:inline-block; " id="selectColorbtn"/>
+    <img src="../images/cross.png" width="30" height="30" style="position:absolute; margin-left:5px; margin-top:-120px; z-index:50;" class="closebtns" id="closebtn1"/ >
+    
+    </div>
+    
+     <!--second box----------------------------------->
+     
+     <div id="fill_color_selection">
+    
+    <abbr title="Dark Red"><div id="Dark_red" class="fillcolor_selection" style="background-color:DarkRed; margin-left:23px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Red"><div id="Red" class="fillcolor_selection" style="background-color:Red; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Orange"><div id="Orange" class="fillcolor_selection" style="background-color:Orange; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Dark Orange"><div id="Dark_orange" class="fillcolor_selection" style="background-color:DarkOrange; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Yellow"><div id="Yellow" class="fillcolor_selection" style="background-color:Yellow; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Light Green"><div id="Light_green" class="fillcolor_selection" style="background-color:LightGreen; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Green"><div id="Green" class="fillcolor_selection" style="background-color:Green; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Dark Green"><div id="Dark_green" class="fillcolor_selection" style="background-color:DarkGreen; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="Light Blue"><div id="Light_blue" class="fillcolor_selection" style="background-color:LightBlue; margin-left:10px; margin-top:25px; display:inline-block;"></div></abbr>
+    <abbr title="White"><div id="White "class="fillcolor_selection" style="background-color:White; margin-left:23px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Light Grey"><div id="LightGrey" class="fillcolor_selection" style="background-color:LightGrey;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr> 
+    <abbr title="Dark Grey"><div id="DarkGrey "class="fillcolor_selection" style="background-color:DarkGrey;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Grey"><div id="Grey "class="fillcolor_selection" style="background-color:Grey;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Black"><div id="Black" class="fillcolor_selection" style="background-color:Black; margin-left:10px;  margin-top:20px; display:inline-block;"></div></abbr>
+    
+    <abbr title="Pink"><div id="Pink" class="fillcolor_selection" style="background-color:Pink;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Purple"><div id="Purple" class="fillcolor_selection" style="background-color:Purple;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Dark Blue"><div id="DarkBlue" class="fillcolor_selection" style="background-color:DarkBlue;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+    <abbr title="Blue"><div id="Blue" class="fillcolor_selection" style="background-color:Blue;  margin-left:10px; margin-top:20px; display:inline-block;"></div></abbr>
+   
+     <p style="margin-left:20px; margin-top:20px; font-family:Helvetica; display:inline-block;">Selecting:</p><div id="fillselected_color" class="fillcolor_selection" style="background-color:White; display:inline-block; position:absolute; margin-left:9px; margin-top:14px;"></div>
+     <input type="button" value="Select color" style="margin-left:204px; display:inline-block; " id="selectfillColorbtn"/>
+	<img src="../images/cross.png" width="30" height="30" style="position:absolute; margin-left:5px; margin-top:-120px; z-index:50;" class="closebtns" id="closebtn2"/ >     
+    </div>
+    
+    <div id="tool_selection_box">
+    <img src="../images/brush.png" width="95" height="95" style="display:inline-block; margin:15px; margin-left:32px;" />
+    <img src="../images/smallbrush.png" width="105" height="95" style="display:inline-block; margin:15px; margin-left:15px;" />
+    <img src="../images/eraser.png" width="95" height="90" style="display:inline-block; margin:15px; margin-left:15px; margin-right:10px;" />
+    <div id="tool_radio" style="margin-top:7px;">
+    <form action="">
+    <input type="radio" style="margin-left:23px;" name="tool" value="bigbrush" id="radio1" checked> Big brush
+    <input type="radio" style="margin-left:47px;" name="tool" value="smallbrush" id="radio2"> Small brush
+    <input type="radio" style="margin-left:40px;" name="tool" value="eraser" id="radio3"> Eraser
+    </form>
+    </div>   
+    <img src="../images/cross.png" width="30" height="30" style="position:absolute; margin-top:-169px;  margin-left:416px; z-index:50;" class="closebtns" id="closebtn3"/ > 
+    
+    </div>
+    
+    <div id="blackshade"></div>
+    
+    <p style="font-family:Arial, Helvetica, sans-serif; margin-left:35px;">Beta 1.0.0</p>
+</body>
+</html>
