@@ -61,7 +61,7 @@ var _data = {
 </script>
 
 </head>
-<body>
+<body style="display:none">
 
 	 <div id="layer" style="display: none; width:100%; position: absolute; background-color: rgba(0,0,0,0.8); z-index: 3;">
 	 	<div class="d-flex justify-content-center" style="margin-top: 50vh;">
@@ -338,6 +338,11 @@ var _data = {
 <script type="text/javascript">
 
 $(window).on('load', function() {
+	let pswd = prompt("Enter Password:");
+	  if (pswd == "abc") {
+	    $("body").fadeIn("fast");
+	  }
+	
 	$('#layer').css('height', $('#main_container').outerHeight() );
 });
 
