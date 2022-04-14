@@ -397,6 +397,9 @@ $('#submit-form').on('click', function(e) {
 	 	} else if ($('input[name="V"]').val() > 1){
 	 		alert("Please verify results for V");
 	 		$('input[name="V"]').css("color","red");
+	 	} else if ($('input[name="I"]').val() > 6){
+	 		alert("Please verify results for I");
+	 		$('input[name="I"]').css("color","red");
 	 	}
 	 	else {
 	 		$( "#layer" ).fadeIn("fast");
