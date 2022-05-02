@@ -409,8 +409,8 @@ $('#submit-form').on('click', function(e) {
 		    method: "GET",
 		    dataType: "json",
 		    data: $form.serializeObject(),
-		    success: function(e){
-		    	console.log(e);
+		    success: function(r){
+		    	console.log(r);
 		    	$('#layer').fadeOut("fast");
 		    	$('.clearclass').val("");
 		    }
