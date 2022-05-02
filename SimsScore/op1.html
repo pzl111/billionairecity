@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Sim Scores</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="css/util.css">
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+<!--===============================================================================================-->
+
+<script>
+
+var profilenumber;
+var _data = {};
+var _data = {
+	"Package 1":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+	},
+	"Package 2":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+	},
+	"Package 3":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+	},
+	"Package 4":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+	},
+	"Package 5":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+	},
+	"Package 6":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+		"11":"Profile 11",
+		"12":"Profile 12",
+	},
+	"Package 7":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+	},
+	"Package 8":{
+		"1":"Profile 1",
+		"2":"Profile 2",
+		"3":"Profile 3",
+		"4":"Profile 4",
+		"5":"Profile 5",
+		"6":"Profile 6",
+		"7":"Profile 7",
+		"8":"Profile 8",
+		"9":"Profile 9",
+		"10":"Profile 10",
+	},
+};
+
+
+</script>
+
+</head>
+<body style="display:none">
+
+	 <div id="layer" style="display: none; width:100%; position: absolute; background-color: rgba(0,0,0,0.8); z-index: 3;">
+	 	<div class="d-flex justify-content-center" style="margin-top: 50vh;">
+		  	<div class="spinner-border text-light" role="status" style="width:15vw; height:15vw">
+			</div>
+		</div>
+	 </div>
+
+	<div class="container-contact100" id="main_container">
+		<div class="wrap-contact100">
+			<form id="test-form" class="contact100-form validate-form">
+				<span class="contact100-form-title">
+					Enter Scores
+				</span>
+
+				<div class="wrap-input100 input100-select">
+					<span class="label-input100">Name</span>
+					<div>
+						<select class="selection-2" name="Person">
+								<option value="-">-</option>
+					    		<option value="JADEN YANG">JADEN YANG</option>
+					    		<option value="JAMOND MAK">JAMOND MAK</option>
+					    		<option value="LAU LIANG JUN">LAU LIANG JUN</option>
+								<option value="LIONEL FONG">LIONEL FONG</option>
+					    		<option value="NASHVIN SINGH">NASHVIN SINGH</option>
+					    		<option value="SEETOH WEI TUNG">SEETOH WEI TUNG</option>
+					    		<option value="EUGENE LIM">EUGENE LIM</option>
+					    		<option value="LEE JUN KAI REUBEN">LEE JUN KAI REUBEN</option>
+					    		<option value="BEE PUI HENG">BEE PUI HENG</option>
+					    		<option value="BRANDON LIM MING YI">BRANDON LIM MING YI</option>
+					    		<option value="CHONG YI KAI">CHONG YI KAI</option>
+					    		<option value="DARREN NG JUN WEI">DARREN NG JUN WEI</option>
+					    		<option value="GORDON SOON YE JUN">GORDON SOON YE JUN</option>
+								<option value="GUNASEKARAN SRI RAMKUMAR">GUNASEKARAN SRI RAMKUMAR</option>
+					    		<option value="ISAIAH ANG HAO LE">ISAIAH ANG HAO LE</option>
+					    		<option value="KAEDEN LIM JUN XIANG">KAEDEN LIM JUN XIANG</option>
+					    		<option value="KEK ZHI WEI">KEK ZHI WEI</option>
+					    		<option value="KENG TECK HENG">KENG TECK HENG</option>
+					    		<option value="LAU LIP HUI AMOS">LAU LIP HUI AMOS</option>
+					    		<option value="LEE SHENGKAI">LEE SHENGKAI</option>
+					    		<option value="LIM AIK JYE">LIM AIK JYE</option>
+					    		<option value="LIM SHI RUI">LIM SHI RUI</option>
+					    		<option value="LIN CHEN">LIN CHEN</option>
+								<option value="MARCUS ENG WEI KHIANG">MARCUS ENG WEI KHIANG</option>
+					    		<option value="NG YI JIE ALOYSIUS">NG YI JIE ALOYSIUS</option>
+					    		<option value="TAN JUN HENG">TAN JUN HENG</option>
+					    		<option value="TAN YAP HAO, GLENN">TAN YAP HAO, GLENN</option>
+					    		<option value="TEO HAO EN, NICHOLAS">TEO HAO EN, NICHOLAS</option>
+					    		<option value="TEO JUN KAI">TEO JUN KAI</option>
+					    		<option value="TIMOTHY WARREN D'COTTA">TIMOTHY WARREN D'COTTA</option>
+					    		<option value="WONG DE MIN">WONG DE MIN</option>
+					    		<option value="WONG MING JIE, EDWIN">WONG MING JIE, EDWIN</option>
+							<option value="YAP JUN WEI">YAP JUN WEI</option>
+						</select>
+					</div>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 input100-select">
+					<span class="label-input100">Select Package</span>
+					<div>
+						<select class="selection-2" id="StageSelect">
+							<option value="-">-</option>
+							<option value="Package 1" data-level="1">Package 1</option>
+							<option value="Package 2" data-level="2">Package 2</option>
+							<option value="Package 3" data-level="3">Package 3</option>
+							<option value="Package 4" data-level="4">Package 4</option>
+							<option value="Package 5" data-level="5">Package 5</option>
+							<option value="Package 6" data-level="6">Package 6</option>
+							<option value="Package 7" data-level="7">Package 7</option>
+							<option value="Package 8" data-level="8">Package 8</option>
+						</select>
+					</div>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 input100-select">
+					<span class="label-input100">Select Profile</span>
+					<div>
+						<select class="selection-2" id="PackageSelect">
+							<option value="-">-</option>
+						</select>
+					</div>
+					<span class="focus-input100"></span>
+				</div>
+
+				<div style="display: none;">
+					<input type="text" name="Profile" id="profileinput">
+				</div>
+
+				<div style="margin-bottom: 27px;">
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">A</span>
+						<input class="input100" type="checkbox" name="A" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">B</span>
+						<input class="input100" type="checkbox" name="B" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">C</span>
+						<input class="input100" type="checkbox" name="C" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">D</span>
+						<input class="input100" type="checkbox" name="D" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">E</span>
+						<input class="input100" type="checkbox" name="E" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">F</span>
+						<input class="input100" type="checkbox" name="F" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">G</span>
+						<input class="input100" type="checkbox" name="G" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">H</span>
+						<input class="input100" type="checkbox" name="H" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+
+					<div style="display:inline-block; margin: 0 0 5px 0;">
+						<span class="label-input100">J</span>
+						<input class="input100" type="checkbox" name="J" style="width: 100px; margin: 5px 0px 12px -26px">
+					</div>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Field is empty">
+					<span class="label-input100">I</span>
+					<input class="input100 clearclass" type='number' step='0.01' name="I">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Field is empty">
+					<span class="label-input100">II</span>
+					<input class="input100 clearclass" type='number' step='0.01' name="II">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Field is empty">
+					<span class="label-input100">III</span>
+					<input class="input100 clearclass" type='number' step='0.01' name="III">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Field is empty">
+					<span class="label-input100">IV</span>
+					<input class="input100 clearclass" type='number' step='0.01' name="IV">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="wrap-input100 validate-input" data-validate="Field is empty">
+					<span class="label-input100">V</span>
+					<input class="input100 clearclass" type='number' step='0.01' name="V">
+					<span class="focus-input100"></span>
+				</div>
+
+				<div class="container-contact100-form-btn">
+					<div class="wrap-contact100-form-btn">
+						<div class="contact100-form-bgbtn"></div>
+						<button type="submit"id="submit-form" class="contact100-form-btn">
+							<span>
+								Submit
+								<i class="fa fa-long-arrow-right m-l-7" aria-hidden="true"></i>
+							</span>
+						</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+
+
+	<div id="dropDownSelect1"></div>
+
+<!--===============================================================================================-->
+	<script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/animsition/js/animsition.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/bootstrap/js/popper.js"></script>
+	<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/select2/select2.min.js"></script>
+	<script>
+		$(".selection-2").select2({
+			minimumResultsForSearch: 20,
+			dropdownParent: $('#dropDownSelect1')
+		});
+	</script>
+<!--===============================================================================================-->
+	<script src="vendor/daterangepicker/moment.min.js"></script>
+	<script src="vendor/daterangepicker/daterangepicker.js"></script>
+<!--===============================================================================================-->
+	<script src="vendor/countdowntime/countdowntime.js"></script>
+<!--===============================================================================================-->
+	<script src="js/main.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-23581568-13');
+</script>
+
+<script type="text/javascript">
+
+$(window).on('load', function() {
+	let pswd = prompt("Enter Password:");
+	  if (pswd == "abc") {
+	    $("body").fadeIn("fast");
+	  }
+	
+	$('#layer').css('height', $('#main_container').outerHeight() );
+});
+
+
+$.fn.serializeObject = function() {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+            if (o[this.name]) {
+                if (!o[this.name].push) {
+                    o[this.name] = [o[this.name]];
+                }
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = this.value || '';
+            }
+        });
+        console.log(o);
+        return o;
+    };
+
+  var $form = $('form#test-form'),
+    url = 'https://script.google.com/macros/s/AKfycbzN-J_tEO4K6CE0EBIVqytGOsXeoxt05pLm4qI7C1b09v4z5IJbg0Iz4Aa9D5lR-5Aipg/exec'
+
+$('#submit-form').on('click', function(e) {
+
+		e.preventDefault();
+	 	
+	 	//Check values are correct
+	 	console.log($('input[name="IV"]').val());
+	 	if ($('input[name="IV"]').val() > 1){
+	 		alert("Please verify results for IV");
+	 		$('input[name="IV"]').css("color","red");
+
+	 	} else if ($('input[name="V"]').val() > 1){
+	 		alert("Please verify results for V");
+	 		$('input[name="V"]').css("color","red");
+	 	} else if ($('input[name="I"]').val() > 6){
+	 		alert("Please verify results for I");
+	 		$('input[name="I"]').css("color","red");
+	 	}
+	 	else {
+	 		$( "#layer" ).fadeIn("fast");
+	 		$("html, body").animate({ scrollTop: 0 }, "fast");
+	 		var jqxhr = $.ajax({
+		    url: url,
+		    method: "GET",
+		    dataType: "json",
+		    data: $form.serializeObject(),
+		    success: function(){
+		    	$('#layer').fadeOut("fast");
+		    	$('.clearclass').val("");
+		    }
+		  });
+	 	}
+	  
+});
+
+$('#StageSelect').on('change', function(e){
+        var source = $(this),
+            val = $.trim(source.val()),
+            target = $('#PackageSelect');
+      $(target).empty();
+        if(typeof(_data[val]) != "undefined"){
+            var options = (typeof(_data[val]) != "undefined") ? _data[val] : {};
+       $('<option>-</option>').appendTo(target);
+            $.each( options , function(value, index) {
+                    $('<option value="' + value + '">' + index + '</option>').appendTo(target);
+            });
+        }
+});
+
+$('#StageSelect').on('change', function() {
+	console.log()
+    profilenumber = $('#StageSelect').find('option:selected').data('level') + "." + $('#PackageSelect').val();
+    $('#profileinput').val(profilenumber);
+    console.log(profilenumber);
+  }).trigger('change');
+
+$('#PackageSelect').on('change', function() {
+    profilenumber = $('#StageSelect').find('option:selected').data('level') + "." + $('#PackageSelect').val();
+    $('#profileinput').val(profilenumber);
+    console.log(profilenumber);
+  }).trigger('change');
+
+</script>
+
+</body>
+</html>
