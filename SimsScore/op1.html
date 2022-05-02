@@ -361,6 +361,14 @@ $(window).on('load', function() {
 	  }
 	
 	$('#layer').css('height', $('#main_container').outerHeight() );
+	$.ajax({
+	  type: "POST",
+	  url: 'https://script.google.com/macros/s/AKfycbzN-J_tEO4K6CE0EBIVqytGOsXeoxt05pLm4qI7C1b09v4z5IJbg0Iz4Aa9D5lR-5Aipg/exec',
+	  //data: data,
+	  success: function(a){
+	  	console.log(a);
+	  }
+	});
 });
 
 
