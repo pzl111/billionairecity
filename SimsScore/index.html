@@ -312,20 +312,36 @@ $.fn.serializeObject = function() {
 
 $('#submit-form').on('click', function(e) {
 
-	 	$( "#layer" ).fadeIn( "fast", function() {
-    		$("html, body").animate({ scrollTop: 0 }, "fast");
-  		});
-	  e.preventDefault();
-	  var jqxhr = $.ajax({
-	    url: url,
-	    method: "GET",
-	    dataType: "json",
-	    data: $form.serializeObject(),
-	    success: function(){
-	    	$('#layer').fadeOut("fast");
-	    	$('.clearclass').val("");
-	    }
-	  });
+	e.preventDefault();
+	 	
+	 	//Check values are correct
+	 	console.log($('input[name="IV"]').val());
+	 	if ($('input[name="IV"]').val() > 1){
+	 		alert("Please verify results for IV");
+	 		$('input[name="IV"]').css("color","red");
+
+	 	} else if ($('input[name="V"]').val() > 1){
+	 		alert("Please verify results for V");
+	 		$('input[name="V"]').css("color","red");
+	 	} else if ($('input[name="I"]').val() > 6){
+	 		alert("Please verify results for I");
+	 		$('input[name="I"]').css("color","red");
+	 	}
+	 	else {
+	 		$( "#layer" ).fadeIn("fast");
+	 		$("html, body").animate({ scrollTop: 0 }, "fast");
+	 		var jqxhr = $.ajax({
+		    url: url,
+		    method: "GET",
+		    dataType: "json",
+		    data: $form.serializeObject(),
+		    success: function(r){
+		    	console.log(r);
+		    	$('#layer').fadeOut("fast");
+		    	$('.clearclass').val("");
+		    }
+		  });
+	 	}
 	 
  
 })
