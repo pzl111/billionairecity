@@ -336,7 +336,7 @@ $(window).on('load', function() {
 	  success: function(a){
 	  	var nameArr = a.split(',');
 		console.log(nameArr);
-		for (var i = 0; i<=nameArr.length; i++){
+		for (var i = 0; i<nameArr.length; i++){
 		    var opt = document.createElement('option');
 		    opt.value = nameArr[i];
 		    opt.innerHTML = nameArr[i];
