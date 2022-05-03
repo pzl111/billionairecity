@@ -154,39 +154,6 @@ var _data = {
 					<div>
 						<select class="selection-2" name="Person">
 								<option value="-">-</option>
-					    		<option value="JADEN YANG">JADEN YANG</option>
-					    		<option value="JAMOND MAK">JAMOND MAK</option>
-					    		<option value="LAU LIANG JUN">LAU LIANG JUN</option>
-								<option value="LIONEL FONG">LIONEL FONG</option>
-					    		<option value="NASHVIN SINGH">NASHVIN SINGH</option>
-					    		<option value="SEETOH WEI TUNG">SEETOH WEI TUNG</option>
-					    		<option value="EUGENE LIM">EUGENE LIM</option>
-					    		<option value="LEE JUN KAI REUBEN">LEE JUN KAI REUBEN</option>
-					    		<option value="BEE PUI HENG">BEE PUI HENG</option>
-					    		<option value="BRANDON LIM MING YI">BRANDON LIM MING YI</option>
-					    		<option value="CHONG YI KAI">CHONG YI KAI</option>
-					    		<option value="DARREN NG JUN WEI">DARREN NG JUN WEI</option>
-					    		<option value="GORDON SOON YE JUN">GORDON SOON YE JUN</option>
-								<option value="GUNASEKARAN SRI RAMKUMAR">GUNASEKARAN SRI RAMKUMAR</option>
-					    		<option value="ISAIAH ANG HAO LE">ISAIAH ANG HAO LE</option>
-					    		<option value="KAEDEN LIM JUN XIANG">KAEDEN LIM JUN XIANG</option>
-					    		<option value="KEK ZHI WEI">KEK ZHI WEI</option>
-					    		<option value="KENG TECK HENG">KENG TECK HENG</option>
-					    		<option value="LAU LIP HUI AMOS">LAU LIP HUI AMOS</option>
-					    		<option value="LEE SHENGKAI">LEE SHENGKAI</option>
-					    		<option value="LIM AIK JYE">LIM AIK JYE</option>
-					    		<option value="LIM SHI RUI">LIM SHI RUI</option>
-					    		<option value="LIN CHEN">LIN CHEN</option>
-								<option value="MARCUS ENG WEI KHIANG">MARCUS ENG WEI KHIANG</option>
-					    		<option value="NG YI JIE ALOYSIUS">NG YI JIE ALOYSIUS</option>
-					    		<option value="TAN JUN HENG">TAN JUN HENG</option>
-					    		<option value="TAN YAP HAO, GLENN">TAN YAP HAO, GLENN</option>
-					    		<option value="TEO HAO EN, NICHOLAS">TEO HAO EN, NICHOLAS</option>
-					    		<option value="TEO JUN KAI">TEO JUN KAI</option>
-					    		<option value="TIMOTHY WARREN D'COTTA">TIMOTHY WARREN D'COTTA</option>
-					    		<option value="WONG DE MIN">WONG DE MIN</option>
-					    		<option value="WONG MING JIE, EDWIN">WONG MING JIE, EDWIN</option>
-							<option value="YAP JUN WEI">YAP JUN WEI</option>
 						</select>
 					</div>
 					<span class="focus-input100"></span>
@@ -361,6 +328,21 @@ $(window).on('load', function() {
 	  }
 	
 	$('#layer').css('height', $('#main_container').outerHeight() );
+	$.ajax({
+	  type: "POST",
+	  url: 'https://script.google.com/macros/s/AKfycbyd4-3dL6s978s6GeX6hgUX810_qPxUPT6aRuxmJ9ErzdajPlM/exec',
+	  //data: data,
+	  success: function(a){
+	  	var nameArr = a.split(',');
+		console.log(nameArr);
+		for (var i = 0; i<nameArr.length; i++){
+		    var opt = document.createElement('option');
+		    opt.value = nameArr[i];
+		    opt.innerHTML = nameArr[i];
+		    document.getElementsByName("Person")[0].appendChild(opt);
+		}
+	  }
+	});
 });
 
 
@@ -397,7 +379,7 @@ $('#submit-form').on('click', function(e) {
 	 	} else if ($('input[name="V"]').val() > 1){
 	 		alert("Please verify results for V");
 	 		$('input[name="V"]').css("color","red");
-	 	} else if ($('input[name="I"]').val() > 6){
+	 	} else if ($('input[name="I"]').val() > 8){
 	 		alert("Please verify results for I");
 	 		$('input[name="I"]').css("color","red");
 	 	}
