@@ -277,6 +277,7 @@ $(window).on('load', function() {
 	  url: 'https://script.google.com/macros/s/AKfycbyd4-3dL6s978s6GeX6hgUX810_qPxUPT6aRuxmJ9ErzdajPlM/exec',
 	  //data: data,
 	  success: function(a){
+	  	console.log(a);
 	  	var raw = a.split(',');
 	  	var nameArr = raw.filter(function(e) { return e !== 'TEMPLATE' })
 			console.log(nameArr);
