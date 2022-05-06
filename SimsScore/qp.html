@@ -334,7 +334,7 @@ $(window).on('load', function() {
 	  //data: data,
 	  success: function(a){
 	  	console.log(a);
-	  	var raw = a.split(',');
+	  	var raw = a.split('|');
 	  	var nameArr = raw.filter(function(e) { return e !== 'TEMPLATE' })
 		console.log(nameArr);
 		for (var i = 0; i<nameArr.length; i++){
