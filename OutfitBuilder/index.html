@@ -365,8 +365,18 @@
 					</div>
 
 					<div class="col-12 mb-3 ms-2">
-					    <input class="style1 align-middle" type="color" id="footwear_id" name="footwear" value="#ffffff">
-					    <label class="text-light ms-2" for="footwear">Footwear Color</label>
+					    <input class="style1 align-middle" type="color" id="footwear_pri_id" name="footwear" value="#ffffff">
+					    <label class="text-light ms-2" for="footwear">Footwear Primary Color</label>
+					</div>
+
+					<div class="col-12 mb-3 ms-2">
+					    <input class="style1 align-middle" type="color" id="footwear_sec_id" name="footwear" value="#ffffff">
+					    <label class="text-light ms-2" for="footwear">Footwear Secondary Color</label>
+					</div>
+
+					<div class="col-12 mb-3 ms-2">
+					    <input class="style1 align-middle" type="color" id="footwear_ter_id" name="footwear" value="#ffffff">
+					    <label class="text-light ms-2" for="footwear">Footwear Tertiary Color</label>
 					</div>
 
 					<div class="col-12 mb-3 ms-2">
@@ -393,8 +403,14 @@ colorTop.addEventListener("input", topcolorpicker, false);
 colorBottom = document.querySelector("#bottom_id");
 colorBottom.addEventListener("input", bottomcolorpicker, false);
 
-colorFootwear = document.querySelector("#footwear_id");
-colorFootwear.addEventListener("input", footwearcolorpicker, false);
+colorFootwearPri = document.querySelector("#footwear_pri_id");
+colorFootwearPri.addEventListener("input", footwearpricolorpicker, false);
+
+colorFootwearSec = document.querySelector("#footwear_sec_id");
+colorFootwearSec.addEventListener("input", footwearseccolorpicker, false);
+
+colorFootwearTer = document.querySelector("#footwear_ter_id");
+colorFootwearTer.addEventListener("input", footweartercolorpicker, false);
 
 colorChecker = document.querySelector("#checker_id");
 colorChecker.addEventListener("input", checkercolorpicker, false);
@@ -414,9 +430,21 @@ function bottomcolorpicker(event) {
 	});
 }
 
-function footwearcolorpicker(event) {
+function footwearpricolorpicker(event) {
 	document.querySelectorAll(".footwear").forEach((e) => {
 	    e.style.setProperty('--primary-color', event.target.value);
+	});
+}
+
+function footwearseccolorpicker(event) {
+	document.querySelectorAll(".footwear").forEach((e) => {
+	    e.style.setProperty('--secondary-color', event.target.value);
+	});
+}
+
+function footweartercolorpicker(event) {
+	document.querySelectorAll(".footwear").forEach((e) => {
+	    e.style.setProperty('--tertiary-color', event.target.value);
 	});
 }
 
