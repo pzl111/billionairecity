@@ -13,25 +13,6 @@
 		    background-color: #2A3D49;
 		}
 
-		.top {
-			 --primary-color: #ffffff;
-			 --line-color: #000000;
-		}
-
-		.bottom {
-			 --primary-color: #ffffff;
-			 --line-color:#000000;
-		}
-
-		.footwear {
-			 --primary-color:#ffffff; 
-			 --secondary-color:#ffffff;
-			 --tertiary-color: #ffffff; 
-			 --stripe-color:#ffffff; 
-			 --checker-color:#ffffff; 
-			 --line-color:#000000;
-		}
-
 		.square-container {
 			margin-top: 3px;
 			padding-left: 12px;
@@ -184,8 +165,9 @@
 
 					<div class="square btn btn-block top_item" onclick="filter('tshirts'); change_top(this)" style="display: block;" data-type='tshirt', data-color='white', data-pricolor='#ffffff' data-linecolor='#000000'>
 					    <div class="content align-middle">
-					    	<div class="content align-middle"><div style="width: 85%; border: 0px solid black; margin: auto; margin-top: 8%;" id='tshirt_filter_card'></div></div>
-					    </div>
+					    	<div style="width: 85%; border: 0px solid black; margin: auto; margin-top: 8%;" id='tshirt_filter_card'>
+					    	</div>
+						</div>
 					</div>
 
 					<div class="square btn btn-block top_item" onclick="filter('long-sleeve-shirts'); change_top(this)" style="display: block;" data-type='long-sleeve-shirt', data-color='white', data-pricolor='#ffffff' data-linecolor='#000000'>
@@ -346,13 +328,44 @@ var footwear = "vans";
 var state = 'all';
 
 // Wardrobe Items
-var tshirts_arr = ['royalblue', 'darkgreen', 'white', 'black', 'lightblue'];
-var long_sleeve_shirts_arr = ['navy', 'maroon', 'white', 'red', 'gray'];
-var sweaters_arr = ['olive'];
-var chinos_arr = ['khaki', 'white', 'navy', 'brown'];
-var shorts_arr = ['khaki', 'white', 'navy', 'gray'];
+
+var tshirts_arr = ['red', 'maroon', 'orange', 'yellow', 'green', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'khaki', 'brown', 'graybrown', 'white', 'black', 'gray'];
+var long_sleeve_shirts_arr = ['red', 'maroon', 'orange', 'yellow', 'green', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'khaki', 'brown', 'graybrown', 'white', 'black', 'gray'];
+var sweaters_arr = ['red', 'maroon', 'orange', 'yellow', 'green', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'khaki', 'graybrown', 'white', 'black', 'gray'];
+var chinos_arr = ['red', 'maroon', 'orange', 'yellow', 'green', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'khaki', 'brown', 'graybrown', 'white', 'black', 'gray'];
+var shorts_arr = ['red', 'maroon', 'orange', 'yellow', 'green', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'khaki', 'brown', 'graybrown', 'white', 'black', 'gray'];
 var vans_arr = ['black-white', 'white-navy'];
 var gazelles_arr = ['white-black-red'];
+
+// var tshirts_arr = [];
+// var long_sleeve_shirts_arr = [];
+// var sweaters_arr = [];
+// var chinos_arr = [];
+// var shorts_arr = [];
+// var vans_arr = [];
+// var gazelles_arr = [];
+
+// var tshirts_arr = ['royalblue', 'darkgreen', 'white', 'black', 'lightblue'];
+// var long_sleeve_shirts_arr = ['darkblue', 'maroon', 'white', 'red', 'gray'];
+// var sweaters_arr = ['olive'];
+// var chinos_arr = ['khaki', 'white', 'darkblue', 'graybrown'];
+// var shorts_arr = ['khaki', 'white', 'darkblue', 'gray'];
+// var vans_arr = ['black-white', 'white-navy'];
+// var gazelles_arr = ['white-black-red'];
+
+// // convert array to JSON string using JSON.stringify()
+// const jsonArray = JSON.stringify(myArray);
+
+// // save to localStorage using "array" as the key and jsonArray as the value
+// localStorage.setItem('array', jsonArray);
+
+// // get the JSON string from localStorage
+// const str = localStorage.getItem('array');
+
+// // convert JSON string to relevant object
+// const parsedArray = JSON.parse(str);
+
+// console.log(parsedArray);
 
 
 // Duplicate Shoe Elements
@@ -808,7 +821,68 @@ function custom() {
 // Colorise Cards By Dfferent Colors
 function colorise_card(color, clone, clone_card)  {
 
+	clone_card.dataset.seccolor = '#ffffff';
+	clone_card.dataset.tercolor = '#ffffff';
+	clone_card.dataset.checkercolor = '#ffffff';
+	clone_card.dataset.stripecolor = '#ffffff';
+
 	switch (color) {
+
+		case 'red':
+			clone.style.setProperty('--primary-color', '#6d1616');
+			clone_card.dataset.color = 'red';
+			clone_card.dataset.pricolor = '#6d1616';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'maroon':
+			clone.style.setProperty('--primary-color', '#3c1010');
+			clone_card.dataset.color = 'maroon';
+			clone_card.dataset.pricolor = '#3c1010';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'orange':
+			clone.style.setProperty('--primary-color', '#e74a1d');
+			clone_card.dataset.color = 'orange';
+			clone_card.dataset.pricolor = '#e74a1d';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'yellow':
+			clone.style.setProperty('--primary-color', '#ffc200');
+			clone_card.dataset.color = 'yellow';
+			clone_card.dataset.pricolor = '#ffc200';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'green':
+			clone.style.setProperty('--primary-color', '#39892f');
+			clone_card.dataset.color = 'green';
+			clone_card.dataset.pricolor = '#39892f';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'olive':
+			clone.style.setProperty('--primary-color', '#494c20');
+			clone_card.dataset.color = 'olive';
+			clone_card.dataset.pricolor = '#494c20';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'darkgreen':
+			clone.style.setProperty('--primary-color', '#16321d');
+			clone_card.dataset.color = 'darkgreen';
+			clone_card.dataset.pricolor = '#16321d';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'lightblue':
+			clone.style.setProperty('--primary-color', '#668099');
+			clone_card.dataset.color = 'lightblue';
+			clone_card.dataset.pricolor = '#668099';
+			clone_card.dataset.linecolor = '#000000';
+			break;
 
 		case 'royalblue':
 			clone.style.setProperty('--primary-color', '#1748a2');
@@ -817,10 +891,45 @@ function colorise_card(color, clone, clone_card)  {
 			clone_card.dataset.linecolor = '#000000';
 			break;
 
-		case 'darkgreen':
-			clone.style.setProperty('--primary-color', '#16321d');
-			clone_card.dataset.color = 'darkgreen';
-			clone_card.dataset.pricolor = '#16321d';
+		case 'navy':
+			clone.style.setProperty('--primary-color', '#1e2e3e');
+			clone_card.dataset.color = 'navy';
+			clone_card.dataset.pricolor = '#1e2e3e';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'darkblue':
+			clone.style.setProperty('--primary-color', '#03172a');
+			clone_card.dataset.color = 'darkblue';
+			clone_card.dataset.pricolor = '#03172a';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'purple':
+			clone.style.setProperty('--primary-color', '#5c329a');
+			clone_card.dataset.color = 'purple';
+			clone_card.dataset.pricolor = '#5c329a';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'khaki':
+			clone.style.setProperty('--primary-color', '#ad9a6b');
+			clone_card.dataset.color = 'khaki';
+			clone_card.dataset.pricolor = '#ad9a6b';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'brown':
+			clone.style.setProperty('--primary-color', '#453011');
+			clone_card.dataset.color = 'brown';
+			clone_card.dataset.pricolor = '#453011';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'graybrown':
+			clone.style.setProperty('--primary-color', '#40392e');
+			clone_card.dataset.color = 'graybrown';
+			clone_card.dataset.pricolor = '#40392e';
 			clone_card.dataset.linecolor = '#000000';
 			break;
 
@@ -839,59 +948,10 @@ function colorise_card(color, clone, clone_card)  {
 			clone_card.dataset.linecolor = '#2a2a2a';
 			break;
 
-		case 'lightblue':
-			clone.style.setProperty('--primary-color', '#668099');
-			clone_card.dataset.color = 'lightblue';
-			clone_card.dataset.pricolor = '#668099';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
-		case 'navy':
-			clone.style.setProperty('--primary-color', '#1e2e3e');
-			clone_card.dataset.color = 'navy';
-			clone_card.dataset.pricolor = '#1e2e3e';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
-		case 'maroon':
-			clone.style.setProperty('--primary-color', '#3c1010');
-			clone_card.dataset.color = 'maroon';
-			clone_card.dataset.pricolor = '#3c1010';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
-		case 'red':
-			clone.style.setProperty('--primary-color', '#6d1616');
-			clone_card.dataset.color = 'red';
-			clone_card.dataset.pricolor = '#6d1616';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
 		case 'gray':
 			clone.style.setProperty('--primary-color', '#606060');
 			clone_card.dataset.color = 'gray';
 			clone_card.dataset.pricolor = '#606060';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
-		case 'olive':
-			clone.style.setProperty('--primary-color', '#494c20');
-			clone_card.dataset.color = 'olive';
-			clone_card.dataset.pricolor = '#494c20';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
-		case 'khaki':
-			clone.style.setProperty('--primary-color', '#ad9a6b');
-			clone_card.dataset.color = 'khaki';
-			clone_card.dataset.pricolor = '#ad9a6b';
-			clone_card.dataset.linecolor = '#000000';
-			break;
-
-		case 'brown':
-			clone.style.setProperty('--primary-color', '#453011');
-			clone_card.dataset.color = 'brown';
-			clone_card.dataset.pricolor = '#453011';
 			clone_card.dataset.linecolor = '#000000';
 			break;
 
@@ -1157,14 +1217,44 @@ function make_gazelles(arr) {
 
 }
 
-make_tshirts(tshirts_arr);
-make_long_sleeve_shirts(long_sleeve_shirts_arr);
-make_sweaters(sweaters_arr);
-make_chinos(chinos_arr);
-make_shorts(shorts_arr);
-make_vans(vans_arr);
-make_gazelles(gazelles_arr);
+// Toggle Categories Based on Wardrobe
+function toggle_categories() {
+	if (tshirts_arr.length === 0) {
+		document.querySelector("#tshirt_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+	if (long_sleeve_shirts_arr.length === 0) {
+		document.querySelector("#long-sleeve-shirt_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+	if (sweaters_arr.length === 0) {
+		document.querySelector("#sweater_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+	if (chinos_arr.length === 0) {
+		document.querySelector("#chino_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+	if (shorts_arr.length === 0) {
+		document.querySelector("#shorts_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+	if (vans_arr.length === 0) {
+		document.querySelector("#vans_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+	if (gazelles_arr.length === 0) {
+		document.querySelector("#gazelle_filter_card").parentElement.parentElement.style.setProperty('display', "none");
+	}
+}
 
+toggle_categories();
+
+function make_clothes() {
+	make_tshirts(tshirts_arr);
+	make_long_sleeve_shirts(long_sleeve_shirts_arr);
+	make_sweaters(sweaters_arr);
+	make_chinos(chinos_arr);
+	make_shorts(shorts_arr);
+	make_vans(vans_arr);
+	make_gazelles(gazelles_arr);
+}
+
+make_clothes();
 
 </script>
 <p style="position: absolute; color: white; top: 0px; left: 5px;">V1.1.3</p>
