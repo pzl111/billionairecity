@@ -519,7 +519,7 @@ function menu(type) {
 		chinos_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 		shorts_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 		vans_arr = ['black-white', 'white-navy', 'red-white', 'royalblue-white', 'darkgreen-white', 'brown-white'];
-		gazelles_arr = ['white-black-red'];
+		gazelles_arr = ['white', 'white-black-red', 'white-red-red', 'white-black-black', 'white-blue-blue', 'white-green-green'];
 		stansmith_arr = ['white', 'white-red', 'white-black', 'white-blue', 'white-green'];
 		lowsneaker_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 
@@ -1458,6 +1458,70 @@ function colorise_card(color, clone, clone_card)  {
 			clone_card.dataset.linecolor = '#000000';
 			break;
 
+		case 'white-black-black':
+			clone.style.setProperty('--primary-color', '#ffffff');
+			clone.style.setProperty('--secondary-color', '#000000');
+			clone.style.setProperty('--tertiary-color', '#000000');
+			clone.style.setProperty('--checker-color', '#000000');
+			clone.style.setProperty('--stripe-color', '#ffffff');
+			clone.style.setProperty('--line-color', '#000000');
+			clone_card.dataset.color = 'white-black-black';
+			clone_card.dataset.pricolor = '#ffffff';
+			clone_card.dataset.seccolor = '#000000';
+			clone_card.dataset.tercolor = '#000000';
+			clone_card.dataset.checkercolor = '#000000';
+			clone_card.dataset.stripecolor = '#ffffff';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'white-red-red':
+			clone.style.setProperty('--primary-color', '#ffffff');
+			clone.style.setProperty('--secondary-color', '#ff0000');
+			clone.style.setProperty('--tertiary-color', '#ff0000');
+			clone.style.setProperty('--checker-color', '#000000');
+			clone.style.setProperty('--stripe-color', '#ffffff');
+			clone.style.setProperty('--line-color', '#000000');
+			clone_card.dataset.color = 'white-red-red';
+			clone_card.dataset.pricolor = '#ffffff';
+			clone_card.dataset.seccolor = '#ff0000';
+			clone_card.dataset.tercolor = '#ff0000';
+			clone_card.dataset.checkercolor = '#000000';
+			clone_card.dataset.stripecolor = '#ffffff';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'white-blue-blue':
+			clone.style.setProperty('--primary-color', '#ffffff');
+			clone.style.setProperty('--secondary-color', '#1748a2');
+			clone.style.setProperty('--tertiary-color', '#1748a2');
+			clone.style.setProperty('--checker-color', '#000000');
+			clone.style.setProperty('--stripe-color', '#ffffff');
+			clone.style.setProperty('--line-color', '#000000');
+			clone_card.dataset.color = 'white-blue-blue';
+			clone_card.dataset.pricolor = '#ffffff';
+			clone_card.dataset.seccolor = '#1748a2';
+			clone_card.dataset.tercolor = '#1748a2';
+			clone_card.dataset.checkercolor = '#000000';
+			clone_card.dataset.stripecolor = '#ffffff';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
+		case 'white-green-green':
+			clone.style.setProperty('--primary-color', '#ffffff');
+			clone.style.setProperty('--secondary-color', '#39892f');
+			clone.style.setProperty('--tertiary-color', '#39892f');
+			clone.style.setProperty('--checker-color', '#000000');
+			clone.style.setProperty('--stripe-color', '#ffffff');
+			clone.style.setProperty('--line-color', '#000000');
+			clone_card.dataset.color = 'white-green-green';
+			clone_card.dataset.pricolor = '#ffffff';
+			clone_card.dataset.seccolor = '#39892f';
+			clone_card.dataset.tercolor = '#39892f';
+			clone_card.dataset.checkercolor = '#000000';
+			clone_card.dataset.stripecolor = '#ffffff';
+			clone_card.dataset.linecolor = '#000000';
+			break;
+
 		}
 }
 
@@ -2153,7 +2217,7 @@ function main() {
 }
 
 </script>
-<p style="position: absolute; color: white; top: 0px; left: 5px;">V1.4.2</p>
+<p style="position: absolute; color: white; top: 0px; left: 5px;">V1.4.3</p>
 
 </body>
 </html>
