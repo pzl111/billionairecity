@@ -128,16 +128,16 @@
 		<div class="col-12 col-md-6" style="background-color: #1d2e38; max-height: 100%; overflow-y: auto; display: block;" id="mainpanel">
 			<div class="row main_btn" style="height: 50%; min-height: 30vh; background-color: #263741" onclick="menu('catalogue')">
 				<div class="align-self-center text-center">
-					<p class="text-center text-light align-self-center" style="font-size: 2em;">Browse Catalogue</p>
-					<svg xmlns="http://www.w3.org/2000/svg" width="92" height="92" fill="white" class="bi bi-cart-fill text-center" viewBox="0 0 16 16">
+					<p class="text-center text-light align-self-center" style="font-size: 1.8em;">Browse Catalogue</p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" fill="white" class="bi bi-cart-fill text-center" viewBox="0 0 16 16">
 						<path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
 					</svg>
 				</div>
 			</div>
 			<div class="row main_btn" style="height: 50%; min-height: 30vh; background-color: #1d2e38" onclick="menu('wardrobe')">
 				<div class="align-self-center text-center">
-					<p class="text-center text-light align-self-center" style="font-size: 2em;">View Wardrobe</p>
-					<svg xmlns="http://www.w3.org/2000/svg" width="92" height="92" fill="white" class="bi bi-cart-fill text-center" viewBox="0 0 640 512">
+					<p class="text-center text-light align-self-center" style="font-size: 1.8em;">View Wardrobe</p>
+					<svg xmlns="http://www.w3.org/2000/svg" width="76" height="76" fill="white" class="bi bi-cart-fill text-center" viewBox="0 0 640 512">
 						<path d="M211.8 0c7.8 0 14.3 5.7 16.7 13.2C240.8 51.9 277.1 80 320 80s79.2-28.1 91.5-66.8C413.9 5.7 420.4 0 428.2 0h12.6c22.5 0 44.2 7.9 61.5 22.3L628.5 127.4c6.6 5.5 10.7 13.5 11.4 22.1s-2.1 17.1-7.8 23.6l-56 64c-11.4 13.1-31.2 14.6-44.6 3.5L480 197.7V448c0 35.3-28.7 64-64 64H224c-35.3 0-64-28.7-64-64V197.7l-51.5 42.9c-13.3 11.1-33.1 9.6-44.6-3.5l-56-64c-5.7-6.5-8.5-15-7.8-23.6s4.8-16.6 11.4-22.1L137.7 22.3C155 7.9 176.7 0 199.2 0h12.6z"/>
 					</svg>
 				</div>
@@ -174,7 +174,7 @@
 			<!-- Sub Menu -->
 			<div class="row mb-2 menu sub_menu" style="display: none;">
 				<div class="col-3 btn btn-block rounded-0" style="border-bottom: 3px solid #435765; color: white; background-color: #435765;"onclick="back()">
-					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-return-left" viewBox="0 0 16 16" style='margin-top: -3%;'>
 						<path fill-rule="evenodd" d="M14.5 1.5a.5.5 0 0 1 .5.5v4.8a2.5 2.5 0 0 1-2.5 2.5H2.707l3.347 3.346a.5.5 0 0 1-.708.708l-4.2-4.2a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 8.3H12.5A1.5 1.5 0 0 0 14 6.8V2a.5.5 0 0 1 .5-.5z"/>
 					</svg>
 				</div>
@@ -256,7 +256,7 @@
 					<div class="square item btn btn-block top_item tshirt template" id='tshirt_card' onclick="change_top(this)" style="display: none;" data-type='tshirt', data-color='', data-pricolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: none;">
@@ -271,7 +271,7 @@
 					<div class="square item btn btn-block top_item long-sleeve-shirt template" id='long_sleeve_shirt_card' onclick="change_top(this)" style="display: none;" data-type='long-sleeve-shirt', data-color='', data-pricolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: none;">
@@ -285,7 +285,7 @@
 					<div class="square item btn btn-block top_item sweater template" id='sweater_card' onclick="change_top(this)" style="display: none;" data-type='sweater', data-color='', data-pricolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -10%; margin-left:77%; width: 32%; display: none;">
@@ -300,7 +300,7 @@
 					<div class="square item btn btn-block bottom_item chinos template" id='chino_card' onclick="change_bottom(this)" style="display: none;" data-type='chinos', data-color='', data-pricolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -7%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -7%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -7%; margin-left:77%; width: 32%; display: none;">
@@ -315,7 +315,7 @@
 					<div class="square item btn btn-block bottom_item shorts template" id='shorts_card' onclick="change_bottom(this)" style="display: none;" data-type='shorts', data-color='', data-pricolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -18%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -18%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -18%; margin-left:77%; width: 32%; display: none;">
@@ -330,7 +330,7 @@
 					<div class="square item btn btn-block footwear_item vans template" id='vans_card' onclick="change_footwear(this)" style="display: none;" data-type='vans', data-color='', data-pricolor='' data-seccolor='' data-tercolor='' data-stripecolor='' data-checkercolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -31%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -31%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -31; margin-left:77%; width: 32%; display: none;">
@@ -345,7 +345,7 @@
 					<div class="square item btn btn-block footwear_item gazelle template" id='gazelle_card' onclick="change_footwear(this)" style="display: none;" data-type='gazelle', data-color='', data-pricolor='' data-seccolor='' data-tercolor='' data-stripecolor='' data-checkercolor='' data-linecolor=''>
 					    <div class="content align-middle">
 					    	<div class='add_div' style="position: relative;">
-					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -31%; margin-left:77%; width: 32%; display: block;">
+					    		<svg onclick="add(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill plus_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -31%; margin-left:77%; width: 32%; display: none;">
 								  <path d="M8 0c-.176 0-.35.006-.523.017l.064.998a7.117 7.117 0 0 1 .918 0l.064-.998A8.113 8.113 0 0 0 8 0zM6.44.152c-.346.069-.684.16-1.012.27l.321.948c.287-.098.582-.177.884-.237L6.44.153zm4.132.271a7.946 7.946 0 0 0-1.011-.27l-.194.98c.302.06.597.14.884.237l.321-.947zm1.873.925a8 8 0 0 0-.906-.524l-.443.896c.275.136.54.29.793.459l.556-.831zM4.46.824c-.314.155-.616.33-.905.524l.556.83a7.07 7.07 0 0 1 .793-.458L4.46.824zM2.725 1.985c-.262.23-.51.478-.74.74l.752.66c.202-.23.418-.446.648-.648l-.66-.752zm11.29.74a8.058 8.058 0 0 0-.74-.74l-.66.752c.23.202.447.418.648.648l.752-.66zm1.161 1.735a7.98 7.98 0 0 0-.524-.905l-.83.556c.169.253.322.518.458.793l.896-.443zM1.348 3.555c-.194.289-.37.591-.524.906l.896.443c.136-.275.29-.54.459-.793l-.831-.556zM.423 5.428a7.945 7.945 0 0 0-.27 1.011l.98.194c.06-.302.14-.597.237-.884l-.947-.321zM15.848 6.44a7.943 7.943 0 0 0-.27-1.012l-.948.321c.098.287.177.582.237.884l.98-.194zM.017 7.477a8.113 8.113 0 0 0 0 1.046l.998-.064a7.117 7.117 0 0 1 0-.918l-.998-.064zM16 8a8.1 8.1 0 0 0-.017-.523l-.998.064a7.11 7.11 0 0 1 0 .918l.998.064A8.1 8.1 0 0 0 16 8zM.152 9.56c.069.346.16.684.27 1.012l.948-.321a6.944 6.944 0 0 1-.237-.884l-.98.194zm15.425 1.012c.112-.328.202-.666.27-1.011l-.98-.194c-.06.302-.14.597-.237.884l.947.321zM.824 11.54a8 8 0 0 0 .524.905l.83-.556a6.999 6.999 0 0 1-.458-.793l-.896.443zm13.828.905c.194-.289.37-.591.524-.906l-.896-.443c-.136.275-.29.54-.459.793l.831.556zm-12.667.83c.23.262.478.51.74.74l.66-.752a7.047 7.047 0 0 1-.648-.648l-.752.66zm11.29.74c.262-.23.51-.478.74-.74l-.752-.66c-.201.23-.418.447-.648.648l.66.752zm-1.735 1.161c.314-.155.616-.33.905-.524l-.556-.83a7.07 7.07 0 0 1-.793.458l.443.896zm-7.985-.524c.289.194.591.37.906.524l.443-.896a6.998 6.998 0 0 1-.793-.459l-.556.831zm1.873.925c.328.112.666.202 1.011.27l.194-.98a6.953 6.953 0 0 1-.884-.237l-.321.947zm4.132.271a7.944 7.944 0 0 0 1.012-.27l-.321-.948a6.954 6.954 0 0 1-.884.237l.194.98zm-2.083.135a8.1 8.1 0 0 0 1.046 0l-.064-.998a7.11 7.11 0 0 1-.918 0l-.064.998zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z"/>
 								</svg>
 								<svg onclick="remove(this)" xmlns="http://www.w3.org/2000/svg" fill="white" class="bi bi-plus-circle-fill tick_icon" viewBox="0 0 16 16" style="position: absolute; margin-top: -31%; margin-left:77%; width: 32%; display: none;">
@@ -413,6 +413,7 @@ var footwear = "vans";
 
 // Initial State
 var state = 'all';
+var catalogue = true;
 
 // Wardrobe Items
 
@@ -424,48 +425,76 @@ var shorts_arr = [];
 var vans_arr = [];
 var gazelles_arr = [];
 
-// All possible items array
-
-
-// // convert array to JSON string using JSON.stringify()
-// const jsonArray = JSON.stringify(myArray);
-
-// // save to localStorage using "array" as the key and jsonArray as the value
-// localStorage.setItem('array', jsonArray);
-
-// // get the JSON string from localStorage
-// var tshirts_arr_raw = localStorage.getItem('tshirts_arr');
-
-// convert JSON string to relevant object
-// var tshirts_arr = JSON.parse(tshirts_arr_raw);
-
-// console.log(tshirts_arr);
-
-// remove item
-// localStorage.removeItem('array');
-
+function clearWardrobe() {
+	localStorage.removeItem('tshirts_arr');
+	localStorage.removeItem('long_sleeve_shirts_arr');
+	localStorage.removeItem('sweaters_arr');
+	localStorage.removeItem('chinos_arr');
+	localStorage.removeItem('shorts_arr');
+	localStorage.removeItem('vans_arr');
+	localStorage.removeItem('gazelles_arr');
+}
 
 function menu(type) {
+
+	var tshirts_raw = JSON.parse(localStorage.getItem('tshirts_arr'));
+	var long_sleeve_shirts_raw = JSON.parse(localStorage.getItem('long_sleeve_shirts_arr'));
+	var sweaters_raw = JSON.parse(localStorage.getItem('sweaters_arr'));
+	var chinos_raw = JSON.parse(localStorage.getItem('chinos_arr'));
+	var shorts_raw = JSON.parse(localStorage.getItem('shorts_arr'));
+	var vans_raw = JSON.parse(localStorage.getItem('vans_arr'));
+	var gazelles_raw = JSON.parse(localStorage.getItem('gazelles_arr'));
+
 	document.querySelector("#mainpanel").style.setProperty('display', "none");
 	document.querySelector("#rightpanel").style.setProperty('display', "block");
+
 	if (type === "catalogue") {
+
+		catalogue = true;
+
 		tshirts_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 		long_sleeve_shirts_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
-		sweaters_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
+		sweaters_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 		chinos_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 		shorts_arr = ['red', 'maroon', 'orange', 'camel', 'yellow', 'mustard', 'green', 'teal', 'olive', 'darkgreen', 'lightblue', 'royalblue', 'navy', 'darkblue', 'purple', 'darkpurple', 'khaki', 'brown', 'graybrown', 'white', 'cream', 'black', 'lightgray', 'gray', 'charcoal'];
 		vans_arr = ['black-white', 'white-navy'];
 		gazelles_arr = ['white-black-red'];
+
 	} else {
 		// Wardrobe array
-		tshirts_arr = ['royalblue', 'darkgreen', 'white', 'black', 'lightblue'];
-		long_sleeve_shirts_arr = ['darkblue', 'maroon', 'white', 'red', 'gray'];
-		sweaters_arr = ['olive'];
-		chinos_arr = ['khaki', 'white', 'darkblue', 'graybrown'];
-		shorts_arr = ['khaki', 'white', 'darkblue', 'gray'];
-		vans_arr = ['black-white', 'white-navy'];
-		gazelles_arr = ['white-black-red'];
+		// tshirts_arr = ['royalblue', 'darkgreen', 'white', 'black', 'lightblue'];
+		// long_sleeve_shirts_arr = ['darkblue', 'maroon', 'white', 'red', 'gray'];
+		// sweaters_arr = ['olive'];
+		// chinos_arr = ['khaki', 'white', 'darkblue', 'graybrown'];
+		// shorts_arr = ['khaki', 'white', 'darkblue', 'gray'];
+		// vans_arr = ['black-white', 'white-navy'];
+		// gazelles_arr = ['white-black-red'];
+
+		catalogue = false;
+
+		if (tshirts_raw !== null) {
+			tshirts_arr = tshirts_raw;
+		}
+		if (long_sleeve_shirts_raw !== null) {
+			long_sleeve_shirts_arr = long_sleeve_shirts_raw;
+		}
+		if (sweaters_raw !== null) {
+			sweaters_arr = sweaters_raw;
+		}
+		if (chinos_raw !== null) {
+			chinos_arr = chinos_raw;
+		}
+		if (shorts_raw !== null) {
+			shorts_arr = shorts_raw;
+		}
+		if (vans_raw !== null) {
+			vans_arr = vans_raw;
+		}
+		if (gazelles_raw !== null) {
+			gazelles_arr = gazelles_raw;
+		}
 	}
+
 	refresh();
 }
 
@@ -1404,6 +1433,7 @@ function toggle_categories() {
 }
 
 function make_clothes() {
+
 	make_tshirts(tshirts_arr);
 	make_long_sleeve_shirts(long_sleeve_shirts_arr);
 	make_sweaters(sweaters_arr);
@@ -1411,6 +1441,144 @@ function make_clothes() {
 	make_shorts(shorts_arr);
 	make_vans(vans_arr);
 	make_gazelles(gazelles_arr);
+
+	document.querySelectorAll(".add_div").forEach((e) => {
+		e.firstElementChild.style.setProperty('display', "none");
+		e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+	});
+
+	if (catalogue) {
+
+		document.querySelectorAll(".add_div").forEach((e) => {
+			var color = e.parentElement.parentElement.dataset.color;
+			var type = e.parentElement.parentElement.dataset.type;
+
+			switch (type) {
+				case "tshirt":;
+					var arr = JSON.parse(localStorage.getItem('tshirts_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+
+				case "long-sleeve-shirt":
+					var arr = JSON.parse(localStorage.getItem('long_sleeve_shirts_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+
+				case "sweater":
+					var arr = JSON.parse(localStorage.getItem('sweaters_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+
+				case "chinos":
+					var arr = JSON.parse(localStorage.getItem('chinos_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+
+				case "shorts":
+					var arr = JSON.parse(localStorage.getItem('shorts_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+
+				case "vans":
+					var arr = JSON.parse(localStorage.getItem('vans_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+
+				case "gazelle":
+					var arr = JSON.parse(localStorage.getItem('gazelles_arr'));
+					if (arr === null) {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					} else if (arr.includes(color)) {
+						e.firstElementChild.style.setProperty('display', "none");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "block");
+					} else {
+						e.firstElementChild.style.setProperty('display', "block");
+						e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+					}
+				break;
+			}
+			
+		});
+	}
+}
+
+function reset_colors(e) {
+	e.dataset.pricolor = '#ffffff';
+	e.dataset.seccolor = '#ffffff';
+	e.dataset.tercolor = '#ffffff';
+	e.dataset.checkercolor = '#ffffff';
+	e.dataset.stripecolor = '#ffffff';
+	e.dataset.linecolor = '#000000';
+	e.style.setProperty('--primary-color', '#ffffff');
+	e.style.setProperty('--secondary-color', '#ffffff');
+	e.style.setProperty('--tertiary-color', '#ffffff');
+	e.style.setProperty('--checker-color', '#ffffff');
+	e.style.setProperty('--stripe-color', '#ffffff');
+	e.style.setProperty('--line-color', '#000000');
+	document.querySelectorAll(".footwear").forEach((e) => {
+		e.style.setProperty('--primary-color', '#ffffff');
+		e.style.setProperty('--secondary-color', '#ffffff');
+		e.style.setProperty('--tertiary-color', '#ffffff');
+		e.style.setProperty('--checker-color', '#ffffff');
+		e.style.setProperty('--stripe-color', '#ffffff');
+		e.style.setProperty('--line-color', '#000000');
+	});
+
 }
 
 function clear() {
@@ -1421,16 +1589,26 @@ function clear() {
     	e.parentElement.parentElement.style.setProperty('display', "none");
     	e.firstElementChild.remove();
   	});
+  	tshirts_arr = [];
+	long_sleeve_shirts_arr = [];
+	sweaters_arr = [];
+	chinos_arr = [];
+	shorts_arr = [];
+	vans_arr = [];
+	gazelles_arr = [];
+	
+	reset_colors(document.querySelector("#tshirt"));
+	reset_colors(document.querySelector("#long_sleeve_shirt"));
+	reset_colors(document.querySelector("#sweater"));
+	reset_colors(document.querySelector("#chino"));
+	reset_colors(document.querySelector("#shorts"));
+	reset_colors(document.querySelector("#vans"));
+	reset_colors(document.querySelector("#gazelle"));
 
-}
-
-function reset_icons() {
-	document.querySelectorAll(".tick_icon").forEach((e) => {
-    	e.style.setProperty('display', "none");
-  	});
-  	document.querySelectorAll(".plus_icon").forEach((e) => {
-    	e.style.setProperty('display', "block");
-  	});
+	document.querySelectorAll(".add_div").forEach((e) => {
+		e.firstElementChild.style.setProperty('display', "none");
+		e.firstElementChild.nextElementSibling.style.setProperty('display', "none");
+	});
 }
 
 function add(e) {
@@ -1439,6 +1617,71 @@ function add(e) {
 	console.log("add " + type + ", " + color);
 	e.style.setProperty('display', "none");
 	e.nextElementSibling.style.setProperty('display', "block");
+
+	switch (type) {
+		case "tshirt":;
+			var arr = JSON.parse(localStorage.getItem('tshirts_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('tshirts_arr', JSON.stringify(arr));
+		break;
+
+		case "long-sleeve-shirt":
+			var arr = JSON.parse(localStorage.getItem('long_sleeve_shirts_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('long_sleeve_shirts_arr', JSON.stringify(arr));
+		break;
+
+		case "sweater":
+			var arr = JSON.parse(localStorage.getItem('sweaters_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('sweaters_arr', JSON.stringify(arr));
+		break;
+
+		case "chinos":
+			var arr = JSON.parse(localStorage.getItem('chinos_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('chinos_arr', JSON.stringify(arr));
+		break;
+
+		case "shorts":
+			var arr = JSON.parse(localStorage.getItem('shorts_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('shorts_arr', JSON.stringify(arr));
+		break;
+
+		case "vans":
+			var arr = JSON.parse(localStorage.getItem('vans_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('vans_arr', JSON.stringify(arr));
+		break;
+
+		case "gazelle":
+			var arr = JSON.parse(localStorage.getItem('gazelles_arr'));
+			if (arr === null) {
+				arr = [];
+			}
+			arr.push(color);
+			localStorage.setItem('gazelles_arr', JSON.stringify(arr));
+		break;
+	}
 }
 
 function remove(e) {
@@ -1447,12 +1690,55 @@ function remove(e) {
 	console.log("remove " + type + ", " + color);
 	e.style.setProperty('display', "none");
 	e.previousElementSibling.style.setProperty('display', "block");
+
+	switch (type) {
+		case "tshirt":;
+			var arr = JSON.parse(localStorage.getItem('tshirts_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('tshirts_arr', JSON.stringify(arr));
+		break;
+
+		case "long-sleeve-shirt":
+			var arr = JSON.parse(localStorage.getItem('long_sleeve_shirts_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('long_sleeve_shirts_arr', JSON.stringify(arr));
+		break;
+
+		case "sweater":
+			var arr = JSON.parse(localStorage.getItem('sweaters_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('sweaters_arr', JSON.stringify(arr));
+		break;
+
+		case "chinos":
+			var arr = JSON.parse(localStorage.getItem('chinos_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('chinos_arr', JSON.stringify(arr));
+		break;
+
+		case "shorts":
+			var arr = JSON.parse(localStorage.getItem('shorts_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('shorts_arr', JSON.stringify(arr));
+		break;
+
+		case "vans":
+			var arr = JSON.parse(localStorage.getItem('vans_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('vans_arr', JSON.stringify(arr));
+		break;
+
+		case "gazelle":
+			var arr = JSON.parse(localStorage.getItem('gazelles_arr'));
+			arr = arr.filter(e => e !== color);
+			localStorage.setItem('gazelles_arr', JSON.stringify(arr));
+		break;
+	}
 }
 
 function refresh() {
 	toggle_categories();
 	make_clothes();
-	reset_icons();
 }
 
 function main() {
@@ -1462,7 +1748,7 @@ function main() {
 }
 
 </script>
-<p style="position: absolute; color: white; top: 0px; left: 5px;">V1.3.2</p>
+<p style="position: absolute; color: white; top: 0px; left: 5px;">V1.4.0</p>
 
 </body>
 </html>
