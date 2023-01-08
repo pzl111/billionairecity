@@ -2585,16 +2585,40 @@ function random() {
 
 		if (top_color === '') {
 
-			function add_tops(arr) {
-				for (let i = 0; i < arr.length; i++) {
-					if (tshirts_arr.includes(arr[i].dataset.color)) {
-						tops.push(arr[i]);;
+			function add_tops(arr, type) {
+
+				if (type === 'tshirt') {
+					for (let i = 0; i < arr.length; i++) {
+						if (tshirts_arr.includes(arr[i].dataset.color)) {
+							tops.push(arr[i]);;
+						}
 					}
 				}
-				change_top(tops[Math.floor(Math.random()*tops.length)]);
+
+				if (type === 'long-sleeve-shirt') {
+					for (let i = 0; i < arr.length; i++) {
+						if (long_sleeve_shirts_arr.includes(arr[i].dataset.color)) {
+							tops.push(arr[i]);;
+						}
+					}
+				}
+
+				if (type === 'sweater') {
+					for (let i = 0; i < arr.length; i++) {
+						if (sweaters_arr.includes(arr[i].dataset.color)) {
+							tops.push(arr[i]);;
+						}
+					}
+				}
+				
 			}
 
-			add_tops(document.querySelectorAll("[data-type='tshirt']"));
+			add_tops(document.querySelectorAll("[data-type='tshirt']"), 'tshirt');
+			add_tops(document.querySelectorAll("[data-type='long-sleeve-shirt']"), 'long-sleeve-shirt');
+			add_tops(document.querySelectorAll("[data-type='sweater']"), 'sweater');
+
+			console.log(tops);
+			change_top(tops[Math.floor(Math.random()*tops.length)]);
 			random();
 
 		} else {
