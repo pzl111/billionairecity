@@ -535,6 +535,7 @@ var footwear = "vans";
 // Initial State
 var state = 'all';
 var catalogue = true;
+var at_main_menu = true;
 
 var top_color = "";
 var bottom_color = "";
@@ -583,6 +584,8 @@ function clearWardrobe() {
 }
 
 function menu(type) {
+
+	at_main_menu = false;
 
 	var tshirts_raw = JSON.parse(localStorage.getItem('tshirts_arr'));
 	var long_sleeve_shirts_raw = JSON.parse(localStorage.getItem('long_sleeve_shirts_arr'));
@@ -2569,95 +2572,117 @@ function main() {
 	document.querySelector("#rightpanel").style.setProperty('display', "none");
 	document.querySelector("#mainpanel").style.setProperty('display', "block");
 	clear();
+	at_main_menu = true;
 }
 
 function random() {
 
+	var tops = [];
 	var bottoms = [];
 	var shoes = [];
 
-	function test(arr, sub) {
-		var result =  arr.map(str => str
-	    	.startsWith(sub.slice(0, Math.max(str.length - 1, 1)))
-	  	);
+	if (!at_main_menu) {
 
-		for (let i = 0; i < result.length; i++) {
-	  		if (result[i]) {
-				var color = arr[i].replace(sub, "");
+		if (top_color === '') {
 
-				function f(e, type) {
-
-					if (type === 'chinos') {
-						e.forEach(el=>{
-							if (el.dataset.color == color && chinos_arr.includes(color)) {
-								bottoms.push(el);
-							}
-						})
-					}
-
-					if (type === 'shorts') {
-						e.forEach(el=>{
-							if (el.dataset.color == color && shorts_arr.includes(color)) {
-								bottoms.push(el);
-							}
-						})
-					}
-
-					if (type === 'cargoshorts') {
-						e.forEach(el=>{
-							if (el.dataset.color == color && cargoshorts_arr.includes(color)) {
-								bottoms.push(el);
-							}
-						})
-					}
-					
-				}
-
-				f(document.querySelectorAll("[data-type='chinos']"), 'chinos');
-				f(document.querySelectorAll("[data-type='shorts']"), 'shorts');
-				f(document.querySelectorAll("[data-type='cargoshorts']"), 'cargoshorts');
-	  		}
-	  	}
-	}
-
-	test(top_combi, top_color+'-');
-
-	if (bottoms.length !== 0) {
-		change_bottom(bottoms[Math.floor(Math.random()*bottoms.length)]);
-	} else {
-		alert('No Bottom Available');
-	}
-
-	function add_shoes(arr, type) {
-
-		if (type === 'lowsneaker') {
-			arr.forEach(el=>{
-				if (bottom_color === 'white') {
-					if (el.dataset.color == 'black') {
-						shoes.push(el);
-					}
-				} else if (bottom_color !== '') {
-					if (el.dataset.color == 'white') {
-						shoes.push(el);
+			function add_tops(arr) {
+				for (let i = 0; i < arr.length; i++) {
+					if (tshirts_arr.includes(arr[i].dataset.color)) {
+						tops.push(arr[i]);;
 					}
 				}
-			})
+				change_top(tops[Math.floor(Math.random()*tops.length)]);
+			}
+
+			add_tops(document.querySelectorAll("[data-type='tshirt']"));
+			random();
+
+		} else {
+
+			function test(arr, sub) {
+				var result =  arr.map(str => str
+			    	.startsWith(sub.slice(0, Math.max(str.length - 1, 1)))
+			  	);
+
+				for (let i = 0; i < result.length; i++) {
+			  		if (result[i]) {
+						var color = arr[i].replace(sub, "");
+
+						function f(e, type) {
+
+							if (type === 'chinos') {
+								e.forEach(el=>{
+									if (el.dataset.color == color && chinos_arr.includes(color)) {
+										bottoms.push(el);
+									}
+								})
+							}
+
+							if (type === 'shorts') {
+								e.forEach(el=>{
+									if (el.dataset.color == color && shorts_arr.includes(color)) {
+										bottoms.push(el);
+									}
+								})
+							}
+
+							if (type === 'cargoshorts') {
+								e.forEach(el=>{
+									if (el.dataset.color == color && cargoshorts_arr.includes(color)) {
+										bottoms.push(el);
+									}
+								})
+							}
+							
+						}
+
+						f(document.querySelectorAll("[data-type='chinos']"), 'chinos');
+						f(document.querySelectorAll("[data-type='shorts']"), 'shorts');
+						f(document.querySelectorAll("[data-type='cargoshorts']"), 'cargoshorts');
+			  		}
+			  	}
+			}
+
+			test(top_combi, top_color+'-');
+
+			if (bottoms.length !== 0) {
+				change_bottom(bottoms[Math.floor(Math.random()*bottoms.length)]);
+			} else {
+				alert('No Bottom Available');
+			}
+
+			function add_shoes(arr, type) {
+
+				if (type === 'lowsneaker') {
+					arr.forEach(el=>{
+						if (bottom_color === 'white') {
+							if (el.dataset.color == 'black') {
+								shoes.push(el);
+							}
+						} else if (bottom_color !== '') {
+							if (el.dataset.color == 'white') {
+								shoes.push(el);
+							}
+						}
+					})
+				}
+				
+			}
+
+			add_shoes(document.querySelectorAll("[data-type='lowsneaker']"), 'lowsneaker');
+
+			if (shoes.length !== 0) {
+				change_footwear(shoes[Math.floor(Math.random()*shoes.length)]);
+			} else {
+				alert('No Footwear Available');
+			}
 		}
-		
-	}
-
-	add_shoes(document.querySelectorAll("[data-type='lowsneaker']"), 'lowsneaker');
-
-	if (shoes.length !== 0) {
-		change_footwear(shoes[Math.floor(Math.random()*shoes.length)]);
-	} else {
-		alert('No Footwear Available');
 	}
 	
 }
 
 </script>
-<p style="position: absolute; color: white; top: 0px; left: 5px; z-index: 5;">V1.5.2</p>
+<p style="position: absolute; color: white; top: 0px; left: 5px; z-index: 5;">V1.5.3</p>
 
 </body>
 </html>
