@@ -2585,54 +2585,79 @@ function random() {
 	  		if (result[i]) {
 				var color = arr[i].replace(sub, "");
 
+				function f(e, type) {
 
-				function f(e) {
-					e.forEach(el=>{
-						if (el.dataset.color == color) {
-							bottoms.push(el);
-						}
-					})
+					if (type === 'chinos') {
+						e.forEach(el=>{
+							if (el.dataset.color == color && chinos_arr.includes(color)) {
+								bottoms.push(el);
+							}
+						})
+					}
+
+					if (type === 'shorts') {
+						e.forEach(el=>{
+							if (el.dataset.color == color && shorts_arr.includes(color)) {
+								bottoms.push(el);
+							}
+						})
+					}
+
+					if (type === 'cargoshorts') {
+						e.forEach(el=>{
+							if (el.dataset.color == color && cargoshorts_arr.includes(color)) {
+								bottoms.push(el);
+							}
+						})
+					}
+					
 				}
 
-				f(document.querySelectorAll("[data-type='chinos']"));
-				f(document.querySelectorAll("[data-type='shorts']"));
-				f(document.querySelectorAll("[data-type='cargoshorts']"));
+				f(document.querySelectorAll("[data-type='chinos']"), 'chinos');
+				f(document.querySelectorAll("[data-type='shorts']"), 'shorts');
+				f(document.querySelectorAll("[data-type='cargoshorts']"), 'cargoshorts');
 	  		}
 	  	}
 	}
 
 	test(top_combi, top_color+'-');
 
-
-
 	if (bottoms.length !== 0) {
 		change_bottom(bottoms[Math.floor(Math.random()*bottoms.length)]);
+	} else {
+		alert('No Outfit Available');
 	}
 
-	function add_shoes(arr) {
-		arr.forEach(el=>{
-			if (bottom_color === 'white') {
-				if (el.dataset.color == 'black') {
-					shoes.push(el);
+	function add_shoes(arr, type) {
+
+		if (type === 'lowsneaker') {
+			arr.forEach(el=>{
+				if (bottom_color === 'white') {
+					if (el.dataset.color == 'black') {
+						shoes.push(el);
+					}
+				} else if (bottom_color !== '') {
+					if (el.dataset.color == 'white') {
+						shoes.push(el);
+					}
 				}
-			} else if (bottom_color !== '') {
-				if (el.dataset.color == 'white') {
-					shoes.push(el);
-				}
-			}
-		})
+			})
+		}
+		
 	}
 
-	add_shoes(document.querySelectorAll("[data-type='lowsneaker']"));
+	add_shoes(document.querySelectorAll("[data-type='lowsneaker']"), 'lowsneaker');
 
 	if (shoes.length !== 0) {
 		change_footwear(shoes[Math.floor(Math.random()*shoes.length)]);
+	} else {
+		alert('No Outfit Available');
 	}
 	
 }
 
 </script>
-<p style="position: absolute; color: white; top: 0px; left: 5px; z-index: 5;">V1.5.0</p>
+<p style="position: absolute; color: white; top: 0px; left: 5px; z-index: 5;">V1.5.1</p>
 
 </body>
 </html>
