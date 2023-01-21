@@ -705,13 +705,25 @@ function menu(type) {
 
 	} else {
 		// My Wardrobe array
-		// tshirts_arr = ['royalblue', 'darkgreen', 'white', 'black', 'lightblue'];
-		// long_sleeve_tshirts_arr = ['darkblue', 'maroon', 'white', 'red', 'gray'];
-		// sweaters_arr = ['olive'];
-		// chinos_arr = ['khaki', 'white', 'darkblue', 'graybrown'];
-		// shorts_arr = ['khaki', 'white', 'darkblue', 'gray'];
+		// tshirts_arr = ['darkgreen', 'lightblue', 'black', 'royalblue', 'darkblue', 'royalblue', 'white', 'brown', 'gray', 'charcoal', 'white'];
+		// long_sleeve_tshirts_arr = ['darkblue', 'maroon', 'lightblue', 'white', 'red'];
+		// sweaters_arr = ['olive', 'gray'];
+		// polo_arr = ['black'];
+		// chinos_arr = ['khaki', 'brown', 'graybrown', 'black', 'darkblue', 'charcoal', 'navy', 'white'];
+		// shorts_arr = ['white', 'lightgray', 'darkblue', 'khaki', 'lightblue'];
 		// vans_arr = ['black-white', 'white-navy'];
-		// gazelles_arr = ['white-black-red'];
+		// lowsneaker_arr = ['white'];
+
+		// localStorage.setItem('tshirts_arr', JSON.stringify(tshirts_arr));
+		// localStorage.setItem('long_sleeve_tshirts_arr', JSON.stringify(long_sleeve_tshirts_arr));
+		// localStorage.setItem('sweaters_arr', JSON.stringify(sweaters_arr));
+		// localStorage.setItem('polo_arr', JSON.stringify(polo_arr));
+		// localStorage.setItem('chinos_arr', JSON.stringify(chinos_arr));
+		// localStorage.setItem('shorts_arr', JSON.stringify(shorts_arr));
+		// localStorage.setItem('vans_arr', JSON.stringify(vans_arr));
+		// localStorage.setItem('lowsneaker_arr', JSON.stringify(lowsneaker_arr));
+
+
 
 		catalogue = false;
 
@@ -1369,9 +1381,9 @@ function colorise_card(color, clone, clone_card)  {
 	switch (color) {
 
 		case 'red':
-			clone.style.setProperty('--primary-color', '#8d1e1e');
+			clone.style.setProperty('--primary-color', '#731c1c');
 			clone_card.dataset.color = 'red';
-			clone_card.dataset.pricolor = '#8d1e1e';
+			clone_card.dataset.pricolor = '#731c1c';
 			clone_card.dataset.linecolor = '#000000';
 			break;
 
@@ -1502,9 +1514,9 @@ function colorise_card(color, clone, clone_card)  {
 			break;
 
 		case 'graybrown':
-			clone.style.setProperty('--primary-color', '#463b2a');
+			clone.style.setProperty('--primary-color', '#3e372e');
 			clone_card.dataset.color = 'graybrown';
-			clone_card.dataset.pricolor = '#463b2a';
+			clone_card.dataset.pricolor = '#3e372e';
 			clone_card.dataset.linecolor = '#000000';
 			break;
 
