@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fetch API Demo</title>
+</head>
+
+<body>
+  <div class="container"></div>
+  <script>
+    const block_id = 'f553f410-7bef-45cd-b9dd-8af0fa7d6ea8';
+    // console.log(`https://api.notion.com/v1/blocks/${block_id}/children`)
+    fetch(`https://api.notion.com/v1/blocks/f553f410-7bef-45cd-b9dd-8af0fa7d6ea8/children`,
+      {
+        mode: 'cors',
+        method: "GET",
+        credentials: 'include',
+        headers: {
+          'Authorization': 'secret_632Cu9NwJzxefl8g1nv0tVKo8XT6FDOaEiYrHlLsRv3',
+          'Content-Type': 'application/json',
+          'Notion-Version': '2021-05-13'
+        }
+      }
+    )
+      .then(
+        function (response) {
+          if (response.status !== 200) {
+            console.log('Looks like there was a problem. Status Code: ' +
+              response.status);
+            return;
+          }
+
+          // Examine the text in the response
+          response.json().then(function (data) {
+            console.log(data);
+          });
+        }
+      )
+      .catch(function (err) {
+        console.log('Fetch Error :-S', err);
+      });
+  </script>
+</body>
+
+</html>
